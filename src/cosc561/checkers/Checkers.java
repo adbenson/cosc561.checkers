@@ -34,6 +34,13 @@ public class Checkers {
 	}
 	
 	public static enum COLOR {
-		RED, BLACK;
+		RED (true), 
+		BLACK (false);
+		
+		public final boolean first;
+		
+		private COLOR(boolean first) {
+			this.first = first;
+		}
 	}
 }
