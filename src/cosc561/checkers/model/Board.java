@@ -38,16 +38,16 @@ public class Board {
 		for (int row = 0; row < SPACES_PER_SIDE; row++) {
 			for (int col = 0; col < SPACES_PER_SIDE; col++) {
 				
-				Space s = new Space(row, col);
-				board.put(spaceId, s);
-				rows.add(row, s);
-				columns.add(col, s);
+				Space space = new Space(row, col);
+				board.put(spaceId, space);
+				rows.add(row, space);
+				columns.add(col, space);
 				
 				if (spaceId <= LAST_BLACK) {
-					s.piece = new Piece(BLACK);
+					space.piece = new Piece(BLACK);
 				}
 				if (spaceId >= FIRST_RED) {
-					s.piece = new Piece(RED);
+					space.piece = new Piece(RED);
 				}
 				
 				spaceId++;
