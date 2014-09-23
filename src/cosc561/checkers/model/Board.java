@@ -18,8 +18,7 @@ public class Board {
 	
 	private HashMap<Integer, Space> spaces;
 	
-	private ArrayList<Space> rows;
-	private ArrayList<Space> columns;
+	private Space[][] grid;
 	
 	public Board() {
 		
@@ -30,8 +29,7 @@ public class Board {
 	public void initializeBoard() {
 		spaces = new HashMap<>(TOTAL_SPACES);
 		
-		rows = new ArrayList<>(SPACES_PER_SIDE);
-		columns = new ArrayList<>(SPACES_PER_SIDE);
+		grid = new Space[SPACES_PER_SIDE][SPACES_PER_SIDE];
 		
 		int spaceId = 1;
 		
@@ -40,8 +38,7 @@ public class Board {
 				
 				Space space = new Space(row, col);
 				spaces.put(spaceId, space);
-				rows.add(row, space);
-				columns.add(col, space);
+				grid[row][col] = space;
 				
 				if (spaceId <= LAST_BLACK) {
 					space.piece = new Piece(BLACK);
