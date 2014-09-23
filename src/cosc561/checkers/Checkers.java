@@ -27,7 +27,7 @@ public class Checkers {
 		    null);
 		
 		if (n < 0) {
-			throw new RuntimeException("No choice made");
+			throw new RuntimeException("No color choice made");
 		}
 		
 		return COLOR.values()[n];
