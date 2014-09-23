@@ -40,6 +40,10 @@ public class Board {
 		return board;
 	}
 	
+	public Space getSpace(int i) {
+		return spaces.get(i);
+	}
+	
 	public class Space {
 		
 		Piece piece;
