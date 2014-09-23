@@ -6,7 +6,8 @@ import static cosc561.checkers.Checkers.COLOR.*;
 
 public class Board {
 	
-	public static final int TOTAL_SPACES = 32;
+	public static final int SPACES_PER_SIDE = 8;
+	public static final int TOTAL_SPACES = SPACES_PER_SIDE * SPACES_PER_SIDE;
 	
 	public static final int LAST_BLACK = 12;
 	
