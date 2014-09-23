@@ -23,12 +23,12 @@ public class Board {
 	
 	public Board() {
 		
-		spaces = initializeBoard();
+		initializeBoard();
 		
 	}
 	
-	public HashMap<Integer, Space> initializeBoard() {
-		HashMap<Integer, Space> board = new HashMap<>(TOTAL_SPACES);
+	public void initializeBoard() {
+		spaces = new HashMap<>(TOTAL_SPACES);
 		
 		rows = new ArrayList<>(SPACES_PER_SIDE);
 		columns = new ArrayList<>(SPACES_PER_SIDE);
@@ -39,7 +39,7 @@ public class Board {
 			for (int col = 0; col < SPACES_PER_SIDE; col++) {
 				
 				Space space = new Space(row, col);
-				board.put(spaceId, space);
+				spaces.put(spaceId, space);
 				rows.add(row, space);
 				columns.add(col, space);
 				
@@ -53,8 +53,6 @@ public class Board {
 				spaceId++;
 			}
 		}
-		
-		return board;
 	}
 	
 	public Space getSpace(int i) {
