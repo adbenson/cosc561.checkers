@@ -2,8 +2,10 @@ package cosc561.checkers.model;
 
 import static cosc561.checkers.Checkers.COLOR.BLACK;
 import static cosc561.checkers.Checkers.COLOR.RED;
-import java.util.HashMap;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Board {
 	
@@ -16,6 +18,9 @@ public class Board {
 	
 	private HashMap<Integer, Space> spaces;
 	
+	private ArrayList<Space> rows;
+	private ArrayList<Space> columns;
+	
 	public Board() {
 		
 		spaces = initializeBoard();
@@ -23,17 +28,29 @@ public class Board {
 	}
 	
 	public HashMap<Integer, Space> initializeBoard() {
-		HashMap<Integer, Space> board = new HashMap<>();
+		HashMap<Integer, Space> board = new HashMap<>(TOTAL_SPACES);
 		
-		for (int i = 1; i <= TOTAL_SPACES; i++) {
-			Space s = new Space();
-			board.put(i, s);
-			
-			if (i <= LAST_BLACK) {
-				s.piece = new Piece(BLACK);
-			}
-			if (i >= FIRST_RED) {
-				s.piece = new Piece(RED);
+		rows = new ArrayList<>(SPACES_PER_SIDE);
+		columns = new ArrayList<>(SPACES_PER_SIDE);
+		
+		int spaceId = 1;
+		
+		for (int row = 0; row < SPACES_PER_SIDE; row++) {
+			for (int col = 0; col < SPACES_PER_SIDE; col++) {
+				
+				Space s = new Space(row, col);
+				board.put(spaceId, s);
+				rows.add(row, s);
+				columns.add(col, s);
+				
+				if (spaceId <= LAST_BLACK) {
+					s.piece = new Piece(BLACK);
+				}
+				if (spaceId >= FIRST_RED) {
+					s.piece = new Piece(RED);
+				}
+				
+				spaceId++;
 			}
 		}
 		
