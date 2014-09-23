@@ -1,8 +1,9 @@
 package cosc561.checkers.model;
 
+import static cosc561.checkers.Checkers.COLOR.BLACK;
+import static cosc561.checkers.Checkers.COLOR.RED;
 import java.util.HashMap;
 
-import static cosc561.checkers.Checkers.COLOR.*;
 
 public class Board {
 	
