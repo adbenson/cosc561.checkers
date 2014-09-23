@@ -48,7 +48,14 @@ public class Board {
 		
 		Piece piece;
 		
-		public Space() {
+		public final int row;
+		public final int column;
+		
+		public Space(int row, int column) {
+			this.row = row;
+			this.column = column;
+		}
+		
 			
 		}
 	}
