@@ -1,6 +1,5 @@
 package cosc561.checkers.model;
 
-import cosc561.checkers.Checkers.COLOR;
 
 public class Piece {
 		
@@ -19,5 +18,15 @@ public class Piece {
 	public void setKing(boolean king) {
 		this.king = king;
 	}
-
+	
+	public static enum COLOR {
+		RED (true), 
+		BLACK (false);
+		
+		public final boolean first;
+		
+		private COLOR(boolean first) {
+			this.first = first;
+		}
+	}
 }

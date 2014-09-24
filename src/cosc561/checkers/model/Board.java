@@ -1,8 +1,5 @@
 package cosc561.checkers.model;
 
-import static cosc561.checkers.Checkers.COLOR.BLACK;
-import static cosc561.checkers.Checkers.COLOR.RED;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,10 +42,10 @@ public class Board {
 					grid[row][col] = space;
 					
 					if (spaceId <= LAST_BLACK) {
-						space.piece = new Piece(BLACK);
+						space.piece = new Piece(Piece.COLOR.BLACK);
 					}
 					if (spaceId >= FIRST_RED) {
-						space.piece = new Piece(RED);
+						space.piece = new Piece(Piece.COLOR.RED);
 					}
 					
 					spaceId++;

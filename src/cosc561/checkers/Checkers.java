@@ -3,6 +3,9 @@ package cosc561.checkers;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import cosc561.checkers.model.Board;
+import cosc561.checkers.model.Piece.COLOR;
+
 public class Checkers {
 	
 	public static void main(String[] args) {
@@ -33,14 +36,4 @@ public class Checkers {
 		return COLOR.values()[n];
 	}
 	
-	public static enum COLOR {
-		RED (true), 
-		BLACK (false);
-		
-		public final boolean first;
-		
-		private COLOR(boolean first) {
-			this.first = first;
-		}
-	}
 }
