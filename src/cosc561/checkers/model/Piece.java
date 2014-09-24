@@ -45,4 +45,8 @@ public class Piece {
 			return color.directions;
 		}
 	}
+
+	public boolean isOpponent(Piece that) {
+		return that.color != this.color;
+	}
 }
