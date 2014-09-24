@@ -1,5 +1,9 @@
 package cosc561.checkers.model;
 
+import static cosc561.checkers.model.Direction.NE;
+import static cosc561.checkers.model.Direction.NW;
+import static cosc561.checkers.model.Direction.SE;
+import static cosc561.checkers.model.Direction.SW;
 
 public class Piece {
 		
@@ -20,13 +24,24 @@ public class Piece {
 	}
 	
 	public static enum Color {
-		RED (true), 
-		BLACK (false);
+		RED (true, new Direction[] {NE, NW}), 
+		BLACK (false, new Direction[] {SE, SW}); 
 		
 		public final boolean first;
+		public final Direction[] directions;
 		
-		private Color(boolean first) {
+		private Color(boolean first, Direction[] directions) {
 			this.first = first;
+			this.directions = directions;
+		}
+	}
+
+	public Direction[] getDirections() {
+		if (isKing()) {
+			return Direction.values();
+		}
+		else {
+			return color.directions;
 		}
 	}
 }
