@@ -36,7 +36,7 @@ public class Board {
 		for (int row = 0; row < SPACES_PER_SIDE; row++) {
 			for (int col = 0; col < SPACES_PER_SIDE; col++) {
 				
-				Space space = new Space(row, col);
+				Space space = new Space(spaceId, row, col);
 				spaces.put(spaceId, space);
 				grid[row][col] = space;
 				
@@ -60,10 +60,14 @@ public class Board {
 		
 		Piece piece;
 		
+		public final int id;
+		
 		public final int row;
 		public final int column;
 		
-		public Space(int row, int column) {
+		
+		public Space(int id, int row, int column) {
+			this.id = id;
 			this.row = row;
 			this.column = column;
 		}
