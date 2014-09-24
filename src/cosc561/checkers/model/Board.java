@@ -73,6 +73,8 @@ public class Board {
 		}
 		
 			
+		public String toString() {
+			return "Space#"+id+"@("+row+","+column+")";
 		}
 	}
 
