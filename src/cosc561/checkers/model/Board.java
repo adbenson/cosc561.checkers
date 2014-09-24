@@ -3,6 +3,7 @@ package cosc561.checkers.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Board {
 	
@@ -67,12 +68,7 @@ public class Board {
 		public final int row;
 		public final int column;
 		
-		private List<Space> adjacent;
-		
-		private Space nw;
-		private Space ne;
-		private Space se;
-		private Space sw;
+		private Map<Direction, Space> adjacent;
 		
 		public Space(int id, int row, int column) {
 			this.id = id;
@@ -80,7 +76,7 @@ public class Board {
 			this.column = column;
 		}
 		
-		public List<Space> getAdjacent() {
+		public Map<Direction, Space> getAdjacent() {
 			if (adjacent == null) {
 				adjacent = findAdjacent();
 			}
@@ -88,24 +84,25 @@ public class Board {
 			return adjacent;
 		}
 		
-		private List<Space> findAdjacent() {
-			List<Space> adjacent = new ArrayList<>();
+		private Map<Direction, Space> findAdjacent() {
+			Map<Direction, Space> adjacent = new HashMap<>();
+			Space that;
 			
 			if (row > 0 && column > 0) {
-				nw = grid[row - 1][column - 1];
-				adjacent.add(nw);
+				that = grid[row - 1][column - 1];
+				adjacent.put(Direction.NW, that);
 			}
 			if (row > 0 && column < SPACES_PER_SIDE - 1) {
-				ne = grid[row - 1][column + 1];
-				adjacent.add(ne);
+				that = grid[row - 1][column + 1];
+				adjacent.put(Direction.NE, that);
 			}
 			if (row < SPACES_PER_SIDE - 1 && column < SPACES_PER_SIDE - 1) {
-				se = grid[row + 1][column + 1];
-				adjacent.add(se);
+				that = grid[row + 1][column + 1];
+				adjacent.put(Direction.SE, that);
 			}
 			if (row < SPACES_PER_SIDE - 1 && column > 0) {
-				sw = grid[row + 1][column - 1];
-				adjacent.add(sw);
+				that = grid[row + 1][column - 1];
+				adjacent.put(Direction.SW, that);
 			}
 			
 			return adjacent;
