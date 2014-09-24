@@ -70,6 +70,12 @@ public class Board {
 		public final int row;
 		public final int column;
 		
+		private List<Space> adjacent;
+		
+		private Space nw;
+		private Space ne;
+		private Space se;
+		private Space sw;
 		
 		public Space(int id, int row, int column) {
 			this.id = id;
@@ -77,7 +83,37 @@ public class Board {
 			this.column = column;
 		}
 		
+		public List<Space> getAdjacent() {
+			if (adjacent == null) {
+				adjacent = findAdjacent();
+			}
+
+			return adjacent;
+		}
+		
+		private List<Space> findAdjacent() {
+			List<Space> adjacent = new ArrayList<>();
 			
+			if (row > 0 && column > 0) {
+				nw = grid[row - 1][column - 1];
+				adjacent.add(nw);
+			}
+			if (row > 0 && column < SPACES_PER_SIDE - 1) {
+				ne = grid[row - 1][column + 1];
+				adjacent.add(ne);
+			}
+			if (row < SPACES_PER_SIDE - 1 && column < SPACES_PER_SIDE - 1) {
+				se = grid[row + 1][column + 1];
+				adjacent.add(se);
+			}
+			if (row < SPACES_PER_SIDE - 1 && column > 0) {
+				sw = grid[row + 1][column - 1];
+				adjacent.add(sw);
+			}
+			
+			return adjacent;
+		}
+		
 		public String toString() {
 			return "Space#"+id+"@("+row+","+column+")";
 		}
