@@ -3,11 +3,11 @@ package cosc561.checkers.model;
 
 public class Piece {
 		
-	public final COLOR color;
+	public final Color color;
 	
 	private boolean king;
 	
-	public Piece(COLOR color) {
+	public Piece(Color color) {
 		this.color = color;
 	}
 
@@ -19,13 +19,13 @@ public class Piece {
 		this.king = king;
 	}
 	
-	public static enum COLOR {
+	public static enum Color {
 		RED (true), 
 		BLACK (false);
 		
 		public final boolean first;
 		
-		private COLOR(boolean first) {
+		private Color(boolean first) {
 			this.first = first;
 		}
 	}

@@ -42,10 +42,10 @@ public class Board {
 					grid[row][col] = space;
 					
 					if (spaceId <= LAST_BLACK) {
-						space.piece = new Piece(Piece.COLOR.BLACK);
+						space.piece = new Piece(Piece.Color.BLACK);
 					}
 					if (spaceId >= FIRST_RED) {
-						space.piece = new Piece(Piece.COLOR.RED);
+						space.piece = new Piece(Piece.Color.RED);
 					}
 					
 					spaceId++;

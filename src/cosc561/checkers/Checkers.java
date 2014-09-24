@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import cosc561.checkers.model.Board;
-import cosc561.checkers.model.Piece.COLOR;
+import cosc561.checkers.model.Piece.Color;
 
 public class Checkers {
 	
@@ -18,7 +18,7 @@ public class Checkers {
 		
 	}
 	
-	private COLOR inquireColor() {
+	private Color inquireColor() {
 		
 		int n = JOptionPane.showOptionDialog(new JFrame(),
 		    "What color are we playing as today?",
@@ -26,14 +26,14 @@ public class Checkers {
 		    JOptionPane.YES_NO_CANCEL_OPTION,
 		    JOptionPane.QUESTION_MESSAGE,
 		    null,
-		    COLOR.values(),
+		    Color.values(),
 		    null);
 		
 		if (n < 0) {
 			throw new RuntimeException("No color choice made");
 		}
 		
-		return COLOR.values()[n];
+		return Color.values()[n];
 	}
 	
 }
