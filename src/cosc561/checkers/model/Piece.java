@@ -13,14 +13,15 @@ public class Piece {
 	
 	public Piece(Color color) {
 		this.color = color;
+		this.king = false;
 	}
 
 	public boolean isKing() {
 		return king;
 	}
 
-	public void setKing(boolean king) {
-		this.king = king;
+	public void setKing() {
+		this.king = true;
 	}
 	
 	public static enum Color {
