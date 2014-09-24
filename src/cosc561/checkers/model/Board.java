@@ -20,12 +20,21 @@ public class Board {
 	private Space[][] grid;
 	
 	public Board() {
-		
-		initializeBoard();
-		
+		initializeSpaces();
 	}
 	
-	public void initializeBoard() {
+	public void fill() {
+		for(Space space : spaces.values()) {
+			if (space.id <= LAST_BLACK) {
+				space.piece = new Piece(Piece.Color.BLACK);
+			}
+			if (space.id >= FIRST_RED) {
+				space.piece = new Piece(Piece.Color.RED);
+			}
+		}
+	}
+	
+	public void initializeSpaces() {
 		spaces = new HashMap<>(TOTAL_SPACES);
 		
 		grid = new Space[SPACES_PER_SIDE][SPACES_PER_SIDE];
@@ -41,13 +50,6 @@ public class Board {
 					Space space = new Space(spaceId, row, col);
 					spaces.put(spaceId, space);
 					grid[row][col] = space;
-					
-					if (spaceId <= LAST_BLACK) {
-						space.piece = new Piece(Piece.Color.BLACK);
-					}
-					if (spaceId >= FIRST_RED) {
-						space.piece = new Piece(Piece.Color.RED);
-					}
 					
 					spaceId++;
 				}
