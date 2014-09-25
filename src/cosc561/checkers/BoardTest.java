@@ -1,6 +1,7 @@
 package cosc561.checkers;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.junit.Test;
 import cosc561.checkers.model.Board;
 import cosc561.checkers.model.Board.Space;
 import cosc561.checkers.model.Piece;
+import cosc561.checkers.model.Piece.Color;
 
 public class BoardTest {
 	
@@ -22,7 +24,7 @@ public class BoardTest {
 
 	@Test
 	public void getLegalMovesEmptySpace() {
-		board.fill();
+		board.addStartingPieces();
 		
 		List<Space> moves = board.getSpace(18).getLegalMoves();
 		
@@ -31,7 +33,7 @@ public class BoardTest {
 	
 	@Test
 	public void getLegalMovesNoOpponents() {
-		board.fill();
+		board.addStartingPieces();
 		
 		//RED
 		List<Space> moves = board.getSpace(22).getLegalMoves();
@@ -52,7 +54,7 @@ public class BoardTest {
 	
 	@Test
 	public void getLegalMovesNoOpponentsEdge() {
-		board.fill();
+		board.addStartingPieces();
 		
 		//RED
 		List<Space> moves = board.getSpace(21).getLegalMoves();
@@ -69,7 +71,7 @@ public class BoardTest {
 	
 	@Test
 	public void getLegalMovesFriendlyBlocked() {
-		board.fill();
+		board.addStartingPieces();
 		
 		//RED
 		List<Space> moves = board.getSpace(7).getLegalMoves();
@@ -79,7 +81,7 @@ public class BoardTest {
 	
 	@Test
 	public void getLegalMovesEnemyBlocked() {
-		board.fill();
+		board.addStartingPieces();
 		
 		//RED
 		List<Space> moves = board.getSpace(7).getLegalMoves();

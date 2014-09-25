@@ -15,15 +15,15 @@ public class Board {
 	
 	public static final int FIRST_RED = 21;
 	
-	private HashMap<Integer, Space> spaces;
-	
 	private Space[][] grid;
+	
+	private HashMap<Integer, Space> spaces;
 	
 	public Board() {
 		initializeSpaces();
 	}
 	
-	public void fill() {
+	public void addStartingPieces() {
 		for(Space space : spaces.values()) {
 			if (space.id <= LAST_BLACK) {
 				space.piece = new Piece(Piece.Color.BLACK);
