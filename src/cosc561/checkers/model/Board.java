@@ -78,6 +78,43 @@ public class Board {
 			this.column = column;
 		}
 		
+		public List<Space> getLegalMoves() {
+			List<Space> moves = new ArrayList<Space>();
+			
+			if (piece != null) {
+				
+				for (Direction direction : piece.getDirections()) {
+					
+					Space candidate = getAdjacent().get(direction);
+					
+					//Edge spaces won't have some adjacent spaces
+					if (candidate != null) {
+						
+						if (!candidate.isEmpty()) {
+							if (piece.isOpponent(candidate.piece)) {
+								Space target = candidate.getAdjacent().get(direction);
+								if (target != null && target.isEmpty()) {
+									//Make the jump!
+									moves.add(target);
+								}
+								//Opponent piece is against a side, can't jump
+							}						
+							//Friendly piece, do nothing
+						}
+						else {
+							moves.add(candidate);
+						}
+					}
+				}
+			}
+			
+			return moves;
+		}
+		
+		private boolean isEmpty() {
+			return piece == null;
+		}
+
 		public Map<Direction, Space> getAdjacent() {
 			if (adjacent == null) {
 				adjacent = findAdjacent();
