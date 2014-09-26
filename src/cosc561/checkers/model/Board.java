@@ -6,16 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 public class Board {
+
+	private static Grid grid = Grid.getInstance();
+
 	
-	public static final boolean FIRST_SPACE_WHITE = true;
-	public static final int SPACES_PER_SIDE = 8;
-	public static final int TOTAL_SPACES = SPACES_PER_SIDE * SPACES_PER_SIDE;
 	
-	public static final int LAST_BLACK = 12;
 	
-	public static final int FIRST_RED = 21;
 	
-	private Space[][] grid;
 	
 	private HashMap<Integer, Space> spaces;
 	
@@ -34,27 +31,6 @@ public class Board {
 		}
 	}
 	
-	public void initializeSpaces() {
-		spaces = new HashMap<>(TOTAL_SPACES);
-		
-		grid = new Space[SPACES_PER_SIDE][SPACES_PER_SIDE];
-		
-		int spaceId = 1;
-		
-		for (int row = 0; row < SPACES_PER_SIDE; row++) {
-			for (int col = 0; col < SPACES_PER_SIDE; col++) {
-				
-				//If both coordinates have the same parity, 
-				// the space should be blank IF the first space should be white
-				if (FIRST_SPACE_WHITE == (row % 2 != col % 2)) {
-					Space space = new Space(spaceId, row, col);
-					spaces.put(spaceId, space);
-					grid[row][col] = space;
-					
-					spaceId++;
-				}
-			}
-		}
 	}
 	
 	public Space getSpace(int i) {
