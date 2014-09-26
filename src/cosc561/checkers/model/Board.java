@@ -93,6 +93,9 @@ public class Board {
 		
 		return moves;
 	}
+	
+	public String toString() {
+		return grid.toString(this);
 	}
 
 }
