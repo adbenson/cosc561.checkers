@@ -9,9 +9,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cosc561.checkers.model.Board;
-import cosc561.checkers.model.Board.Space;
+import cosc561.checkers.model.Grid;
 import cosc561.checkers.model.Piece;
 import cosc561.checkers.model.Piece.Color;
+import cosc561.checkers.model.Space;
 
 public class BoardTest {
 	
@@ -26,7 +27,7 @@ public class BoardTest {
 	public void getLegalMovesEmptySpace() {
 		board.addStartingPieces();
 		
-		List<Space> moves = board.getSpace(18).getLegalMoves();
+		List<Space> moves = board.getLegalMoves(18);
 		
 		assertEquals(moves.size(), 0);
 	}
@@ -34,22 +35,19 @@ public class BoardTest {
 	@Test
 	public void getLegalMovesNoOpponents() {
 		board.addStartingPieces();
-		
 		//RED
-		List<Space> moves = board.getSpace(22).getLegalMoves();
+		List<Space> moves = board.getLegalMoves(22);
 		
 		assertEquals(moves.size(), 2);
-		
-		assertTrue(hasId(moves, 17));
-		assertTrue(hasId(moves, 18));
+
+		assertMoves(moves, 17, 18);
 		
 		//BLACK
-		moves = board.getSpace(10).getLegalMoves();
+		moves = board.getLegalMoves(10);
 		
 		assertEquals(moves.size(), 2);
 		
-		assertTrue(hasId(moves, 14));
-		assertTrue(hasId(moves, 15));
+		assertMoves(moves, 14, 15);
 	}
 	
 	@Test
@@ -57,24 +55,24 @@ public class BoardTest {
 		board.addStartingPieces();
 		
 		//RED
-		List<Space> moves = board.getSpace(21).getLegalMoves();
+		List<Space> moves = board.getLegalMoves(21);
 		
 		assertEquals(moves.size(), 1);
-		assertTrue(hasId(moves, 17));
+		assertMoves(moves, 17);
 		
 		//BLACK
-		moves = board.getSpace(12).getLegalMoves();
+		moves = board.getLegalMoves(12);
 		
 		assertEquals(moves.size(), 1);
-		assertTrue(hasId(moves, 16));
+		assertMoves(moves, 16);
 	}
-	
+
 	@Test
 	public void getLegalMovesFriendlyBlocked() {
 		board.addStartingPieces();
 		
 		//RED
-		List<Space> moves = board.getSpace(7).getLegalMoves();
+		List<Space> moves = board.getLegalMoves(7);
 		
 		assertEquals(moves.size(), 0);
 	}
@@ -84,12 +82,56 @@ public class BoardTest {
 		board.addStartingPieces();
 		
 		//RED
-		List<Space> moves = board.getSpace(7).getLegalMoves();
+		List<Space> moves = board.getLegalMoves(7);
 		
 		assertEquals(moves.size(), 0);
 	}
 	
-	private boolean hasId(List<Space> list, int id) {
+	@Test
+	public void getLegalMovesKingNoJump() {
+		board.addStartingPieces();
+		
+		//BLACK
+		board.kingPiece(10);
+		board.movePiece(10, 18);
+		
+		List<Space> moves = board.getLegalMoves(18);
+		
+		assertEquals(moves.size(), 2);
+		assertMoves(moves, 14, 15);
+		
+		//RED
+		board.kingPiece(23);
+		board.movePiece(23, 15);
+
+		moves = board.getLegalMoves(15);
+		
+		assertEquals(moves.size(), 2);
+		//Piece is blocked by black king, but can take his place
+		assertMoves(moves, 10, 19);
+	}
+	
+	@Test
+	public void getLegalMovesNoOpponentsKing() {
+		Piece king = new Piece(Color.RED);
+		king.setKing();
+		
+		board.addPiece(18, king);
+		
+		List<Space> moves = board.getLegalMoves(18);
+		
+		assertEquals(moves.size(), 4);
+		assertMoves(moves, 14, 15, 22, 23);
+	}
+	
+	
+	private void assertMoves(List<Space> moves, int... spaceIds) {
+		for (int id : spaceIds) {
+			assertTrue("Move to space "+ id +" not found in ("+moves+")", hasMove(moves, id));
+		}
+	}
+	
+	private boolean hasMove(List<Space> list, int id) {
 		for(Space s : list) {
 			if (s.id == id) {
 				return true;
