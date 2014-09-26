@@ -34,7 +34,17 @@ public class Board {
 		return pieces[space.id];
 	}
 	
+	public void removePiece(int id) {
+		pieces[id] = null;
+	}
 	
+	public void movePiece(int from, int to) {
+		pieces[to] = pieces[from];
+		pieces[from] = null;
+	}
+	
+	public void kingPiece(int id) {
+		pieces[id].setKing();
 	}
 	
 	public Space getSpace(int id) {
