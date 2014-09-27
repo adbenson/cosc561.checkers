@@ -68,24 +68,30 @@ public class Board {
 			
 			for (Direction direction : piece.getDirections()) {
 				
-				Space candidate = grid.getAdjacent(space, direction);
+				Space adjacent = grid.getAdjacent(space, direction);
 				
 				//Edge spaces won't have some adjacent spaces
-				if (candidate != null) {
+				if (adjacent != null) {
 					
-					if (!isEmpty(candidate)) {
-						if (piece.isOpponent(getPiece(candidate))) {
-							Space target = grid.getAdjacent(candidate, direction);
-							if (target != null && isEmpty(target)) {
-								//Make the jump!
-								jumps.addAll(jumpOptions);
+					if (!isEmpty(adjacent)) {
+						if (piece.isOpponent(getPiece(adjacent))) {
+							Space landingSpace = grid.getAdjacent(adjacent, direction);
+							if (landingSpace != null && isEmpty(landingSpace)) {
+								//Start the recursive jump search
+								ArrayList<Space> multiJumpOptions = findMultiJumpOptions(landingSpace, piece, adjacent);
+								
+								if (multiJumpOptions.isEmpty()) { 
+									jumps.add(landingSpace);
+								} else {
+									jumps.addAll(multiJumpOptions);
+								}
 							}
 							//Opponent piece is against a side, can't jump
 						}						
 						//Friendly piece, do nothing
 					}
 					else {
-						moves.add(candidate);
+						moves.add(adjacent);
 					}
 				}
 			}
@@ -97,7 +103,40 @@ public class Board {
 			return moves;
 		}
 	}
-	
+
+	private ArrayList<Space> findMultiJumpOptions(Space space, Piece piece, Space origin) {
+		ArrayList<Space> jumpOptions = new ArrayList<Space>();
+
+		for (Direction direction : piece.getDirections()) {
+			Space adjacent = grid.getAdjacent(space, direction);
+			if (adjacent != origin) {
+
+				// Edge spaces won't have some adjacent spaces
+				if (adjacent != null) {
+
+					if (!isEmpty(adjacent)) {
+						if (piece.isOpponent(getPiece(adjacent))) {
+							Space landingSpace = grid.getAdjacent(adjacent, direction);
+							if (landingSpace != null && isEmpty(landingSpace)) {
+								// Start the recursive jump search
+								jumpOptions.addAll(findMultiJumpOptions(landingSpace, piece, adjacent));
+							}
+							// Opponent piece is against a side, can't jump
+						}
+						// Friendly piece, do nothing
+					}
+					//No adjacent piece so we can't do a jump
+				}
+				// Don't jump back to the space we just jumped OVER
+			}
+		}
+		
+		if (jumpOptions.isEmpty()) {
+			jumpOptions.add(space);
+		}
+		return jumpOptions;
+	}
+
 	public String toString() {
 		return grid.toString(this);
 	}

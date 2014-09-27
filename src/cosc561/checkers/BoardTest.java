@@ -112,6 +112,43 @@ public class BoardTest {
 		assertEquals(moves.size(), 1);
 		assertMoves(moves, 19);
 	}
+	
+	@Test 
+	public void getLegalMovesMultiJump() {
+		//Setup - RED
+		Piece jumper = new Piece(Color.RED);
+		Piece dupe1 = new Piece(Color.BLACK);
+		Piece dupe2 = new Piece(Color.BLACK);
+		Piece dupe3 = new Piece(Color.BLACK);
+		board.addPiece(29, jumper);
+		board.addPiece(25, dupe1);
+		board.addPiece(18, dupe2);
+		board.addPiece(11, dupe3);
+
+		//Call Method - RED
+		List<Space> moves = board.getLegalMoves(29);
+		
+		// Validate - RED
+		// The jump is forced so only show one legal move
+		assertEquals(moves.size(), 1);
+		assertMoves(moves, 8);
+		
+		//Add another piece
+		Piece dupe3b = new Piece(Color.BLACK);
+		board.addPiece(10, dupe3b);
+		
+		//Call Method - RED
+		moves = board.getLegalMoves(29);
+
+		// Validate - RED
+		assertEquals(moves.size(), 2);
+		assertMoves(moves, 8);
+		assertMoves(moves, 6);
+
+
+	}
+	
+	@Test
 	public void getLegalMovesKingNoJump() {
 		board.addStartingPieces();
 		
