@@ -63,7 +63,7 @@ public class Board {
 		Piece piece = getPiece(space);
 
 		List<Space> moves = new ArrayList<Space>();
-
+		List<Space> jumps = new ArrayList<Space>();
 		if (piece != null) {
 			
 			for (Direction direction : piece.getDirections()) {
@@ -78,7 +78,7 @@ public class Board {
 							Space target = grid.getAdjacent(candidate, direction);
 							if (target != null && isEmpty(target)) {
 								//Make the jump!
-								moves.add(target);
+								jumps.addAll(jumpOptions);
 							}
 							//Opponent piece is against a side, can't jump
 						}						
@@ -91,7 +91,11 @@ public class Board {
 			}
 		}
 		
-		return moves;
+		if (!jumps.isEmpty()) { 
+			return jumps;
+		} else {
+			return moves;
+		}
 	}
 	
 	public String toString() {

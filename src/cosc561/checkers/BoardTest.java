@@ -88,6 +88,30 @@ public class BoardTest {
 	}
 	
 	@Test
+	public void getLegalMovesOneJumpForced() { 
+		//Setup - RED
+		board.addStartingPieces();
+		board.movePiece(11, 18);
+		
+		//Call Method - RED
+		List<Space> moves = board.getLegalMoves(22);
+		
+
+		//Validate - RED
+		//The jump is forced so only show one legal move
+		assertEquals(moves.size(), 1);
+		assertMoves(moves, 15);
+		
+		//Setup - BLACK
+		board.movePiece(24, 16);
+		
+		//Call Method - BLACK
+		moves = board.getLegalMoves(12);
+		
+		//Validate - BLACK
+		assertEquals(moves.size(), 1);
+		assertMoves(moves, 19);
+	}
 	public void getLegalMovesKingNoJump() {
 		board.addStartingPieces();
 		
