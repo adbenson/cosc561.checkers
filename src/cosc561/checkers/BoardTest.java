@@ -145,7 +145,18 @@ public class BoardTest {
 		assertMoves(moves, 8);
 		assertMoves(moves, 6);
 
+		//Add another piece
+		Piece dupe2b = new Piece(Color.BLACK);
+		board.addPiece(17, dupe2b);
+		
+		// Call Method - RED
+		moves = board.getLegalMoves(29);
 
+		// Validate - RED
+		assertEquals(moves.size(), 3);
+		assertMoves(moves, 8);
+		assertMoves(moves, 6);
+		assertMoves(moves, 13);
 	}
 	
 	@Test
