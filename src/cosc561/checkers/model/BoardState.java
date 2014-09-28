@@ -3,6 +3,8 @@ package cosc561.checkers.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import cosc561.checkers.model.Piece.Color;
+
 public class BoardState {
 
 	private static Grid grid = Grid.getInstance();
@@ -36,8 +38,29 @@ public class BoardState {
 	
 	public void removePiece(int id) {
 		pieces[id] = null;
+		
+		//Check for end game
+		gameOver();
 	}
 	
+	public boolean gameOver() {
+		Color winningColor = null;
+		boolean gameOver = true;
+		for (int p = 0; p < pieces.length; p++) {
+			Piece piece = pieces[p];
+			if (piece != null) {
+				if (winningColor == null) { 
+					winningColor = piece.color;
+				}
+				// Both colors must be on the board for the game to be still going
+				if (winningColor != piece.color) {
+					gameOver = false;
+				}
+			}
+		}
+		return gameOver;
+	}
+
 	public void movePiece(int from, int to) {
 		pieces[to] = pieces[from];
 		pieces[from] = null;

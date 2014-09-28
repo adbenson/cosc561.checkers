@@ -1,7 +1,6 @@
 package cosc561.checkers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -25,13 +24,29 @@ public class BoardTest {
 
 	
 	@Test
-	public void gameOver() { 
+	public void gameOverFalse() { 
 		//Setup
 		board.addStartingPieces();
 		//Test
+		boolean gameOver = board.gameOver();
 		
 		//Validate
+		assertFalse(gameOver);
+	}
+	@Test
+	public void gameOverTrue() { 
+		//Setup
+		board.addPiece(22, new Piece(Color.RED));
+		board.addPiece(18, new Piece(Color.BLACK));
+		boolean gameOver = board.gameOver();
+		assertFalse(gameOver);
+
+		//Test
+		board.removePiece(22);
+		gameOver = board.gameOver();
 		
+		//Validate
+		assertTrue(gameOver);
 	}
 	
 	@Test
