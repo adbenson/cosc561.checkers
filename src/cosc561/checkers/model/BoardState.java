@@ -3,13 +3,13 @@ package cosc561.checkers.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Board {
+public class BoardState {
 
 	private static Grid grid = Grid.getInstance();
 
 	private Piece[] pieces;
 	
-	public Board() {
+	public BoardState() {
 		pieces = new Piece[Grid.USED_SPACES + 1];
 	}
 	

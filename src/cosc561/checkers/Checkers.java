@@ -3,7 +3,7 @@ package cosc561.checkers;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import cosc561.checkers.model.Board;
+import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Piece.Color;
 
 public class Checkers {

@@ -123,7 +123,7 @@ public class Grid {
 		return toString(null);
 	}
 	
-	public String toString(Board board) {
+	public String toString(BoardState board) {
 		StringBuilder string = new StringBuilder();
 		String rowSeparator = "   ";
 		string.append("    ");

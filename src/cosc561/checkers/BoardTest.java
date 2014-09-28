@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import cosc561.checkers.model.Board;
+import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Grid;
 import cosc561.checkers.model.Piece;
 import cosc561.checkers.model.Piece.Color;
@@ -16,13 +16,24 @@ import cosc561.checkers.model.Space;
 
 public class BoardTest {
 	
-	private Board board;
+	private BoardState board;
 	
 	@Before
 	public void setUp() {
-		board = new Board();
+		board = new BoardState();
 	}
 
+	
+	@Test
+	public void gameOver() { 
+		//Setup
+		board.addStartingPieces();
+		//Test
+		
+		//Validate
+		
+	}
+	
 	@Test
 	public void getLegalMovesEmptySpace() {
 		board.addStartingPieces();
