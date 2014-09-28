@@ -90,8 +90,8 @@ public class BoardTest {
 	@Test
 	public void getLegalMovesOneJumpForced() { 
 		//Setup - RED
-		board.addStartingPieces();
-		board.movePiece(11, 18);
+		board.addPiece(22, new Piece(Color.RED));
+		board.addPiece(18, new Piece(Color.BLACK));
 		
 		//Call Method - RED
 		List<Space> moves = board.getLegalMoves(22);
@@ -103,14 +103,15 @@ public class BoardTest {
 		assertMoves(moves, 15);
 		
 		//Setup - BLACK
-		board.movePiece(24, 16);
-		
+		board.addPiece(3, new Piece(Color.BLACK));
+		board.addPiece(7, new Piece(Color.RED));
+				
 		//Call Method - BLACK
-		moves = board.getLegalMoves(12);
+		moves = board.getLegalMoves(3);
 		
 		//Validate - BLACK
 		assertEquals(moves.size(), 1);
-		assertMoves(moves, 19);
+		assertMoves(moves, 10);
 	}
 	
 	@Test 

@@ -58,83 +58,58 @@ public class Board {
 	public List<Space> getLegalMoves(int id) {
 		return getLegalMoves(getSpace(id));
 	}
-	
-	public List<Space> getLegalMoves(Space space) {
-		Piece piece = getPiece(space);
 
+	public List<Space> getLegalMoves(Space space) {
+		return getLegalMoves(space, null, null);
+	}
+		
+
+	private List<Space> getLegalMoves(Space space, Piece piece, Space jumpedSpace) {
+		boolean hasJumped = (jumpedSpace != null);
+		piece = (piece == null) ? getPiece(space) : piece;
+	
 		List<Space> moves = new ArrayList<Space>();
 		List<Space> jumps = new ArrayList<Space>();
+
 		if (piece != null) {
-			
 			for (Direction direction : piece.getDirections()) {
-				
 				Space adjacent = grid.getAdjacent(space, direction);
-				
-				//Edge spaces won't have some adjacent spaces
-				if (adjacent != null) {
-					
-					if (!isEmpty(adjacent)) {
-						if (piece.isOpponent(getPiece(adjacent))) {
-							Space landingSpace = grid.getAdjacent(adjacent, direction);
-							if (landingSpace != null && isEmpty(landingSpace)) {
-								//Start the recursive jump search
-								ArrayList<Space> multiJumpOptions = findMultiJumpOptions(landingSpace, piece, adjacent);
-								
-								if (multiJumpOptions.isEmpty()) { 
-									jumps.add(landingSpace);
-								} else {
-									jumps.addAll(multiJumpOptions);
+				if (adjacent != jumpedSpace) {
+					// Edge spaces won't have some adjacent spaces
+					if (adjacent != null) {
+						if (!isEmpty(adjacent)) {
+							if (piece.isOpponent(getPiece(adjacent))) {
+								Space landingSpace = grid.getAdjacent(adjacent, direction);
+								if (landingSpace != null && isEmpty(landingSpace)) {
+									// Start the recursive jump search
+									jumps.addAll(getLegalMoves(landingSpace, piece, adjacent));
 								}
+								// Opponent piece is against a side, can't jump
 							}
-							//Opponent piece is against a side, can't jump
-						}						
-						//Friendly piece, do nothing
-					}
-					else {
-						moves.add(adjacent);
-					}
-				}
-			}
-		}
-		
-		if (!jumps.isEmpty()) { 
-			return jumps;
-		} else {
-			return moves;
-		}
-	}
-
-	private ArrayList<Space> findMultiJumpOptions(Space space, Piece piece, Space origin) {
-		ArrayList<Space> jumpOptions = new ArrayList<Space>();
-
-		for (Direction direction : piece.getDirections()) {
-			Space adjacent = grid.getAdjacent(space, direction);
-			if (adjacent != origin) {
-
-				// Edge spaces won't have some adjacent spaces
-				if (adjacent != null) {
-
-					if (!isEmpty(adjacent)) {
-						if (piece.isOpponent(getPiece(adjacent))) {
-							Space landingSpace = grid.getAdjacent(adjacent, direction);
-							if (landingSpace != null && isEmpty(landingSpace)) {
-								// Start the recursive jump search
-								jumpOptions.addAll(findMultiJumpOptions(landingSpace, piece, adjacent));
-							}
-							// Opponent piece is against a side, can't jump
+							// Friendly piece, do nothing
+						} else {
+							moves.add(adjacent);
 						}
-						// Friendly piece, do nothing
 					}
-					//No adjacent piece so we can't do a jump
+					// No adjacent piece so we can't do a jump
 				}
-				// Don't jump back to the space we just jumped OVER
+				// Don't allow a King to jump back to his original spot.
 			}
 		}
 		
-		if (jumpOptions.isEmpty()) {
-			jumpOptions.add(space);
+		
+		if (hasJumped) { 
+			if (jumps.isEmpty()) {
+				// A jump has been made. No more are available.
+				jumps.add(space);
+			}
+		} else {
+			if (jumps.isEmpty()) {
+				// If no jump was ever available, then move normally
+				jumps = moves;
+			}
 		}
-		return jumpOptions;
+		return jumps;
 	}
 
 	public String toString() {
