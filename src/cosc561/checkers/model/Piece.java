@@ -4,6 +4,7 @@ import static cosc561.checkers.model.Direction.NE;
 import static cosc561.checkers.model.Direction.NW;
 import static cosc561.checkers.model.Direction.SE;
 import static cosc561.checkers.model.Direction.SW;
+import cosc561.checkers.model.Piece.Color;
 
 public class Piece {
 		
@@ -48,6 +49,10 @@ public class Piece {
 			}
 			
 			return null;
+		}
+
+		public Color opponent() {
+			return (this == RED)? BLACK : RED;
 		}
 	}
 
