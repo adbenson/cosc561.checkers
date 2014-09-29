@@ -1,0 +1,89 @@
+package cosc561.checkers.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class PlayerTurn {
+		
+	private List<Change> moves;
+	
+	public PlayerTurn() {
+		moves = new ArrayList<>();
+	}
+	
+	public void add(Piece piece, Space to) {
+		moves.add(new Add(piece, to));
+	}
+	
+	public void remove(Space from) {
+		moves.add(new Remove(from));
+	}
+	
+	public void move(Space from, Space to) {
+		moves.add(new Move(from, to));
+	}
+	
+	public List<Change> getMoves() {
+		return moves;
+	}
+	
+	public abstract class Change {
+		public final Piece piece;
+		public final Space from;
+		public final Space to;
+		
+		public Change(Piece piece, Space from, Space to) {
+			this.piece = piece;
+			this.from = from;
+			this.to = to;
+		}
+
+		public abstract void applyTo(BoardState boardState);
+		
+	}
+	
+	public class Add extends Change {
+		public Add(Piece piece, Space to) {
+			super(piece, null, to);
+		}
+
+		@Override
+		public void applyTo(BoardState board) {
+			board.addPiece(to, piece);
+		}
+	}
+	
+	public class Remove extends Change {
+		public Remove(Space from) {
+			super(null, from, null);
+		}
+
+		@Override
+		public void applyTo(BoardState board) {
+			board.removePiece(from);
+		}
+	}
+	
+	public class Move extends Change {
+		public Move(Space from, Space to) {
+			super(null, from, to);
+		}
+
+		@Override
+		public void applyTo(BoardState board) {
+			board.movePiece(from, to);
+		}
+	}
+	
+	public class King extends Change {
+		public King(Space space) {
+			super(null, null, space);
+		}
+		
+		@Override
+		public void applyTo(BoardState board) {
+			board.kingPiece(to);
+		}
+	}
+	
+}

@@ -4,24 +4,56 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cosc561.checkers.model.Piece.Color;
+import cosc561.checkers.model.PlayerTurn.Add;
+import cosc561.checkers.model.PlayerTurn.Change;
 
 public class BoardState {
 
 	private static Grid grid = Grid.getInstance();
-
-	private Piece[] pieces;
+	
+	private final BoardState previous;
+	private final Piece[] pieces;
+	private final PlayerTurn turn;
+	
+	private boolean played;
 	
 	public BoardState() {
 		pieces = new Piece[Grid.USED_SPACES + 1];
+		previous = null;
+		turn = new PlayerTurn();
+		played = true;
 	}
 	
-	public void addStartingPieces() {
+	public BoardState(BoardState board, PlayerTurn turn) {
+		this.pieces = board.pieces.clone();
+		this.previous = board;
+		this.played = false;
+		this.turn = turn;
+		
+		apply(turn);
+	}
+	
+	private void apply(PlayerTurn turn) {
+		for (Change change : turn.getMoves()) {
+			change.applyTo(this);
+		}
+	}
+
+	public BoardState addStartingPieces() {
+		PlayerTurn turn = new PlayerTurn();
+		
+		BoardState newBoard = new BoardState(this, turn);
+		
 		for(Space space : grid.getSpaces()) {
 			Piece.Color color = Piece.Color.getColorForSpace(space.id);
 			if (color != null) {
-				addPiece(space, new Piece(color));
+				newBoard.turn.add(new Piece(color), space);
 			}
 		}
+		
+		newBoard.apply(turn);
+		
+		return newBoard;
 	}
 	
 	public void addPiece(int id, Piece piece) {
@@ -36,11 +68,29 @@ public class BoardState {
 		return pieces[space.id];
 	}
 	
+	public Piece[] getPieces() {
+		return pieces;
+	}
+	
+	public void removePiece(Space space) {
+		removePiece(space.id);
+	}
+	
 	public void removePiece(int id) {
 		pieces[id] = null;
 		
 		//Check for end game
 		gameOver();
+	}
+	
+	public void movePiece(Space from, Space to) {
+		pieces[to.id] = pieces[from.id];
+		pieces[from.id] = null;
+	}
+
+	public void movePiece(int from, int to) {
+		pieces[to] = pieces[from];
+		pieces[from] = null;
 	}
 	
 	public boolean gameOver() {
@@ -60,10 +110,9 @@ public class BoardState {
 		}
 		return gameOver;
 	}
-
-	public void movePiece(int from, int to) {
-		pieces[to] = pieces[from];
-		pieces[from] = null;
+	
+	public void kingPiece(Space space) {
+		kingPiece(space.id);
 	}
 	
 	public void kingPiece(int id) {
@@ -85,7 +134,6 @@ public class BoardState {
 	public List<Space> getLegalMoves(Space space) {
 		return getLegalMoves(space, null, null);
 	}
-		
 
 	private List<Space> getLegalMoves(Space space, Piece piece, Space jumpedSpace) {
 		boolean hasJumped = (jumpedSpace != null);
@@ -137,6 +185,25 @@ public class BoardState {
 
 	public String toString() {
 		return grid.toString(this);
+	}
+
+	public List<BoardState> getPossibleMoves(Color color) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public PlayerTurn getOriginatingMove() {
+		BoardState state = this;
+		
+		while (state.previous != null && !state.played) {
+			state = state.previous;
+		}
+		
+		return state.turn;
+	}
+
+	public void setPlayed() {
+		played = true;
 	}
 
 }
