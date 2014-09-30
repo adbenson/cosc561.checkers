@@ -3,7 +3,6 @@ package cosc561.checkers.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import cosc561.checkers.model.PlayerTurn.Add;
 import cosc561.checkers.model.PlayerTurn.Change;
 
 public class BoardState {
@@ -181,20 +180,30 @@ public class BoardState {
 		}
 		return jumps;
 	}
-
-	public String toString() {
-		return grid.toString(this);
+	
+	private List<BoardState> getPossibleStates(int id) {
+		List<BoardState> states = new ArrayList<>();
+		
+		return states;
 	}
 
-	public List<BoardState> getPossibleMoves(Color color) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<BoardState> getAllPossibleStates(Color color) {
+		List<BoardState> states = new ArrayList<>();
+		
+		for (int id = 1; id < pieces.length; id++) {
+			if (pieces[id].color == color) {
+				states.addAll(getPossibleStates(id));
+			}
+		}
+		
+		return states;
 	}
 
 	public PlayerTurn getOriginatingMove() {
 		BoardState state = this;
 		
-		while (state.previous != null && !state.played) {
+		//Find the state after the latest played state
+		while (state.previous != null && !state.previous.played) {
 			state = state.previous;
 		}
 		
@@ -203,6 +212,10 @@ public class BoardState {
 
 	public void setPlayed() {
 		played = true;
+	}
+
+	public String toString() {
+		return grid.toString(this);
 	}
 
 }

@@ -34,7 +34,7 @@ public class Player {
 			nextDepth = new ArrayList<>();
 			
 			for (BoardState candidate : candidates) {
-				nextDepth.addAll(candidate.getPossibleMoves(currentPlayer));
+				nextDepth.addAll(candidate.getAllPossibleStates(currentPlayer));
 			}
 			
 			currentPlayer = color.opponent();
@@ -59,5 +59,4 @@ public class Player {
 	public void opponentMove(PlayerTurn move) {
 		
 	}
-
 }
