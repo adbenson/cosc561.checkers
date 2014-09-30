@@ -56,7 +56,7 @@ public class BoardTest {
 		
 		List<Space> moves = board.getLegalMoves(18);
 		
-		assertEquals(moves.size(), 0);
+		assertEquals(0, moves.size());
 	}
 	
 	@Test
@@ -65,14 +65,14 @@ public class BoardTest {
 		//RED
 		List<Space> moves = board.getLegalMoves(22);
 		
-		assertEquals(moves.size(), 2);
+		assertEquals(2, moves.size());
 
 		assertMoves(moves, 17, 18);
 		
 		//BLACK
 		moves = board.getLegalMoves(10);
 		
-		assertEquals(moves.size(), 2);
+		assertEquals(2, moves.size());
 		
 		assertMoves(moves, 14, 15);
 	}
@@ -84,13 +84,13 @@ public class BoardTest {
 		//RED
 		List<Space> moves = board.getLegalMoves(21);
 		
-		assertEquals(moves.size(), 1);
+		assertEquals(1, moves.size());
 		assertMoves(moves, 17);
 		
 		//BLACK
 		moves = board.getLegalMoves(12);
 		
-		assertEquals(moves.size(), 1);
+		assertEquals(1, moves.size());
 		assertMoves(moves, 16);
 	}
 
@@ -101,7 +101,7 @@ public class BoardTest {
 		//RED
 		List<Space> moves = board.getLegalMoves(7);
 		
-		assertEquals(moves.size(), 0);
+		assertEquals(0, moves.size());
 	}
 	
 	@Test
@@ -111,7 +111,7 @@ public class BoardTest {
 		//RED
 		List<Space> moves = board.getLegalMoves(7);
 		
-		assertEquals(moves.size(), 0);
+		assertEquals(0, moves.size());
 	}
 	
 	@Test
@@ -126,7 +126,7 @@ public class BoardTest {
 
 		//Validate - RED
 		//The jump is forced so only show one legal move
-		assertEquals(moves.size(), 1);
+		assertEquals(1, moves.size());
 		assertMoves(moves, 15);
 		
 		//Setup - BLACK
@@ -137,7 +137,7 @@ public class BoardTest {
 		moves = board.getLegalMoves(3);
 		
 		//Validate - BLACK
-		assertEquals(moves.size(), 1);
+		assertEquals(1, moves.size());
 		assertMoves(moves, 10);
 	}
 	
@@ -158,7 +158,7 @@ public class BoardTest {
 		
 		// Validate - RED
 		// The jump is forced so only show one legal move
-		assertEquals(moves.size(), 1);
+		assertEquals(1, moves.size());
 		assertMoves(moves, 8);
 		
 		//Add another piece
@@ -169,7 +169,7 @@ public class BoardTest {
 		moves = board.getLegalMoves(29);
 
 		// Validate - RED
-		assertEquals(moves.size(), 2);
+		assertEquals(2, moves.size());
 		assertMoves(moves, 8);
 		assertMoves(moves, 6);
 
@@ -181,7 +181,7 @@ public class BoardTest {
 		moves = board.getLegalMoves(29);
 
 		// Validate - RED
-		assertEquals(moves.size(), 3);
+		assertEquals(3, moves.size());
 		assertMoves(moves, 8);
 		assertMoves(moves, 6);
 		assertMoves(moves, 13);
@@ -197,7 +197,7 @@ public class BoardTest {
 		
 		List<Space> moves = board.getLegalMoves(18);
 		
-		assertEquals(moves.size(), 2);
+		assertEquals(2, moves.size());
 		assertMoves(moves, 14, 15);
 		
 		//RED
@@ -206,7 +206,7 @@ public class BoardTest {
 
 		moves = board.getLegalMoves(15);
 		
-		assertEquals(moves.size(), 2);
+		assertEquals(2, moves.size());
 		//Piece is blocked by black king, but can take his place
 		assertMoves(moves, 10, 19);
 	}
@@ -220,7 +220,7 @@ public class BoardTest {
 		
 		List<Space> moves = board.getLegalMoves(18);
 		
-		assertEquals(moves.size(), 4);
+		assertEquals(4, moves.size());
 		assertMoves(moves, 14, 15, 22, 23);
 	}
 	
