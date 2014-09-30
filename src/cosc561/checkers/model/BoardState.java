@@ -3,7 +3,6 @@ package cosc561.checkers.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import cosc561.checkers.model.Piece.Color;
 import cosc561.checkers.model.PlayerTurn.Add;
 import cosc561.checkers.model.PlayerTurn.Change;
 
@@ -45,7 +44,7 @@ public class BoardState {
 		BoardState newBoard = new BoardState(this, turn);
 		
 		for(Space space : grid.getSpaces()) {
-			Piece.Color color = Piece.Color.getColorForSpace(space.id);
+			Color color = Color.getColorForSpace(space.id);
 			if (color != null) {
 				newBoard.turn.add(new Piece(color), space);
 			}

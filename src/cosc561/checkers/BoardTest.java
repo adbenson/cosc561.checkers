@@ -8,9 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cosc561.checkers.model.BoardState;
+import cosc561.checkers.model.Color;
 import cosc561.checkers.model.Grid;
 import cosc561.checkers.model.Piece;
-import cosc561.checkers.model.Piece.Color;
 import cosc561.checkers.model.Space;
 
 public class BoardTest {

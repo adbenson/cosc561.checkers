@@ -1,7 +1,7 @@
 package cosc561.checkers.evaluator;
 
 import cosc561.checkers.model.BoardState;
-import cosc561.checkers.model.Piece.Color;
+import cosc561.checkers.model.Color;
 
 public class NaiveEvaluator extends Evaluator {
 	

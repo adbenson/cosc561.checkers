@@ -1,14 +1,13 @@
 package cosc561.checkers.evaluator;
 
 import cosc561.checkers.model.BoardState;
-import cosc561.checkers.model.Piece;
-import cosc561.checkers.model.Piece.Color;
+import cosc561.checkers.model.Color;
 
 public abstract class Evaluator {
 	
-	protected final Piece.Color playerColor;
+	protected final Color playerColor;
 	
-	public Evaluator(Piece.Color playerColor) {
+	public Evaluator(Color playerColor) {
 		this.playerColor = playerColor;
 	}
 
