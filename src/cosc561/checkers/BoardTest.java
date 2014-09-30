@@ -27,7 +27,7 @@ public class BoardTest {
 	@Test
 	public void gameOverFalse() { 
 		//Setup
-		board.addStartingPieces();
+		board = board.addStartingPieces();
 		//Test
 		boolean gameOver = board.gameOver();
 		
@@ -52,7 +52,7 @@ public class BoardTest {
 	
 	@Test
 	public void getLegalMovesEmptySpace() {
-		board.addStartingPieces();
+		board = board.addStartingPieces();
 		
 		List<Space> moves = board.getLegalMoves(18);
 		
@@ -61,7 +61,7 @@ public class BoardTest {
 	
 	@Test
 	public void getLegalMovesNoOpponents() {
-		board.addStartingPieces();
+		board = board.addStartingPieces();
 		//RED
 		List<Space> moves = board.getLegalMoves(22);
 		
@@ -79,7 +79,7 @@ public class BoardTest {
 	
 	@Test
 	public void getLegalMovesNoOpponentsEdge() {
-		board.addStartingPieces();
+		board = board.addStartingPieces();
 		
 		//RED
 		List<Space> moves = board.getLegalMoves(21);
@@ -96,7 +96,7 @@ public class BoardTest {
 
 	@Test
 	public void getLegalMovesFriendlyBlocked() {
-		board.addStartingPieces();
+		board = board.addStartingPieces();
 		
 		//RED
 		List<Space> moves = board.getLegalMoves(7);
@@ -106,7 +106,7 @@ public class BoardTest {
 	
 	@Test
 	public void getLegalMovesEnemyBlocked() {
-		board.addStartingPieces();
+		board = board.addStartingPieces();
 		
 		//RED
 		List<Space> moves = board.getLegalMoves(7);
@@ -189,7 +189,7 @@ public class BoardTest {
 	
 	@Test
 	public void getLegalMovesKingNoJump() {
-		board.addStartingPieces();
+		board = board.addStartingPieces();
 		
 		//BLACK
 		board.kingPiece(10);
