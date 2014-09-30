@@ -3,11 +3,11 @@ package cosc561.checkers.model;
 
 public class Piece {
 		
-	public final Color color;
+	public final PlayerColor color;
 	
 	private boolean king;
 	
-	public Piece(Color color) {
+	public Piece(PlayerColor color) {
 		this.color = color;
 		this.king = false;
 	}
@@ -34,6 +34,6 @@ public class Piece {
 	}
 	
 	public String toString() {
-		return (color == Color.RED? "R" : "B") + (isKing()? "K" : " ");
+		return (color == PlayerColor.RED? "R" : "B") + (isKing()? "K" : " ");
 	}
 }

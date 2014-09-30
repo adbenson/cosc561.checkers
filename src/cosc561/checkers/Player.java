@@ -5,26 +5,25 @@ import java.util.List;
 
 import cosc561.checkers.evaluator.Evaluator;
 import cosc561.checkers.model.BoardState;
-import cosc561.checkers.model.Color;
+import cosc561.checkers.model.PlayerColor;
 import cosc561.checkers.model.PlayerTurn;
 
 public class Player {
 	
 	private BoardState currentState;
-	private Color color;
+	private PlayerColor color;
 	private int searchDepth;
 	
 	private Evaluator evaluator;
 	
-	public Player(BoardState startState, Color color, int searchDepth) {
-		this.currentState = startState;		
+	public Player(BoardState startState, PlayerColor color, int searchDepth) {
 		this.color = color;
 		this.searchDepth = searchDepth;
 	}
 
 	public PlayerTurn nextMove() {
 		
-		Color currentPlayer = color;
+		PlayerColor currentPlayer = color;
 		
 		List<BoardState> candidates = new ArrayList<>();
 		candidates.add(currentState);

@@ -43,7 +43,7 @@ public class BoardState {
 		BoardState newBoard = new BoardState(this, turn);
 		
 		for(Space space : grid.getSpaces()) {
-			Color color = Color.getColorForSpace(space.id);
+			PlayerColor color = PlayerColor.getColorForSpace(space.id);
 			if (color != null) {
 				newBoard.turn.add(new Piece(color), space);
 			}
@@ -92,7 +92,7 @@ public class BoardState {
 	}
 	
 	public boolean gameOver() {
-		Color winningColor = null;
+		PlayerColor winningColor = null;
 		boolean gameOver = true;
 		for (int p = 0; p < pieces.length; p++) {
 			Piece piece = pieces[p];
@@ -187,7 +187,7 @@ public class BoardState {
 		return states;
 	}
 
-	public List<BoardState> getAllPossibleStates(Color color) {
+	public List<BoardState> getAllPossibleStates(PlayerColor color) {
 		List<BoardState> states = new ArrayList<>();
 		
 		for (int id = 1; id < pieces.length; id++) {

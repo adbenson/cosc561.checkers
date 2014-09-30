@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cosc561.checkers.model.BoardState;
-import cosc561.checkers.model.Color;
+import cosc561.checkers.model.PlayerColor;
 import cosc561.checkers.model.Piece;
 import cosc561.checkers.model.Space;
 
@@ -37,8 +37,8 @@ public class BoardTest {
 	@Test
 	public void gameOverTrue() {
 		// Setup
-		board.addPiece(22, new Piece(Color.RED));
-		board.addPiece(18, new Piece(Color.BLACK));
+		board.addPiece(22, new Piece(PlayerColor.RED));
+		board.addPiece(18, new Piece(PlayerColor.BLACK));
 		boolean gameOver = board.gameOver();
 		assertFalse(gameOver);
 
@@ -117,8 +117,8 @@ public class BoardTest {
 	@Test
 	public void getLegalMovesOneJumpForced() {
 		// Setup - RED
-		board.addPiece(22, new Piece(Color.RED));
-		board.addPiece(18, new Piece(Color.BLACK));
+		board.addPiece(22, new Piece(PlayerColor.RED));
+		board.addPiece(18, new Piece(PlayerColor.BLACK));
 
 		// Call Method - RED
 		List<Space> moves = board.getLegalMoves(22);
@@ -129,8 +129,8 @@ public class BoardTest {
 		assertMoves(moves, 15);
 
 		// Setup - BLACK
-		board.addPiece(3, new Piece(Color.BLACK));
-		board.addPiece(7, new Piece(Color.RED));
+		board.addPiece(3, new Piece(PlayerColor.BLACK));
+		board.addPiece(7, new Piece(PlayerColor.RED));
 
 		// Call Method - BLACK
 		moves = board.getLegalMoves(3);
@@ -143,10 +143,10 @@ public class BoardTest {
 	@Test
 	public void getLegalMovesMultiJump() {
 		// Setup - RED
-		Piece jumper = new Piece(Color.RED);
-		Piece dupe1 = new Piece(Color.BLACK);
-		Piece dupe2 = new Piece(Color.BLACK);
-		Piece dupe3 = new Piece(Color.BLACK);
+		Piece jumper = new Piece(PlayerColor.RED);
+		Piece dupe1 = new Piece(PlayerColor.BLACK);
+		Piece dupe2 = new Piece(PlayerColor.BLACK);
+		Piece dupe3 = new Piece(PlayerColor.BLACK);
 		board.addPiece(29, jumper);
 		board.addPiece(25, dupe1);
 		board.addPiece(18, dupe2);
@@ -161,7 +161,7 @@ public class BoardTest {
 		assertMoves(moves, 8);
 
 		// Add another piece
-		Piece dupe3b = new Piece(Color.BLACK);
+		Piece dupe3b = new Piece(PlayerColor.BLACK);
 		board.addPiece(10, dupe3b);
 
 		// Call Method - RED
@@ -173,7 +173,7 @@ public class BoardTest {
 		assertMoves(moves, 6);
 
 		// Add another piece
-		Piece dupe2b = new Piece(Color.BLACK);
+		Piece dupe2b = new Piece(PlayerColor.BLACK);
 		board.addPiece(17, dupe2b);
 
 		// Call Method - RED
@@ -212,7 +212,7 @@ public class BoardTest {
 
 	@Test
 	public void getLegalMovesNoOpponentsKing() {
-		Piece king = new Piece(Color.RED);
+		Piece king = new Piece(PlayerColor.RED);
 		king.setKing();
 
 		board.addPiece(18, king);

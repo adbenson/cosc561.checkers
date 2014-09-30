@@ -1,17 +1,17 @@
 package cosc561.checkers.evaluator;
 
 import cosc561.checkers.model.BoardState;
-import cosc561.checkers.model.Color;
+import cosc561.checkers.model.PlayerColor;
 
 public class NaiveEvaluator extends Evaluator {
 	
 	
-	public NaiveEvaluator(Color color) {
+	public NaiveEvaluator(PlayerColor color) {
 		super(color);
 	}
 
 	@Override
-	public int evaluate(BoardState state, Color currentPlayer) {
+	public int evaluate(BoardState state, PlayerColor currentPlayer) {
 		return 0;
 	}
 
