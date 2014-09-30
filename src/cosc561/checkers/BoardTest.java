@@ -1,6 +1,8 @@
 package cosc561.checkers;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -9,7 +11,6 @@ import org.junit.Test;
 
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Color;
-import cosc561.checkers.model.Grid;
 import cosc561.checkers.model.Piece;
 import cosc561.checkers.model.Space;
 
