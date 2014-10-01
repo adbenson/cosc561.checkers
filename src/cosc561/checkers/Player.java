@@ -23,10 +23,23 @@ public class Player {
 
 	public BoardState nextMove(BoardState currentState) {
 		
-		PlayerColor currentPlayer = color;
-		
 		List<BoardState> candidates = new ArrayList<>();
 		candidates.add(currentState);
+		
+		candidates = getNthStateSet(candidates);
+
+		evaluator = EvaluatorManager.getEvaluator(color);
+
+		BoardState bestState = evaluator.chooseBest(candidates, color);
+		
+		BoardState nextState = bestState.getFirstUnplayed();
+		nextState.setPlayed();
+		
+		return nextState;
+	}
+	
+	public List<BoardState> getNthStateSet(List<BoardState> candidates) {
+		PlayerColor currentPlayer = color;
 		
 		List<BoardState> nextDepth = null;
 		for (int depth = 1; depth <= searchDepth; depth++) {
@@ -40,21 +53,7 @@ public class Player {
 			candidates = nextDepth;
 		}
 		
-		BoardState bestState = null;
-		int bestScore = 0;
-		
-		evaluator = EvaluatorManager.getEvaluator(color);
-		
-		for (BoardState state : candidates) {
-			if (bestState == null || evaluator.evaluate(state, currentPlayer) > bestScore) {
-				bestState = state;
-			}
-		}
-		
-		currentState = bestState;
-		currentState.setPlayed();
-		
-		return bestState.getFirstUnplayed();
+		return candidates;
 	}
 	
 	public void opponentMove(PlayerTurn move) {
