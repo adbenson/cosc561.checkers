@@ -4,24 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cosc561.checkers.evaluator.Evaluator;
+import cosc561.checkers.evaluator.EvaluatorManager;
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.PlayerColor;
 import cosc561.checkers.model.PlayerTurn;
 
 public class Player {
 	
-	private BoardState currentState;
 	private PlayerColor color;
 	private int searchDepth;
 	
 	private Evaluator evaluator;
 	
-	public Player(BoardState startState, PlayerColor color, int searchDepth) {
+	public Player(PlayerColor color, int searchDepth) {
 		this.color = color;
 		this.searchDepth = searchDepth;
 	}
 
-	public PlayerTurn nextMove() {
+	public BoardState nextMove(BoardState currentState) {
 		
 		PlayerColor currentPlayer = color;
 		
@@ -29,14 +29,14 @@ public class Player {
 		candidates.add(currentState);
 		
 		List<BoardState> nextDepth = null;
-		for (int i = 1; i < searchDepth; i++) {
+		for (int depth = 1; depth <= searchDepth; depth++) {
 			nextDepth = new ArrayList<>();
 			
 			for (BoardState candidate : candidates) {
 				nextDepth.addAll(candidate.getAllPossibleStates(currentPlayer));
 			}
 			
-			currentPlayer = color.opponent();
+			currentPlayer = currentPlayer.opponent();
 			candidates = nextDepth;
 		}
 		
