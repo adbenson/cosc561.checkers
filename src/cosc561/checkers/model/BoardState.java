@@ -18,10 +18,10 @@ public class BoardState {
 	
 	private boolean played;
 	
-	public BoardState() {
+	public BoardState(PlayerColor firstPlayer) {
 		pieces = new Piece[Grid.USED_SPACES + 1];
 		previous = null;
-		turn = new PlayerTurn();
+		turn = new PlayerTurn(firstPlayer);
 		played = true;
 		
 		uid = lastId++;
@@ -44,8 +44,8 @@ public class BoardState {
 		}
 	}
 
-	public BoardState addStartingPieces() {
-		PlayerTurn turn = new PlayerTurn();
+	public BoardState addStartingPieces(PlayerColor currentPlayer) {
+		PlayerTurn turn = new PlayerTurn(currentPlayer);
 		
 		BoardState newBoard = new BoardState(this, turn);
 		

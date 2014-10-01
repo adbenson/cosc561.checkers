@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Piece;
-import cosc561.checkers.model.PlayerColor;
+import static cosc561.checkers.model.PlayerColor.*;
 import cosc561.checkers.model.PlayerTurn;
 import cosc561.checkers.model.Space;
 
@@ -21,13 +21,13 @@ public class BoardTest {
 
 	@Before
 	public void setUp() {
-		board = new BoardState();
+		board = new BoardState(RED);
 	}
 
 	@Test
 	public void gameOverFalse() {
 		// Setup
-		board = board.addStartingPieces();
+		board = board.addStartingPieces(RED);
 		// Test
 		boolean gameOver = board.gameOver();
 
@@ -38,8 +38,8 @@ public class BoardTest {
 	@Test
 	public void gameOverTrue() {
 		// Setup
-		board.addPiece(22, new Piece(PlayerColor.RED));
-		board.addPiece(18, new Piece(PlayerColor.BLACK));
+		board.addPiece(22, new Piece(RED));
+		board.addPiece(18, new Piece(BLACK));
 		boolean gameOver = board.gameOver();
 		assertFalse(gameOver);
 
@@ -53,7 +53,7 @@ public class BoardTest {
 
 	@Test
 	public void getLegalMovesEmptySpace() {
-		board = board.addStartingPieces();
+		board = board.addStartingPieces(RED);
 
 		List<Space> moves = board.getLegalMoves(18);
 
@@ -62,7 +62,7 @@ public class BoardTest {
 
 	@Test
 	public void getLegalMovesNoOpponents() {
-		board = board.addStartingPieces();
+		board = board.addStartingPieces(RED);
 		// RED
 		List<Space> moves = board.getLegalMoves(22);
 
@@ -80,7 +80,7 @@ public class BoardTest {
 
 	@Test
 	public void getLegalMovesNoOpponentsEdge() {
-		board = board.addStartingPieces();
+		board = board.addStartingPieces(RED);
 
 		// RED
 		List<Space> moves = board.getLegalMoves(21);
@@ -97,7 +97,7 @@ public class BoardTest {
 
 	@Test
 	public void getLegalMovesFriendlyBlocked() {
-		board = board.addStartingPieces();
+		board = board.addStartingPieces(RED);
 
 		// RED
 		List<Space> moves = board.getLegalMoves(7);
@@ -107,7 +107,7 @@ public class BoardTest {
 
 	@Test
 	public void getLegalMovesEnemyBlocked() {
-		board = board.addStartingPieces();
+		board = board.addStartingPieces(RED);
 
 		// RED
 		List<Space> moves = board.getLegalMoves(7);
@@ -118,8 +118,8 @@ public class BoardTest {
 	@Test
 	public void getLegalMovesOneJumpForced() {
 		// Setup - RED
-		board.addPiece(22, new Piece(PlayerColor.RED));
-		board.addPiece(18, new Piece(PlayerColor.BLACK));
+		board.addPiece(22, new Piece(RED));
+		board.addPiece(18, new Piece(BLACK));
 
 		// Call Method - RED
 		List<Space> moves = board.getLegalMoves(22);
@@ -130,8 +130,8 @@ public class BoardTest {
 		assertMoves(moves, 15);
 
 		// Setup - BLACK
-		board.addPiece(3, new Piece(PlayerColor.BLACK));
-		board.addPiece(7, new Piece(PlayerColor.RED));
+		board.addPiece(3, new Piece(BLACK));
+		board.addPiece(7, new Piece(RED));
 
 		// Call Method - BLACK
 		moves = board.getLegalMoves(3);
@@ -144,10 +144,10 @@ public class BoardTest {
 	@Test
 	public void getLegalMovesMultiJump() {
 		// Setup - RED
-		Piece jumper = new Piece(PlayerColor.RED);
-		Piece dupe1 = new Piece(PlayerColor.BLACK);
-		Piece dupe2 = new Piece(PlayerColor.BLACK);
-		Piece dupe3 = new Piece(PlayerColor.BLACK);
+		Piece jumper = new Piece(RED);
+		Piece dupe1 = new Piece(BLACK);
+		Piece dupe2 = new Piece(BLACK);
+		Piece dupe3 = new Piece(BLACK);
 		board.addPiece(29, jumper);
 		board.addPiece(25, dupe1);
 		board.addPiece(18, dupe2);
@@ -162,7 +162,7 @@ public class BoardTest {
 		assertMoves(moves, 8);
 
 		// Add another piece
-		Piece dupe3b = new Piece(PlayerColor.BLACK);
+		Piece dupe3b = new Piece(BLACK);
 		board.addPiece(10, dupe3b);
 
 		// Call Method - RED
@@ -174,7 +174,7 @@ public class BoardTest {
 		assertMoves(moves, 6);
 
 		// Add another piece
-		Piece dupe2b = new Piece(PlayerColor.BLACK);
+		Piece dupe2b = new Piece(BLACK);
 		board.addPiece(17, dupe2b);
 
 		// Call Method - RED
@@ -189,7 +189,7 @@ public class BoardTest {
 
 	@Test
 	public void getLegalMovesKingNoJump() {
-		board = board.addStartingPieces();
+		board = board.addStartingPieces(RED);
 
 		// BLACK
 		board.kingPiece(10);
@@ -213,7 +213,7 @@ public class BoardTest {
 
 	@Test
 	public void getLegalMovesNoOpponentsKing() {
-		Piece king = new Piece(PlayerColor.RED);
+		Piece king = new Piece(RED);
 		king.setKing();
 
 		board.addPiece(18, king);
@@ -242,12 +242,12 @@ public class BoardTest {
 	
 	@Test 
 	public void testGetFirstUnplayed() {
-		BoardState b1 = new BoardState(board, new PlayerTurn());
-		BoardState b2 = new BoardState(b1, new PlayerTurn());
+		BoardState b1 = new BoardState(board, new PlayerTurn(RED));
+		BoardState b2 = new BoardState(b1, new PlayerTurn(RED));
 		b2.setPlayed();
 		
-		BoardState b3 = new BoardState(b2, new PlayerTurn());
-		BoardState b4 = new BoardState(b3, new PlayerTurn());
+		BoardState b3 = new BoardState(b2, new PlayerTurn(RED));
+		BoardState b4 = new BoardState(b3, new PlayerTurn(RED));
 		
 		BoardState unplayed = b4.getFirstUnplayed();
 		assertEquals(b3, unplayed);

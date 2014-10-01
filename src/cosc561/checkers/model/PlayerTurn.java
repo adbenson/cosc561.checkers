@@ -5,10 +5,12 @@ import java.util.List;
 
 public class PlayerTurn {
 		
-	private List<Change> moves;
+	private final List<Change> moves;
+	public final PlayerColor player;
 	
-	public PlayerTurn() {
-		moves = new ArrayList<>();
+	public PlayerTurn(PlayerColor player) {
+		this.moves = new ArrayList<>();
+		this.player = player;
 	}
 	
 	public void add(Piece piece, Space to) {
