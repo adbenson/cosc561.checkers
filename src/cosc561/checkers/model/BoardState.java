@@ -203,6 +203,9 @@ public class BoardState {
 		played = true;
 	}
 
+	public String toString() {
+		return grid.toString(this);
+	}
 
 	public BoardState getFirstUnplayed() {
 		BoardState state = this;
@@ -213,9 +216,6 @@ public class BoardState {
 		}
 		
 		return state;
-
-	public String toString() {
-		return grid.toString(this);
 	}
 
 }

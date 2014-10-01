@@ -54,7 +54,7 @@ public class Player {
 		currentState = bestState;
 		currentState.setPlayed();
 		
-		return bestState.getOriginatingMove();
+		return bestState.getFirstUnplayed();
 	}
 	
 	public void opponentMove(PlayerTurn move) {
