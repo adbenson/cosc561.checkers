@@ -10,8 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cosc561.checkers.model.BoardState;
-import cosc561.checkers.model.PlayerColor;
 import cosc561.checkers.model.Piece;
+import cosc561.checkers.model.PlayerColor;
+import cosc561.checkers.model.PlayerTurn;
 import cosc561.checkers.model.Space;
 
 public class BoardTest {
@@ -237,6 +238,19 @@ public class BoardTest {
 		}
 
 		return false;
+	}
+	
+	@Test 
+	public void testGetFirstUnplayed() {
+		BoardState b1 = new BoardState(board, new PlayerTurn());
+		BoardState b2 = new BoardState(b1, new PlayerTurn());
+		b2.setPlayed();
+		
+		BoardState b3 = new BoardState(b2, new PlayerTurn());
+		BoardState b4 = new BoardState(b3, new PlayerTurn());
+		
+		BoardState unplayed = b4.getFirstUnplayed();
+		assertEquals(b3, unplayed);
 	}
 
 }
