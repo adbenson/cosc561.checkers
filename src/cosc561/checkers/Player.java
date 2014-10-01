@@ -43,6 +43,8 @@ public class Player {
 		BoardState bestState = null;
 		int bestScore = 0;
 		
+		evaluator = EvaluatorManager.getEvaluator(color);
+		
 		for (BoardState state : candidates) {
 			if (bestState == null || evaluator.evaluate(state, currentPlayer) > bestScore) {
 				bestState = state;
