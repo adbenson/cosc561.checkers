@@ -202,7 +202,9 @@ public class BoardState {
 	public void setPlayed() {
 		played = true;
 	}
-	public PlayerTurn getOriginatingMove() {
+
+
+	public BoardState getFirstUnplayed() {
 		BoardState state = this;
 		
 		//Find the state after the latest played state
@@ -210,8 +212,7 @@ public class BoardState {
 			state = state.previous;
 		}
 		
-		return state.turn;
-	}
+		return state;
 
 	public String toString() {
 		return grid.toString(this);
