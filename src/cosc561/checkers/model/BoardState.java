@@ -6,12 +6,15 @@ import java.util.List;
 import cosc561.checkers.model.PlayerTurn.Change;
 
 public class BoardState {
+	
+	private static long lastId = 1;
 
 	private static Grid grid = Grid.getInstance();
 	
 	private final BoardState previous;
 	private final Piece[] pieces;
 	private final PlayerTurn turn;
+	private final long uid;
 	
 	private boolean played;
 	
@@ -20,6 +23,8 @@ public class BoardState {
 		previous = null;
 		turn = new PlayerTurn();
 		played = true;
+		
+		uid = lastId++;
 	}
 	
 	public BoardState(BoardState board, PlayerTurn turn) {
@@ -27,6 +32,8 @@ public class BoardState {
 		this.previous = board;
 		this.played = false;
 		this.turn = turn;
+		
+		uid = lastId++;
 		
 		apply(turn);
 	}
@@ -204,7 +211,7 @@ public class BoardState {
 	}
 
 	public String toString() {
-		return grid.toString(this);
+		return "Board #" + uid + "\n" + grid.toString(this);
 	}
 
 	public BoardState getFirstUnplayed() {
