@@ -199,6 +199,9 @@ public class BoardState {
 		return states;
 	}
 
+	public void setPlayed() {
+		played = true;
+	}
 	public PlayerTurn getOriginatingMove() {
 		BoardState state = this;
 		
@@ -208,10 +211,6 @@ public class BoardState {
 		}
 		
 		return state.turn;
-	}
-
-	public void setPlayed() {
-		played = true;
 	}
 
 	public String toString() {
