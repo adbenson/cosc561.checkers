@@ -6,8 +6,10 @@ import java.util.List;
 import cosc561.checkers.evaluator.Evaluator;
 import cosc561.checkers.evaluator.EvaluatorManager;
 import cosc561.checkers.model.BoardState;
+import cosc561.checkers.model.BoardState.IllegalMoveException;
 import cosc561.checkers.model.PlayerColor;
 import cosc561.checkers.model.PlayerTurn;
+import cosc561.checkers.model.Space;
 
 public class Player {
 	
@@ -21,42 +23,9 @@ public class Player {
 		this.searchDepth = searchDepth;
 	}
 
-	public BoardState nextMove(BoardState currentState) {
-		
-		List<BoardState> candidates = new ArrayList<>();
-		candidates.add(currentState);
-		
-		candidates = getNthStateSet(candidates);
+	public BoardState nextMove(BoardState currentState) throws IllegalMoveException {
 
-		evaluator = EvaluatorManager.getEvaluator(color);
+		return currentState.getAllPossibleStates(color).get(0);
+	}
 
-		BoardState bestState = evaluator.chooseBest(candidates, color);
-		
-		BoardState nextState = bestState.getFirstUnplayed();
-		nextState.setPlayed();
-		
-		return nextState;
-	}
-	
-	public List<BoardState> getNthStateSet(List<BoardState> candidates) {
-		PlayerColor currentPlayer = color;
-		
-		List<BoardState> nextDepth = null;
-		for (int depth = 1; depth <= searchDepth; depth++) {
-			nextDepth = new ArrayList<>();
-			
-			for (BoardState candidate : candidates) {
-				nextDepth.addAll(candidate.getAllPossibleStates(currentPlayer));
-			}
-			
-			currentPlayer = currentPlayer.opponent();
-			candidates = nextDepth;
-		}
-		
-		return candidates;
-	}
-	
-	public void opponentMove(PlayerTurn move) {
-		
-	}
 }
