@@ -2,6 +2,8 @@ package cosc561.checkers.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.PlayerTurn.Change;
@@ -13,14 +15,15 @@ public class BoardState {
 	private static Grid grid = Grid.getInstance();
 	
 	private final BoardState previous;
-	private final Piece[] pieces;
 	private final PlayerTurn turn;
 	private final long uid;
 	
 	private boolean played;
 	
+	private PieceMap pieces;
+	
 	public BoardState(PlayerColor firstPlayer) {
-		pieces = new Piece[Grid.USED_SPACES + 1];
+		pieces = new PieceMap();
 		previous = null;
 		turn = new PlayerTurn(firstPlayer);
 		played = true;
@@ -28,15 +31,17 @@ public class BoardState {
 		uid = lastId++;
 	}
 	
-	public BoardState(BoardState board, PlayerTurn turn) {
-		this.pieces = board.pieces.clone();
+	public BoardState(BoardState board, PlayerColor color) {
+		this.pieces = new PieceMap(board.pieces);
 		this.previous = board;
 		this.played = false;
-		this.turn = turn;
+		this.turn = new PlayerTurn(color);
 		
 		uid = lastId++;
-		
-		apply(turn);
+	}
+
+	public PieceMap getPieces() {
+		return pieces;
 	}
 	
 	private void apply(PlayerTurn turn) throws IllegalMoveException {
@@ -46,64 +51,39 @@ public class BoardState {
 	}
 
 	public BoardState addStartingPieces() throws IllegalMoveException {		
-		PlayerTurn turn = new PlayerTurn(currentPlayer);
-		
-		BoardState newBoard = new BoardState(this, turn);
-		
 		for(Space space : grid.getSpaces()) {
 			PlayerColor color = PlayerColor.getColorForSpace(space.id);
 			if (color != null) {
-				newBoard.turn.add(new Piece(color), space);
+				addPiece(space, new Piece(color));
 			}
 		}
-		
-		newBoard.apply(turn);
-		
-		return newBoard;
-	}
-	
-	public void addPiece(int id, Piece piece) {
-		pieces[id] = piece;
+
+		return this;
 	}
 	
 	public void addPiece(Space space, Piece piece) throws IllegalMoveException {
-		addPiece(space.id, piece);
+		pieces.add(space, piece);
 	}
 	
 	public Piece getPiece(Space space) {
-		return pieces[space.id];
-	}
-	
-	public Piece[] getPieces() {
-		return pieces;
-	}
-	
-	public void removePiece(Space space) {
-		removePiece(space.id);
-	}
-	
-	public void removePiece(int id) {
-		pieces[id] = null;
-		
-		//Check for end game
-		gameOver();
-	}
-	
-	public void movePiece(Space from, Space to) {
-		pieces[to.id] = pieces[from.id];
-		pieces[from.id] = null;
+		return pieces.get(space);
 	}
 
-	public void movePiece(int from, int to) {
-		pieces[to] = pieces[from];
-		pieces[from] = null;
+	public void removePiece(Space space) throws IllegalMoveException {
+		pieces.remove(space);
+		
+		//TODO check for game end
+	}
+	
+	public void movePiece(Space from, Space to) throws IllegalMoveException {
+		pieces.move(from, to);
 	}
 	
 	public boolean gameOver() {
 		PlayerColor winningColor = null;
 		boolean gameOver = true;
-		for (int p = 0; p < pieces.length; p++) {
-			Piece piece = pieces[p];
+		for (Entry<Space, Piece> entry : pieces) {
+			Piece piece = entry.getValue();
 			if (piece != null) {
 				if (winningColor == null) { 
 					winningColor = piece.color;
@@ -117,12 +97,8 @@ public class BoardState {
 		return gameOver;
 	}
 	
-	public void kingPiece(Space space) {
-		kingPiece(space.id);
-	}
-	
-	public void kingPiece(int id) {
-		pieces[id].setKing();
+	public void kingPiece(Space space) throws IllegalMoveException {
+		pieces.king(space);
 	}
 	
 	public Space getSpace(int id) {
@@ -130,7 +106,7 @@ public class BoardState {
 	}
 	
 	public boolean isEmpty(Space space) {
-		return pieces[space.id] == null;
+		return !pieces.hasPiece(space);
 	}
 	
 	public List<Space> getLegalMoves(int id) {

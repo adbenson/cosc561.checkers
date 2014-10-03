@@ -17,8 +17,8 @@ public class PieceCountEvaluator extends Evaluator {
 	public int evaluate(BoardState state, PlayerColor currentPlayer) {
 		int value = 0;
 		
-		for (Piece piece : state.getPieces()) {
-			value += (piece.color == playerColor)? 1 : -1;
+		for (Map.Entry<Space, Piece> entry : state.getPieces()) {
+			value += (entry.getValue().color == playerColor)? 1 : -1;
 		}
 			
 		return value;
