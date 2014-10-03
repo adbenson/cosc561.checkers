@@ -38,13 +38,13 @@ public class BoardState {
 		apply(turn);
 	}
 	
-	private void apply(PlayerTurn turn) {
+	private void apply(PlayerTurn turn) throws IllegalMoveException {
 		for (Change change : turn.getMoves()) {
 			change.applyTo(this);
 		}
 	}
 
-	public BoardState addStartingPieces(PlayerColor currentPlayer) {
+	public BoardState addStartingPieces() throws IllegalMoveException {		
 		PlayerTurn turn = new PlayerTurn(currentPlayer);
 		
 		BoardState newBoard = new BoardState(this, turn);
@@ -65,7 +65,7 @@ public class BoardState {
 		pieces[id] = piece;
 	}
 	
-	public void addPiece(Space space, Piece piece) {
+	public void addPiece(Space space, Piece piece) throws IllegalMoveException {
 		addPiece(space.id, piece);
 	}
 	
@@ -223,6 +223,18 @@ public class BoardState {
 		}
 		
 		return state;
+	}
+	
+	public class IllegalMoveException extends Exception {
+		private static final long serialVersionUID = 1L;
+
+		public IllegalMoveException(String msg) {
+			super(msg);
+		}
+		
+		public IllegalMoveException(String msg, Throwable t) {
+			super(msg, t);
+		}
 	}
 
 }

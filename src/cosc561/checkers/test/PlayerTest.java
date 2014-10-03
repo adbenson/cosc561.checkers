@@ -14,6 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import cosc561.checkers.Player;
 import cosc561.checkers.model.BoardState;
+import cosc561.checkers.model.BoardState.IllegalMoveException;
 import cosc561.checkers.model.PlayerColor;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -28,11 +29,11 @@ public class PlayerTest {
 	BoardState unplayed;
 	
 	@Before
-	public void setUp() {
+	public void setUp() throws IllegalMoveException {
 		state = mock(BoardState.class);
 	}
 	
-	private void initReturnStates() {
+	private void initReturnStates() throws IllegalMoveException {
 		List<BoardState> returnStates = new ArrayList<>();
 		
 		when(state.getAllPossibleStates(PlayerColor.RED)).thenReturn(returnStates);
@@ -47,7 +48,7 @@ public class PlayerTest {
 	}
 
 	@Test
-	public void testNextMoveDepth1() {
+	public void testNextMoveDepth1() throws IllegalMoveException {
 
 		initReturnStates();
 		
@@ -61,7 +62,7 @@ public class PlayerTest {
 	}
 	
 	@Test
-	public void testNextMoveDepth2() {
+	public void testNextMoveDepth2() throws IllegalMoveException {
 		
 		initReturnStates();
 		
@@ -75,7 +76,7 @@ public class PlayerTest {
 	}
 	
 	@Test
-	public void testNextMoveDepth3() {
+	public void testNextMoveDepth3() throws IllegalMoveException {
 		
 		initReturnStates();
 				

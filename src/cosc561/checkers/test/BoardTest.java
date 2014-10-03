@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cosc561.checkers.model.BoardState;
+import cosc561.checkers.model.BoardState.IllegalMoveException;
 import cosc561.checkers.model.Piece;
 import static cosc561.checkers.model.PlayerColor.*;
 import cosc561.checkers.model.PlayerTurn;
@@ -20,12 +21,12 @@ public class BoardTest {
 	private BoardState board;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws IllegalMoveException {
 		board = new BoardState(RED);
 	}
 
 	@Test
-	public void gameOverFalse() {
+	public void gameOverFalse() throws IllegalMoveException {
 		// Setup
 		board = board.addStartingPieces(RED);
 		// Test
@@ -36,7 +37,7 @@ public class BoardTest {
 	}
 
 	@Test
-	public void gameOverTrue() {
+	public void gameOverTrue() throws IllegalMoveException {
 		// Setup
 		board.addPiece(22, new Piece(RED));
 		board.addPiece(18, new Piece(BLACK));
@@ -52,7 +53,7 @@ public class BoardTest {
 	}
 
 	@Test
-	public void getLegalMovesEmptySpace() {
+	public void getLegalMovesEmptySpace() throws IllegalMoveException {
 		board = board.addStartingPieces(RED);
 
 		List<Space> moves = board.getLegalMoves(18);
@@ -61,7 +62,7 @@ public class BoardTest {
 	}
 
 	@Test
-	public void getLegalMovesNoOpponents() {
+	public void getLegalMovesNoOpponents() throws IllegalMoveException {
 		board = board.addStartingPieces(RED);
 		// RED
 		List<Space> moves = board.getLegalMoves(22);
@@ -79,7 +80,7 @@ public class BoardTest {
 	}
 
 	@Test
-	public void getLegalMovesNoOpponentsEdge() {
+	public void getLegalMovesNoOpponentsEdge() throws IllegalMoveException {
 		board = board.addStartingPieces(RED);
 
 		// RED
@@ -96,7 +97,7 @@ public class BoardTest {
 	}
 
 	@Test
-	public void getLegalMovesFriendlyBlocked() {
+	public void getLegalMovesFriendlyBlocked() throws IllegalMoveException {
 		board = board.addStartingPieces(RED);
 
 		// RED
@@ -106,7 +107,7 @@ public class BoardTest {
 	}
 
 	@Test
-	public void getLegalMovesEnemyBlocked() {
+	public void getLegalMovesEnemyBlocked() throws IllegalMoveException {
 		board = board.addStartingPieces(RED);
 
 		// RED
@@ -116,7 +117,7 @@ public class BoardTest {
 	}
 
 	@Test
-	public void getLegalMovesOneJumpForced() {
+	public void getLegalMovesOneJumpForced() throws IllegalMoveException {
 		// Setup - RED
 		board.addPiece(22, new Piece(RED));
 		board.addPiece(18, new Piece(BLACK));
@@ -142,7 +143,7 @@ public class BoardTest {
 	}
 
 	@Test
-	public void getLegalMovesMultiJump() {
+	public void getLegalMovesMultiJump() throws IllegalMoveException {
 		// Setup - RED
 		Piece jumper = new Piece(RED);
 		Piece dupe1 = new Piece(BLACK);
@@ -188,7 +189,7 @@ public class BoardTest {
 	}
 
 	@Test
-	public void getLegalMovesKingNoJump() {
+	public void getLegalMovesKingNoJump() throws IllegalMoveException {
 		board = board.addStartingPieces(RED);
 
 		// BLACK
@@ -212,7 +213,7 @@ public class BoardTest {
 	}
 
 	@Test
-	public void getLegalMovesNoOpponentsKing() {
+	public void getLegalMovesNoOpponentsKing() throws IllegalMoveException {
 		Piece king = new Piece(RED);
 		king.setKing();
 

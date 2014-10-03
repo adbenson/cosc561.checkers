@@ -3,6 +3,8 @@ package cosc561.checkers.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import cosc561.checkers.model.BoardState.IllegalMoveException;
+
 public class PlayerTurn {
 		
 	private final List<Change> moves;
@@ -40,7 +42,7 @@ public class PlayerTurn {
 			this.to = to;
 		}
 
-		public abstract void applyTo(BoardState boardState);
+		public abstract void applyTo(BoardState boardState) throws IllegalMoveException;
 		
 	}
 	
@@ -50,7 +52,7 @@ public class PlayerTurn {
 		}
 
 		@Override
-		public void applyTo(BoardState board) {
+		public void applyTo(BoardState board) throws IllegalMoveException {
 			board.addPiece(to, piece);
 		}
 	}
@@ -61,7 +63,7 @@ public class PlayerTurn {
 		}
 
 		@Override
-		public void applyTo(BoardState board) {
+		public void applyTo(BoardState board) throws IllegalMoveException {
 			board.removePiece(from);
 		}
 	}
@@ -72,7 +74,7 @@ public class PlayerTurn {
 		}
 
 		@Override
-		public void applyTo(BoardState board) {
+		public void applyTo(BoardState board) throws IllegalMoveException {
 			board.movePiece(from, to);
 		}
 	}
@@ -83,7 +85,7 @@ public class PlayerTurn {
 		}
 		
 		@Override
-		public void applyTo(BoardState board) {
+		public void applyTo(BoardState board) throws IllegalMoveException {
 			board.kingPiece(to);
 		}
 	}
