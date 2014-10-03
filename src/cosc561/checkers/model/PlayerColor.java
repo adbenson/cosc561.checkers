@@ -7,17 +7,17 @@ import static cosc561.checkers.model.Direction.SW;
 
 
 public enum PlayerColor {
-	RED (true, new Direction[] {NE, NW}), 
-	BLACK (false, new Direction[] {SE, SW}); 
+	RED (new Direction[] {NE, NW}), 
+	BLACK (new Direction[] {SE, SW}); 
 	
 	public static final int LAST_BLACK = 12;
 	public static final int FIRST_RED = 21;
 	
-	public final boolean first;
+	public static final PlayerColor startingPlayer = RED;
+	
 	public final Direction[] directions;
 	
-	private PlayerColor(boolean first, Direction[] directions) {
-		this.first = first;
+	private PlayerColor(Direction[] directions) {
 		this.directions = directions;
 	}
 	
