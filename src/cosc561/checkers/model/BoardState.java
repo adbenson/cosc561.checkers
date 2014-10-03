@@ -171,12 +171,33 @@ public class BoardState {
 		return states;
 	}
 
-	public List<BoardState> getAllPossibleStates(PlayerColor color) {
+	public List<BoardState> getAllPossibleStates(PlayerColor color) throws IllegalMoveException {
 		List<BoardState> states = new ArrayList<>();
 		
-		for (int id = 1; id < pieces.length; id++) {
-			if (pieces[id].color == color) {
-				states.addAll(getPossibleStates(id));
+		for (Map.Entry<Space, Piece> entry : pieces) {
+			Piece piece = entry.getValue();
+			if (piece != null && piece.color == color) {
+				states.addAll(getPossibleStates(entry.getKey(), color));
+			}
+		}
+		
+		return states;
+	}
+	
+	public List<BoardState> getPossibleStates(Space space, PlayerColor color) throws IllegalMoveException {
+		List<BoardState> states = new ArrayList<>();
+		
+		Piece piece = pieces.get(space);
+		if (piece != null) {
+			for (Direction direction : piece.getDirections()) {
+				Space adjacent = grid.getAdjacent(space, direction);
+				if (adjacent != null && isEmpty(adjacent)) {
+					
+					BoardState state = new BoardState(this, color);
+					states.add(state);
+					
+					state.movePiece(space, adjacent);
+				}
 			}
 		}
 		
