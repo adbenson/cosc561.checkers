@@ -10,8 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cosc561.checkers.model.BoardState;
-import cosc561.checkers.model.BoardState.IllegalMoveException;
 import cosc561.checkers.model.Piece;
+import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import static cosc561.checkers.model.PlayerColor.*;
 import cosc561.checkers.model.PlayerTurn;
 import cosc561.checkers.model.Space;

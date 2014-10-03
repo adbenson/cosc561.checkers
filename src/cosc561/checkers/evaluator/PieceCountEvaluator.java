@@ -1,8 +1,11 @@
 package cosc561.checkers.evaluator;
 
+import java.util.Map;
+
 import cosc561.checkers.model.BoardState;
-import cosc561.checkers.model.PlayerColor;
 import cosc561.checkers.model.Piece;
+import cosc561.checkers.model.PlayerColor;
+import cosc561.checkers.model.Space;
 
 public class PieceCountEvaluator extends Evaluator {
 

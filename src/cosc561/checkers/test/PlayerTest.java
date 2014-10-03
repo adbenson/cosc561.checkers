@@ -1,7 +1,10 @@
 package cosc561.checkers.test;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import cosc561.checkers.Player;
 import cosc561.checkers.model.BoardState;
-import cosc561.checkers.model.BoardState.IllegalMoveException;
+import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.PlayerColor;
 
 @RunWith(MockitoJUnitRunner.class)

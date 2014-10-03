@@ -3,7 +3,7 @@ package cosc561.checkers.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import cosc561.checkers.model.BoardState.IllegalMoveException;
+import cosc561.checkers.model.PieceMap.IllegalMoveException;
 
 public class PlayerTurn {
 		
