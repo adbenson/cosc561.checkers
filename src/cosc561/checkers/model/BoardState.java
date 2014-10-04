@@ -133,18 +133,8 @@ public class BoardState {
 		pieces.king(space);
 	}
 	
-	public Space getSpace(int id) {
-		return grid.getSpaceById(id);
-	}
-	
 	public boolean isEmpty(Space space) {
 		return !pieces.hasPiece(space);
-	}
-	
-	private List<BoardState> getPossibleStates(int id) {
-		List<BoardState> states = new ArrayList<>();
-		
-		return states;
 	}
 
 	public List<BoardState> getAllPossibleStates(PlayerColor color) throws IllegalMoveException {
