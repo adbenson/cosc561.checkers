@@ -27,6 +27,7 @@ public class PieceMap implements Iterable<Map.Entry<Space, Piece>> {
 		return pieces[space.id] != null;
 	}
 	
+	
 	public void move(Space from, Space to) throws IllegalMoveException {
 		if (hasPiece(from) && !hasPiece(to)) {
 			pieces[to.id] = pieces[from.id];
@@ -61,7 +62,15 @@ public class PieceMap implements Iterable<Map.Entry<Space, Piece>> {
 	public PieceMap(PieceMap pieces) {
 		this.pieces = pieces.pieces.clone();
 	}
+	
+	public Piece[] getPieces(){
+		return this.pieces;
+	}
 
+	public int getSize() {
+		return pieces.length;
+	}
+	
 	@Override
 	public Iterator<Map.Entry<Space, Piece>> iterator() {
 		return new Iterator<Map.Entry<Space, Piece>>() {

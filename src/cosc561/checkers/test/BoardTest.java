@@ -7,6 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import org.junit.Test;
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Grid;
 import cosc561.checkers.model.Piece;
+import cosc561.checkers.model.PieceMap;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.Space;
 
@@ -245,6 +247,164 @@ public class BoardTest {
 
 		return false;
 	}
+	
+	@Test
+	public void isEqualTo() throws IllegalMoveException {
+		//Setup
+		board.addPiece(space(18), new Piece(RED));
+		BoardState possBoardState1 = new BoardState(RED);
+		possBoardState1.addPiece(space(18), new Piece(RED));
+		
+		//Test & Validate
+		assertFalse(board.isEqualTo(possBoardState1));
+	}
+	@Test
+	public void isEqualTo_FAIL() throws IllegalMoveException {
+		//Setup
+		board.addPiece(space(16), new Piece(RED));
+		BoardState possBoardState1 = new BoardState(RED);
+		possBoardState1.addPiece(space(18), new Piece(RED));
+		
+		//Test & Validate
+		assertTrue(board.isEqualTo(possBoardState1));
+	}
+	private boolean hasState(List<BoardState> expectedStates, BoardState actualState) {
+		boolean hasState = false;
+		for (BoardState exptectedState : expectedStates) {
+			if (exptectedState.isEqualTo(actualState)){
+				hasState = true;
+				break;
+			}
+		}
+		return hasState;
+	}
+	
+	@Test
+	public void getPossibleStatesOpenSpaces() throws IllegalMoveException {
+	
+		//Setup
+		Piece piece = new Piece(RED);
+		board.addPiece(space(22), piece);
+		BoardState possBoardState1 = new BoardState(board, RED);
+		possBoardState1.movePiece(space(22), space(17));
+		BoardState possBoardState2 = new BoardState(board, RED);
+		possBoardState2.movePiece(space(22), space(18));
+		
+		//Test
+		List<BoardState> actualStates = board.getPossibleStates(space(22), RED);
+		
+		//Validate
+		assertTrue(actualStates.size() == 2);
+		assertStates(actualStates, possBoardState1, possBoardState2);
+		
+	}
+	@Test
+	public void getPossibleStatesSingleJump() throws IllegalMoveException {
+	
+		//Setup - ONE OPTION
+		Piece rPiece = new Piece(RED);
+		board.addPiece(space(22), rPiece);
+		Piece bPiece = new Piece(BLACK);
+		board.addPiece(space(18), bPiece);
+		BoardState possBoardState1 = new BoardState(board, RED);
+		possBoardState1.movePiece(space(22), space(15));
+		//possBoardState1.removePiece(space(18));
+
+		//Test
+		List<BoardState> actualStates = board.getPossibleStates(space(22), RED);
+		
+		//Validate
+		assertTrue(actualStates.size() == 1);
+		assertStates(actualStates, possBoardState1);
+	}
+	
+	@Test
+	public void getPossibleStatesSingleJump_Options() throws IllegalMoveException {
+		
+		//Setup - ONE OPTION
+		Piece rPiece = new Piece(RED);
+		board.addPiece(space(22), rPiece);
+		Piece bPiece = new Piece(BLACK);
+		board.addPiece(space(18), bPiece);
+		Piece bPiece2 = new Piece(BLACK);
+		board.addPiece(space(17), bPiece2);
+		BoardState possBoardState1 = new BoardState(board, RED);
+		possBoardState1.movePiece(space(22), space(15));
+		BoardState possBoardState2 = new BoardState(board, RED);
+		possBoardState2.movePiece(space(22), space(13));
+		
+		//Test
+		List<BoardState> actualStates = board.getPossibleStates(space(22), RED);
+		
+		//Validate
+		assertTrue(actualStates.size() == 2);
+		assertStates(actualStates, possBoardState1, possBoardState2);
+	}
+	
+	@Test
+	public void getPossibleStatesMultiJump() throws IllegalMoveException {
+		
+		//Setup - ONE OPTION
+		Piece rPiece = new Piece(RED);
+		board.addPiece(space(22), rPiece);
+		Piece bPiece = new Piece(BLACK);
+		board.addPiece(space(18), bPiece);
+		Piece bPiece2 = new Piece(BLACK);
+		board.addPiece(space(11), bPiece2);
+		
+		BoardState possBoardState1 = new BoardState(board, RED);
+		possBoardState1.movePiece(space(22), space(7));
+
+		//Test
+		List<BoardState> actualStates = board.getPossibleStates(space(22), RED);
+		
+		//Validate
+		assertTrue(actualStates.size() == 1);
+		assertStates(actualStates, possBoardState1);
+	}
+	
+	@Test
+	public void getPossibleStatesMultiJump_Options() throws IllegalMoveException {
+		
+		//Setup - ONE OPTION
+		Piece rPiece = new Piece(RED);
+		board.addPiece(space(22), rPiece);
+		Piece bPiece = new Piece(BLACK);
+		board.addPiece(space(18), bPiece);
+		Piece bPiece2 = new Piece(BLACK);
+		board.addPiece(space(17), bPiece2);
+		BoardState possBoardState1 = new BoardState(board, RED);
+		possBoardState1.movePiece(space(22), space(15));
+		BoardState possBoardState2 = new BoardState(board, RED);
+		possBoardState2.movePiece(space(22), space(13));
+		
+		//Test
+		List<BoardState> actualStates = board.getPossibleStates(space(22), RED);
+		
+		//Validate
+		assertTrue(actualStates.size() == 2);
+		assertStates(actualStates, possBoardState1, possBoardState2);
+	}
+	
+	@Test
+	public void getAllPossibleStates() throws IllegalMoveException { 
+		//Setup
+		
+		//Test
+		board.getAllPossibleStates(RED);
+		
+		//Validate
+		
+		
+		
+	}
+	
+	private void assertStates(List<BoardState> states, BoardState... boardStates) { 
+		for (BoardState state : boardStates) {
+			assertTrue("problem with assert state", hasState(states, state));
+		}
+	}
+	
 	
 	@Test 
 	public void testGetFirstUnplayed() throws IllegalMoveException {

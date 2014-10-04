@@ -1,6 +1,7 @@
 package cosc561.checkers.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,6 +41,37 @@ public class BoardState {
 		uid = lastId++;
 	}
 
+	
+	//TODO fix this - HOW DO I COMPARE BOARD STATES. I DON"T GET YOUR ITERATABLE THING
+	public boolean isEqualTo(BoardState anotherBoard) {
+		boolean allPiecesMatch = true;
+		if (this.pieces.getSize() != anotherBoard.pieces.getSize()) {
+			allPiecesMatch = false;
+		} else {
+			//for each of our spaces...
+			//get the piece in that space
+			//check to see if they a piece (same color) in same space
+			ArrayList<Space> spaces = (ArrayList<Space>) Grid.getInstance().getSpaces();
+			for (Map.Entry<Space, Piece> entry : pieces) {
+				Space ourKey = entry.getKey();
+				Piece ourPiece = entry.getValue();
+				
+				Piece theirPiece = anotherBoard.pieces.get(ourKey);
+				if ((ourPiece == null && theirPiece != null) || (ourPiece != null && theirPiece == null)) {
+					allPiecesMatch = false;
+					break;					
+				} else if (ourPiece != null && theirPiece != null) {
+					if (!ourPiece.toString().equals(theirPiece.toString())) {
+						allPiecesMatch = false;
+						break;
+					}
+				}
+		
+			}
+		}
+		return allPiecesMatch;
+	}
+
 	public PieceMap getPieces() {
 		return pieces;
 	}
@@ -77,6 +109,10 @@ public class BoardState {
 	
 	public void movePiece(Space from, Space to) throws IllegalMoveException {
 		pieces.move(from, to);
+	}
+	
+	public void jumpPiece(Space from, Space jumpedSpace) {	
+		
 	}
 	
 	public boolean gameOver() {
@@ -183,27 +219,70 @@ public class BoardState {
 		
 		return states;
 	}
-	
+
+
+	//I got real confused trying to track the jump origin/jumped/landing space so i just made a jump object....
 	public List<BoardState> getPossibleStates(Space space, PlayerColor color) throws IllegalMoveException {
 		List<BoardState> states = new ArrayList<>();
-		
+
 		Piece piece = pieces.get(space);
 		if (piece != null) {
+			ArrayList<Space> emptyAdjacents = new ArrayList<Space>();
+			ArrayList<Jump> jumpOptions = new ArrayList<Jump>();
+			
+			//For Each Direction
 			for (Direction direction : piece.getDirections()) {
+				
+				//Track the adjacent space
 				Space adjacent = grid.getAdjacent(space, direction);
-				if (adjacent != null && isEmpty(adjacent)) {
-					
-					BoardState state = new BoardState(this, color);
-					states.add(state);
-					
-					state.movePiece(space, adjacent);
+				if (adjacent != null) {					
+					if (isEmpty(adjacent)) {
+						emptyAdjacents.add(adjacent);
+					} else {
+						if (piece.isOpponent(getPiece(adjacent))) {
+							Space landingSpace = grid.getAdjacent(adjacent, direction);
+							if (landingSpace != null && isEmpty(landingSpace)) {
+								Jump jump = new Jump(space, adjacent, landingSpace);
+								jumpOptions.add(jump);
+							}
+						}
+					}
 				}
 			}
+			
+			if (jumpOptions.isEmpty() && !emptyAdjacents.isEmpty()) {
+				//Consider empty spaces only when no jumps are available
+				for (Space emptySpace : emptyAdjacents) { 
+					BoardState state = new BoardState(this, color);
+					state.movePiece(space, emptySpace);
+					states.add(state);  
+				}
+			} else if (!jumpOptions.isEmpty()) {
+				for (Jump jump: jumpOptions) { 
+					BoardState state = new BoardState(this, color);
+					state.movePiece(space, jump.landing);
+					state.removePiece(jump.capture);
+					states.add(state);
+				}
+				
+			}
+
+			
 		}
 		
 		return states;
 	}
 
+	private ArrayList<BoardState> findJumpOptionStates(Space jumpable, Piece piece) {
+		
+		ArrayList<BoardState> statesToAdd = new ArrayList<BoardState>();
+		
+		
+		
+		
+		return statesToAdd;
+	}
+	
 	public void setPlayed() {
 		played = true;
 	}
@@ -224,5 +303,8 @@ public class BoardState {
 	}
 	
 
+	public PieceMap getPieceMap() {
+		return pieces;
+	}
 
 }
