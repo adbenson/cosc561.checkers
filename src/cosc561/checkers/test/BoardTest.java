@@ -417,19 +417,5 @@ public class BoardTest {
 		b2.movePiece(space(22), space(18));
 		assertTrue(board.equals(b2));
 	}
-	
-	
-	@Test 
-	public void testGetFirstUnplayed() throws IllegalMoveException {
-//		BoardState b1 = new BoardState(board, new PlayerTurn(RED));
-//		BoardState b2 = new BoardState(b1, new PlayerTurn(RED));
-//		b2.setPlayed();
-//		
-//		BoardState b3 = new BoardState(b2, new PlayerTurn(RED));
-//		BoardState b4 = new BoardState(b3, new PlayerTurn(RED));
-//		
-//		BoardState unplayed = b4.getFirstUnplayed();
-//		assertEquals(b3, unplayed);
-	}
 
 }
