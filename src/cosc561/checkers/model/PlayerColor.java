@@ -23,7 +23,7 @@ public enum PlayerColor {
 		this.shortName = shortName;
 	}
 	
-	public static PlayerColor getColorForSpace(int id) {
+	public static PlayerColor getColorForStartingSpace(int id) {
 		if (id <= LAST_BLACK) {
 			return BLACK;
 		}

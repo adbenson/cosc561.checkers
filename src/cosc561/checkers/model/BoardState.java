@@ -63,7 +63,7 @@ public class BoardState {
 
 	public BoardState addStartingPieces() throws IllegalMoveException {		
 		for(Space space : grid.getSpaces()) {
-			PlayerColor color = PlayerColor.getColorForSpace(space.id);
+			PlayerColor color = PlayerColor.getColorForStartingSpace(space.id);
 			if (color != null) {
 				addPiece(space, Piece.get(color));
 			}
@@ -88,6 +88,9 @@ public class BoardState {
 	
 	public void movePiece(Space from, Space to) throws IllegalMoveException {
 		pieces.move(from, to);
+		if (shouldKing(to)) {
+			pieces.king(to);
+		}
 	}
 	
 	public void jumpPiece(Space from, Space jumpedSpace) {	
@@ -110,10 +113,6 @@ public class BoardState {
 			}
 		}
 		return gameOver;
-	}
-	
-	public void kingPiece(Space space) throws IllegalMoveException {
-		pieces.king(space);
 	}
 	
 	public boolean isEmpty(Space space) {
@@ -194,6 +193,11 @@ public class BoardState {
 		}
 		
 		return states;
+	}
+
+	private boolean shouldKing(Space space) {
+		Piece piece = pieces.get(space);
+		return (!piece.isKing() && grid.canKing(space, piece.color));
 	}
 
 	private ArrayList<BoardState> findJumpOptionStates(Jump jump, Piece piece, BoardState state, PlayerColor color) throws IllegalMoveException {

@@ -70,7 +70,7 @@ public class Piece {
 		}
 		
 		public String toString() {
-			return super.toString() + "K";
+			return color.shortName + color.shortName;
 		}
 	}
 }

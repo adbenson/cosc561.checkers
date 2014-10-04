@@ -86,7 +86,7 @@ public class PlayerTurn {
 		
 		@Override
 		public void applyTo(BoardState board) throws IllegalMoveException {
-			board.kingPiece(to);
+//			board.kingPiece(to);
 		}
 	}
 	
