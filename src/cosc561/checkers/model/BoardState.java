@@ -42,8 +42,6 @@ public class BoardState {
 		uid = lastId++;
 	}
 
-
-	//TODO this method is crap. I don't understand your iterable map. sorry.
 	public boolean equals(Object other) {
 		if (! (other instanceof BoardState)) {
 			return false;
