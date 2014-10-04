@@ -84,14 +84,29 @@ public class BoardState {
 		history.push("Removed Piece: " + space.id);
 	}
 	
-	public void movePiece(Space from, Space to) throws IllegalMoveException {
+	public boolean movePiece(Space from, Space to) throws IllegalMoveException {
 		pieces.move(from, to);
 		if (shouldKing(to)) {
 			pieces.king(to);
 		}
+		else if (pieces.get(to).isKing()) {
+			return !hasPreviousMatch(to);
+		}
 		history.push("Moved Piece: " + from.id + ", to: " + to.id);
+		return true;
 	}
 	
+	private boolean hasPreviousMatch(Space moved) {
+		if (previous != null && previous.previous != null) {
+			Piece previouslyAtSpace = previous.previous.getPiece(moved);
+			//TODO this method may be too simplistic; it could false positive 
+			// when another King has moved into the same space.
+			return previouslyAtSpace == pieces.get(moved);
+		}
+		
+		return false;
+	}
+
 	public boolean gameOver() {
 		PlayerColor winningColor = null;
 		boolean gameOver = true;
@@ -157,8 +172,9 @@ public class BoardState {
 			//Consider empty spaces only when no jumps are available
 			for (Space emptySpace : emptyAdjacents) { 
 				BoardState state = new BoardState(this, color);
-				state.movePiece(space, emptySpace);
-				states.add(state);  
+				if (state.movePiece(space, emptySpace)) {
+					states.add(state);
+				}
 			}
 		} else if (!jumpOptions.isEmpty()) {
 			for (Jump jump: jumpOptions) { 
@@ -208,9 +224,10 @@ public class BoardState {
 			if (!jumpOptions.isEmpty()) {
 				for (Jump jumpOption: jumpOptions) { 
 					BoardState newState = new BoardState(state, color);
-					newState.movePiece(jumpOption.origin, jumpOption.landing);
-					newState.removePiece(jumpOption.capture);
-					statesToAdd.addAll(findJumpOptionStates(jumpOption, piece, newState, color));
+					if (newState.movePiece(jumpOption.origin, jumpOption.landing)) {
+						newState.removePiece(jumpOption.capture);
+						statesToAdd.addAll(findJumpOptionStates(jumpOption, piece, newState, color));
+					}
 				}
 			} else {
 				//no options were found. multi jump ends here.
