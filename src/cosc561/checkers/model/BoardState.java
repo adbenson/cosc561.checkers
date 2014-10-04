@@ -125,7 +125,6 @@ public class BoardState {
 	}
 
 
-	//I got real confused trying to track the jump origin/jumped/landing space so i just made a jump object....
 	public List<BoardState> getPossibleStates(Space space, PlayerColor color) throws IllegalMoveException {
 		List<BoardState> states = new ArrayList<>();
 
@@ -165,13 +164,6 @@ public class BoardState {
 				states.add(state);  
 			}
 		} else if (!jumpOptions.isEmpty()) {
-//				if (jumpOptions.size() == 1) {
-//					Jump jump = jumpOptions.get(0);
-//					states.addAll(findJumpOptionStates(jump, piece));
-//				} else {
-//					
-//					
-//				}
 			for (Jump jump: jumpOptions) { 
 				BoardState state = new BoardState(this, color);
 				state.movePiece(space, jump.landing);
