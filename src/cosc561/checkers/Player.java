@@ -19,7 +19,14 @@ public class Player {
 
 	public BoardState nextMove(BoardState currentState) throws IllegalMoveException {
 
-		return currentState.getAllPossibleStates(color).get(0);
+		BoardState chosenState = currentState.getAllPossibleStates(color).get(0);
+		
+		System.out.println(this + " has made a move: " + "\n" + chosenState.printHistory());
+		
+		return chosenState;
 	}
 
+	public String toString() {
+		return color.toString();
+	}
 }

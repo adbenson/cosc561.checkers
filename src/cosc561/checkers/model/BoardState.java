@@ -1,7 +1,9 @@
 package cosc561.checkers.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 import cosc561.checkers.model.PieceMap.Entry;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
@@ -20,13 +22,14 @@ public class BoardState {
 	private boolean played;
 	
 	private PieceMap pieces;
-	
+	private Stack<String> history;
+
 	public BoardState(PlayerColor firstPlayer) {
 		pieces = new PieceMap();
 		previous = null;
 		turn = new PlayerTurn(firstPlayer);
 		played = true;
-		
+		history = new Stack<String>();
 		uid = lastId++;
 	}
 	
@@ -35,7 +38,7 @@ public class BoardState {
 		this.previous = board;
 		this.played = false;
 		this.turn = new PlayerTurn(color);
-		
+		history = new Stack<String>();
 		uid = lastId++;
 	}
 
@@ -80,8 +83,7 @@ public class BoardState {
 
 	public void removePiece(Space space) throws IllegalMoveException {
 		pieces.remove(space);
-		
-		//TODO check for game end
+		history.push("Removed Piece: " + space.id);
 	}
 	
 	public void movePiece(Space from, Space to) throws IllegalMoveException {
@@ -89,10 +91,7 @@ public class BoardState {
 		if (shouldKing(to)) {
 			pieces.king(to);
 		}
-	}
-	
-	public void jumpPiece(Space from, Space jumpedSpace) {	
-		
+		history.push("Moved Piece: " + from.id + ", to: " + to.id);
 	}
 	
 	public boolean gameOver() {
@@ -247,5 +246,22 @@ public class BoardState {
 	public PieceMap getPieceMap() {
 		return pieces;
 	}
+
+	
+	public Stack<String> getHistory() {
+		return history;
+	}
+
+	public String printHistory() {
+		StringBuilder builder = new StringBuilder();
+		Iterator<String> iter = history.iterator();
+		while (iter.hasNext()) { 
+			builder.append(iter.next()+ "\n");
+		}
+		
+		return builder.toString();
+	}
+
+
 
 }
