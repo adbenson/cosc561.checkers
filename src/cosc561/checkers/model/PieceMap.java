@@ -1,5 +1,6 @@
 package cosc561.checkers.model;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -69,6 +70,14 @@ public class PieceMap implements Iterable<Map.Entry<Space, Piece>> {
 
 	public int getSize() {
 		return pieces.length;
+	}
+	
+	public boolean equals(Object other) {
+		if (!(other instanceof PieceMap)) {
+			return false;
+		}
+		
+		return Arrays.equals(pieces, ((PieceMap)other).pieces);
 	}
 	
 	@Override

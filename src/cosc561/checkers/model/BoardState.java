@@ -43,29 +43,12 @@ public class BoardState {
 
 
 	//TODO this method is crap. I don't understand your iterable map. sorry.
-	public boolean isEqualTo(BoardState anotherBoard) {
-		boolean allPiecesMatch = true;
-		if (this.pieces.getSize() != anotherBoard.pieces.getSize()) {
-			allPiecesMatch = false;
-		} else {			
-			ArrayList<Space> spaces = (ArrayList<Space>) Grid.getInstance().getSpaces();
-			for (Map.Entry<Space, Piece> entry : pieces) {
-				Space ourKey = entry.getKey();
-				Piece ourPiece = entry.getValue();
-				
-				Piece theirPiece = anotherBoard.pieces.get(ourKey);
-				if ((ourPiece == null && theirPiece != null) || (ourPiece != null && theirPiece == null)) {
-					allPiecesMatch = false;
-					break;					
-				} else if (ourPiece != null && theirPiece != null) {
-					if (!ourPiece.toString().equals(theirPiece.toString())) {
-						allPiecesMatch = false;
-						break;
-					}
-				}
-			}
+	public boolean equals(Object other) {
+		if (! (other instanceof BoardState)) {
+			return false;
 		}
-		return allPiecesMatch;
+		
+		return pieces.equals(((BoardState)other).pieces);
 	}
 
 	public PieceMap getPieces() {

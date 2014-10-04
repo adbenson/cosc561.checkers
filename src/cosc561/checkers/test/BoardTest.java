@@ -7,7 +7,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,8 +14,8 @@ import org.junit.Test;
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Grid;
 import cosc561.checkers.model.Piece;
-import cosc561.checkers.model.PieceMap;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
+import cosc561.checkers.model.PlayerColor;
 import cosc561.checkers.model.Space;
 
 public class BoardTest {
@@ -247,31 +246,11 @@ public class BoardTest {
 
 		return false;
 	}
-	
-	@Test
-	public void isEqualTo() throws IllegalMoveException {
-		//Setup
-		board.addPiece(space(18), Piece.get(RED));
-		BoardState possBoardState1 = new BoardState(RED);
-		possBoardState1.addPiece(space(18), Piece.get(RED));
-		
-		//Test & Validate
-		assertTrue(board.isEqualTo(possBoardState1));
-	}
-	@Test
-	public void isEqualTo_FAIL() throws IllegalMoveException {
-		//Setup
-		board.addPiece(space(16), Piece.get(RED));
-		BoardState possBoardState1 = new BoardState(RED);
-		possBoardState1.addPiece(space(18), Piece.get(RED));
-		
-		//Test & Validate
-		assertFalse(board.isEqualTo(possBoardState1));
-	}
+
 	private boolean hasState(List<BoardState> expectedStates, BoardState actualState) {
 		boolean hasState = false;
 		for (BoardState exptectedState : expectedStates) {
-			if (exptectedState.isEqualTo(actualState)){
+			if (exptectedState.equals(actualState)){
 				hasState = true;
 				break;
 			}
@@ -419,6 +398,24 @@ public class BoardTest {
 		for (BoardState state : boardStates) {
 			assertTrue("problem with assert state", hasState(states, state));
 		}
+	}
+	
+	@Test
+	public void testEquals() throws IllegalMoveException {
+		BoardState b2 = new BoardState(PlayerColor.RED);
+		assertTrue(board.equals(b2));
+		
+		b2 = b2.addStartingPieces();
+		assertFalse(board.equals(b2));
+		
+		board = board.addStartingPieces();
+		assertTrue(board.equals(b2));
+		
+		board.movePiece(space(22), space(18));
+		assertFalse(board.equals(b2));
+		
+		b2.movePiece(space(22), space(18));
+		assertTrue(board.equals(b2));
 	}
 	
 	
