@@ -7,8 +7,8 @@ import static cosc561.checkers.model.Direction.SW;
 
 
 public enum PlayerColor {
-	RED (new Direction[] {NE, NW}), 
-	BLACK (new Direction[] {SE, SW}); 
+	RED (new Direction[] {NE, NW}, "X"), 
+	BLACK (new Direction[] {SE, SW}, "O"); 
 	
 	public static final int LAST_BLACK = 12;
 	public static final int FIRST_RED = 21;
@@ -16,9 +16,11 @@ public enum PlayerColor {
 	public static final PlayerColor startingPlayer = RED;
 	
 	public final Direction[] directions;
+	public final String shortName;
 	
-	private PlayerColor(Direction[] directions) {
+	private PlayerColor(Direction[] directions, String shortName) {
 		this.directions = directions;
+		this.shortName = shortName;
 	}
 	
 	public static PlayerColor getColorForSpace(int id) {
@@ -35,4 +37,6 @@ public enum PlayerColor {
 	public PlayerColor opponent() {
 		return (this == RED)? BLACK : RED;
 	}
+	
+	
 }

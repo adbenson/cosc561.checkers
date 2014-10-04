@@ -42,8 +42,8 @@ public class BoardTest {
 	@Test
 	public void gameOverTrue() throws IllegalMoveException {
 		// Setup
-		board.addPiece(space(22), new Piece(RED));
-		board.addPiece(space(18), new Piece(BLACK));
+		board.addPiece(space(22), Piece.get(RED));
+		board.addPiece(space(18), Piece.get(BLACK));
 		boolean gameOver = board.gameOver();
 		assertFalse(gameOver);
 
@@ -122,8 +122,8 @@ public class BoardTest {
 //	@Test
 //	public void getLegalMovesOneJumpForced() throws IllegalMoveException {
 //		// Setup - RED
-//		board.addPiece(space(22), new Piece(RED));
-//		board.addPiece(space(18), new Piece(BLACK));
+//		board.addPiece(space(22), Piece.get(RED));
+//		board.addPiece(space(18), Piece.get(BLACK));
 //
 //		// Call Method - RED
 //		List<Space> moves = board.getLegalMoves(22);
@@ -134,8 +134,8 @@ public class BoardTest {
 //		assertMoves(moves, 15);
 //
 //		// Setup - BLACK
-//		board.addPiece(space(3), new Piece(BLACK));
-//		board.addPiece(space(7), new Piece(RED));
+//		board.addPiece(space(3), Piece.get(BLACK));
+//		board.addPiece(space(7), Piece.get(RED));
 //
 //		// Call Method - BLACK
 //		moves = board.getLegalMoves(3);
@@ -148,10 +148,10 @@ public class BoardTest {
 //	@Test
 //	public void getLegalMovesMultiJump() throws IllegalMoveException {
 //		// Setup - RED
-//		Piece jumper = new Piece(RED);
-//		Piece dupe1 = new Piece(BLACK);
-//		Piece dupe2 = new Piece(BLACK);
-//		Piece dupe3 = new Piece(BLACK);
+//		Piece jumper = Piece.get(RED);
+//		Piece dupe1 = Piece.get(BLACK);
+//		Piece dupe2 = Piece.get(BLACK);
+//		Piece dupe3 = Piece.get(BLACK);
 //		board.addPiece(space(29), jumper);
 //		board.addPiece(space(25), dupe1);
 //		board.addPiece(space(18), dupe2);
@@ -166,7 +166,7 @@ public class BoardTest {
 //		assertMoves(moves, 8);
 //
 //		// Add another piece
-//		Piece dupe3b = new Piece(BLACK);
+//		Piece dupe3b = Piece.get(BLACK);
 //		board.addPiece(space(10), dupe3b);
 //
 //		// Call Method - RED
@@ -178,7 +178,7 @@ public class BoardTest {
 //		assertMoves(moves, 6);
 //
 //		// Add another piece
-//		Piece dupe2b = new Piece(BLACK);
+//		Piece dupe2b = Piece.get(BLACK);
 //		board.addPiece(space(17), dupe2b);
 //
 //		// Call Method - RED
@@ -217,7 +217,7 @@ public class BoardTest {
 //
 //	@Test
 //	public void getLegalMovesNoOpponentsKing() throws IllegalMoveException {
-//		Piece king = new Piece(RED);
+//		Piece king = Piece.get(RED);
 //		king.setKing();
 //
 //		board.addPiece(space(18), king);
@@ -251,9 +251,9 @@ public class BoardTest {
 	@Test
 	public void isEqualTo() throws IllegalMoveException {
 		//Setup
-		board.addPiece(space(18), new Piece(RED));
+		board.addPiece(space(18), Piece.get(RED));
 		BoardState possBoardState1 = new BoardState(RED);
-		possBoardState1.addPiece(space(18), new Piece(RED));
+		possBoardState1.addPiece(space(18), Piece.get(RED));
 		
 		//Test & Validate
 		assertTrue(board.isEqualTo(possBoardState1));
@@ -261,9 +261,9 @@ public class BoardTest {
 	@Test
 	public void isEqualTo_FAIL() throws IllegalMoveException {
 		//Setup
-		board.addPiece(space(16), new Piece(RED));
+		board.addPiece(space(16), Piece.get(RED));
 		BoardState possBoardState1 = new BoardState(RED);
-		possBoardState1.addPiece(space(18), new Piece(RED));
+		possBoardState1.addPiece(space(18), Piece.get(RED));
 		
 		//Test & Validate
 		assertFalse(board.isEqualTo(possBoardState1));
@@ -283,7 +283,7 @@ public class BoardTest {
 	public void getPossibleStatesOpenSpaces() throws IllegalMoveException {
 	
 		//Setup
-		Piece piece = new Piece(RED);
+		Piece piece = Piece.get(RED);
 		board.addPiece(space(22), piece);
 		BoardState possBoardState1 = new BoardState(board, RED);
 		possBoardState1.movePiece(space(22), space(17));
@@ -302,9 +302,9 @@ public class BoardTest {
 	public void getPossibleStatesSingleJump() throws IllegalMoveException {
 	
 		//Setup - ONE OPTION
-		Piece rPiece = new Piece(RED);
+		Piece rPiece = Piece.get(RED);
 		board.addPiece(space(22), rPiece);
-		Piece bPiece = new Piece(BLACK);
+		Piece bPiece = Piece.get(BLACK);
 		board.addPiece(space(18), bPiece);
 		BoardState possBoardState1 = new BoardState(board, RED);
 		possBoardState1.movePiece(space(22), space(15));
@@ -322,11 +322,11 @@ public class BoardTest {
 	public void getPossibleStatesSingleJump_Options() throws IllegalMoveException {
 		
 		//Setup - ONE OPTION
-		Piece rPiece = new Piece(RED);
+		Piece rPiece = Piece.get(RED);
 		board.addPiece(space(22), rPiece);
-		Piece bPiece = new Piece(BLACK);
+		Piece bPiece = Piece.get(BLACK);
 		board.addPiece(space(18), bPiece);
-		Piece bPiece2 = new Piece(BLACK);
+		Piece bPiece2 = Piece.get(BLACK);
 		board.addPiece(space(17), bPiece2);
 		BoardState possBoardState1 = new BoardState(board, RED);
 		possBoardState1.movePiece(space(22), space(15));
@@ -346,11 +346,11 @@ public class BoardTest {
 	public void getPossibleStatesMultiJump() throws IllegalMoveException {
 		
 		//Setup - ONE OPTION
-		Piece rPiece = new Piece(RED);
+		Piece rPiece = Piece.get(RED);
 		board.addPiece(space(22), rPiece);
-		Piece bPiece = new Piece(BLACK);
+		Piece bPiece = Piece.get(BLACK);
 		board.addPiece(space(18), bPiece);
-		Piece bPiece2 = new Piece(BLACK);
+		Piece bPiece2 = Piece.get(BLACK);
 		board.addPiece(space(11), bPiece2);
 		
 		BoardState possBoardState1 = new BoardState(board, RED);
@@ -370,16 +370,16 @@ public class BoardTest {
 	public void getPossibleStatesMultiJump_Options() throws IllegalMoveException {
 		
 		//Setup - ONE OPTION
-		Piece rPiece = new Piece(RED);
+		Piece rPiece = Piece.get(RED);
 		board.addPiece(space(22), rPiece);
 		
-		Piece bPiece = new Piece(BLACK);
+		Piece bPiece = Piece.get(BLACK);
 		board.addPiece(space(18), bPiece);
 
-		Piece bPiece2 = new Piece(BLACK);
+		Piece bPiece2 = Piece.get(BLACK);
 		board.addPiece(space(11), bPiece2);
 		
-		Piece bPiece3 = new Piece(BLACK);
+		Piece bPiece3 = Piece.get(BLACK);
 		board.addPiece(space(10), bPiece3);
 		
 		//TO B1 to B2

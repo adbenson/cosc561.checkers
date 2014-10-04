@@ -15,7 +15,7 @@ public class PieceMap implements Iterable<Map.Entry<Space, Piece>> {
 	
 	public void king(Space space) throws IllegalMoveException {
 		if (hasPiece(space) && !pieces[space.id].isKing()) {
-			pieces[space.id].setKing();
+			pieces[space.id] = pieces[space.id].getKing();
 		} else if (!hasPiece(space)) {
 			throw new IllegalMoveException("Cannot king piece in "+space+". No piece in that space");
 		} else {

@@ -82,7 +82,7 @@ public class BoardState {
 		for(Space space : grid.getSpaces()) {
 			PlayerColor color = PlayerColor.getColorForSpace(space.id);
 			if (color != null) {
-				addPiece(space, new Piece(color));
+				addPiece(space, Piece.get(color));
 			}
 		}
 

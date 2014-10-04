@@ -1,32 +1,47 @@
 package cosc561.checkers.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class Piece {
+	
+	private static final Map<PlayerColor, Piece> singletons;
+	
+	static {
+		singletons = new HashMap<>();
+		
+		for (PlayerColor color : PlayerColor.values()) {
+			singletons.put(color, new Piece(color));
+		}
+	}
+	
+	public static Piece get(PlayerColor color) {
+		return singletons.get(color);
+	}
 		
 	public final PlayerColor color;
 	
-	private boolean king;
+	private KingPiece king;
 	
-	public Piece(PlayerColor color) {
+	private Piece(PlayerColor color) {
 		this.color = color;
-		this.king = false;
 	}
 
 	public boolean isKing() {
+		return false;
+	}
+
+	public KingPiece getKing() {
+		if (king == null) {
+			king = new KingPiece(color);
+		}
+		
 		return king;
 	}
 
-	public void setKing() {
-		this.king = true;
-	}
-
 	public Direction[] getDirections() {
-		if (isKing()) {
-			return Direction.values();
-		}
-		else {
-			return color.directions;
-		}
+		return color.directions;
 	}
 
 	public boolean isOpponent(Piece that) {
@@ -34,6 +49,28 @@ public class Piece {
 	}
 	
 	public String toString() {
-		return (color == PlayerColor.RED? "R" : "B") + (isKing()? "K" : " ");
+		return color.shortName;
+	}
+	
+	public static class KingPiece extends Piece {
+		public KingPiece(PlayerColor color) {
+			super(color);
+		}
+		
+		public boolean isKing() {
+			return true;
+		}
+		
+		public KingPiece getKing() {
+			return this;
+		}
+		
+		public Direction[] getDirections() {
+			return Direction.values();
+		}
+		
+		public String toString() {
+			return super.toString() + "K";
+		}
 	}
 }
