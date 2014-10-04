@@ -49,7 +49,7 @@ public class Piece {
 	}
 	
 	public String toString() {
-		return color.shortName;
+		return color.shortName + " ";
 	}
 	
 	public static class KingPiece extends Piece {

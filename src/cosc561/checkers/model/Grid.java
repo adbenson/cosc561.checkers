@@ -125,26 +125,21 @@ public class Grid {
 	
 	public String toString(BoardState board) {
 		StringBuilder string = new StringBuilder();
-		String rowSeparator = "   ";
-		string.append("    ");
+		string.append("   ");
 		for (int col=0; col<SPACES_PER_SIDE; col++) {
-			string.append((col<10? " " : "") + col + " ");
-			rowSeparator += "---";
+			string.append(col + " ");
 		}
-		rowSeparator += "-";
 		string.append("\n");
 		
 		for (int row=0; row<SPACES_PER_SIDE; row++) {
-			string.append(rowSeparator);
-			string.append("\n");
 			
-			string.append((row<10? " " : "") + row + " |");
+			string.append(row + " ");
 			
 			for (int col=0; col<SPACES_PER_SIDE; col++) {
 				Space space = grid[row][col];
 				
 				if (space == null) {
-					string.append("  ");
+					string.append("[]");
 				}
 				else {
 					if (board == null) {
@@ -160,7 +155,6 @@ public class Grid {
 						}
 					}
 				}
-				string.append("|");
 			}
 			string.append("\n");
 		}

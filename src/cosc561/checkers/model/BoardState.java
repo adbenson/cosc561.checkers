@@ -17,7 +17,7 @@ public class BoardState {
 	
 	private final BoardState previous;
 	private final PlayerTurn turn;
-	private final long uid;
+	public final long uid;
 	
 	private boolean played;
 	
