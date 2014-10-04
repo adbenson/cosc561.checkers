@@ -41,16 +41,13 @@ public class BoardState {
 		uid = lastId++;
 	}
 
-	
-	//TODO fix this - HOW DO I COMPARE BOARD STATES. I DON"T GET YOUR ITERATABLE THING
+
+	//TODO this method is crap. I don't understand your iterable map. sorry.
 	public boolean isEqualTo(BoardState anotherBoard) {
 		boolean allPiecesMatch = true;
 		if (this.pieces.getSize() != anotherBoard.pieces.getSize()) {
 			allPiecesMatch = false;
-		} else {
-			//for each of our spaces...
-			//get the piece in that space
-			//check to see if they a piece (same color) in same space
+		} else {			
 			ArrayList<Space> spaces = (ArrayList<Space>) Grid.getInstance().getSpaces();
 			for (Map.Entry<Space, Piece> entry : pieces) {
 				Space ourKey = entry.getKey();
@@ -66,7 +63,6 @@ public class BoardState {
 						break;
 					}
 				}
-		
 			}
 		}
 		return allPiecesMatch;

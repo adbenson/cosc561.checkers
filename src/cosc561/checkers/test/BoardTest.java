@@ -256,7 +256,7 @@ public class BoardTest {
 		possBoardState1.addPiece(space(18), new Piece(RED));
 		
 		//Test & Validate
-		assertFalse(board.isEqualTo(possBoardState1));
+		assertTrue(board.isEqualTo(possBoardState1));
 	}
 	@Test
 	public void isEqualTo_FAIL() throws IllegalMoveException {
@@ -266,7 +266,7 @@ public class BoardTest {
 		possBoardState1.addPiece(space(18), new Piece(RED));
 		
 		//Test & Validate
-		assertTrue(board.isEqualTo(possBoardState1));
+		assertFalse(board.isEqualTo(possBoardState1));
 	}
 	private boolean hasState(List<BoardState> expectedStates, BoardState actualState) {
 		boolean hasState = false;
@@ -308,7 +308,7 @@ public class BoardTest {
 		board.addPiece(space(18), bPiece);
 		BoardState possBoardState1 = new BoardState(board, RED);
 		possBoardState1.movePiece(space(22), space(15));
-		//possBoardState1.removePiece(space(18));
+		possBoardState1.removePiece(space(18));
 
 		//Test
 		List<BoardState> actualStates = board.getPossibleStates(space(22), RED);
@@ -330,9 +330,10 @@ public class BoardTest {
 		board.addPiece(space(17), bPiece2);
 		BoardState possBoardState1 = new BoardState(board, RED);
 		possBoardState1.movePiece(space(22), space(15));
+		possBoardState1.removePiece(space(18));
 		BoardState possBoardState2 = new BoardState(board, RED);
 		possBoardState2.movePiece(space(22), space(13));
-		
+		possBoardState2.removePiece(space(17));		
 		//Test
 		List<BoardState> actualStates = board.getPossibleStates(space(22), RED);
 		
