@@ -141,62 +141,6 @@ public class BoardState {
 		return !pieces.hasPiece(space);
 	}
 	
-	public List<Space> getLegalMoves(int id) {
-		return getLegalMoves(getSpace(id));
-	}
-
-	public List<Space> getLegalMoves(Space space) {
-		return getLegalMoves(space, null, null);
-	}
-
-	private List<Space> getLegalMoves(Space space, Piece piece, Space jumpedSpace) {
-		boolean hasJumped = (jumpedSpace != null);
-		piece = (piece == null) ? getPiece(space) : piece;
-	
-		List<Space> moves = new ArrayList<Space>();
-		List<Space> jumps = new ArrayList<Space>();
-
-		if (piece != null) {
-			for (Direction direction : piece.getDirections()) {
-				Space adjacent = grid.getAdjacent(space, direction);
-				if (adjacent != jumpedSpace) {
-					// Edge spaces won't have some adjacent spaces
-					if (adjacent != null) {
-						if (!isEmpty(adjacent)) {
-							if (piece.isOpponent(getPiece(adjacent))) {
-								Space landingSpace = grid.getAdjacent(adjacent, direction);
-								if (landingSpace != null && isEmpty(landingSpace)) {
-									// Start the recursive jump search
-									jumps.addAll(getLegalMoves(landingSpace, piece, adjacent));
-								}
-								// Opponent piece is against a side, can't jump
-							}
-							// Friendly piece, do nothing
-						} else {
-							moves.add(adjacent);
-						}
-					}
-					// No adjacent piece so we can't do a jump
-				}
-				// Don't allow a King to jump back to his original spot.
-			}
-		}
-		
-		
-		if (hasJumped) { 
-			if (jumps.isEmpty()) {
-				// A jump has been made. No more are available.
-				jumps.add(space);
-			}
-		} else {
-			if (jumps.isEmpty()) {
-				// If no jump was ever available, then move normally
-				jumps = moves;
-			}
-		}
-		return jumps;
-	}
-	
 	private List<BoardState> getPossibleStates(int id) {
 		List<BoardState> states = new ArrayList<>();
 		
@@ -229,12 +173,14 @@ public class BoardState {
 			//For Each Direction
 			for (Direction direction : piece.getDirections()) {
 				
-				//Track the adjacent space
+				//Track the adjacent spaces
 				Space adjacent = grid.getAdjacent(space, direction);
 				if (adjacent != null) {					
 					if (isEmpty(adjacent)) {
+						//log any open spaces
 						emptyAdjacents.add(adjacent);
 					} else {
+						//log any filled spaces and look for jump options
 						if (piece.isOpponent(getPiece(adjacent))) {
 							Space landingSpace = grid.getAdjacent(adjacent, direction);
 							if (landingSpace != null && isEmpty(landingSpace)) {
@@ -246,6 +192,7 @@ public class BoardState {
 				}
 			}
 			
+			//FORCE JUMP LOGIC
 			if (jumpOptions.isEmpty() && !emptyAdjacents.isEmpty()) {
 				//Consider empty spaces only when no jumps are available
 				for (Space emptySpace : emptyAdjacents) { 
@@ -254,11 +201,18 @@ public class BoardState {
 					states.add(state);  
 				}
 			} else if (!jumpOptions.isEmpty()) {
+//				if (jumpOptions.size() == 1) {
+//					Jump jump = jumpOptions.get(0);
+//					states.addAll(findJumpOptionStates(jump, piece));
+//				} else {
+//					
+//					
+//				}
 				for (Jump jump: jumpOptions) { 
 					BoardState state = new BoardState(this, color);
 					state.movePiece(space, jump.landing);
 					state.removePiece(jump.capture);
-					states.add(state);
+					states.addAll(findJumpOptionStates(jump, piece, state, color));
 				}
 				
 			}
@@ -269,13 +223,45 @@ public class BoardState {
 		return states;
 	}
 
-	private ArrayList<BoardState> findJumpOptionStates(Space jumpable, Piece piece) {
+	private ArrayList<BoardState> findJumpOptionStates(Jump jump, Piece piece, BoardState state, PlayerColor color) throws IllegalMoveException {
 		
 		ArrayList<BoardState> statesToAdd = new ArrayList<BoardState>();
 		
-		
-		
-		
+			ArrayList<Jump> jumpOptions = new ArrayList<Jump>();
+			
+			//For Each Direction
+			for (Direction direction : piece.getDirections()) {
+				Space adjacent = grid.getAdjacent(jump.landing, direction);
+
+				//Make sure we don't consider jumping back over the piece we just captured
+				if (adjacent != null && adjacent != jump.capture) {					
+					
+					if (!isEmpty(adjacent)) {
+						//log any filled spaces and look for jump options
+						if (piece.isOpponent(getPiece(adjacent))) {
+							Space landingSpace = grid.getAdjacent(adjacent, direction);
+							if (landingSpace != null && isEmpty(landingSpace)) {
+								Jump newJump = new Jump(jump.landing, adjacent, landingSpace);
+								jumpOptions.add(newJump);
+							}//no where to land
+						}//piece was adjacent but not our enemy
+					}//adjacent space was empty
+				}//adjacent space is null or where we came from
+			}
+			
+			if (!jumpOptions.isEmpty()) {
+				for (Jump jumpOption: jumpOptions) { 
+					BoardState newState = new BoardState(state, color);
+					newState.movePiece(jumpOption.origin, jumpOption.landing);
+					newState.removePiece(jumpOption.capture);
+					statesToAdd.addAll(findJumpOptionStates(jumpOption, piece, newState, color));
+				}
+			} else {
+				//no options were found. multi jump ends here.
+				//just send back the original state that was passed here
+				statesToAdd.add(state);
+			}
+
 		return statesToAdd;
 	}
 	

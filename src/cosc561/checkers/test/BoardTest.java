@@ -55,178 +55,178 @@ public class BoardTest {
 		assertTrue(gameOver);
 	}
 
-	@Test
-	public void getLegalMovesEmptySpace() throws IllegalMoveException {
-		board = board.addStartingPieces();
-
-		List<Space> moves = board.getLegalMoves(18);
-
-		assertEquals(0, moves.size());
-	}
-
-	@Test
-	public void getLegalMovesNoOpponents() throws IllegalMoveException {
-		board = board.addStartingPieces();
-		// RED
-		List<Space> moves = board.getLegalMoves(22);
-
-		assertEquals(2, moves.size());
-
-		assertMoves(moves, 17, 18);
-
-		// BLACK
-		moves = board.getLegalMoves(10);
-
-		assertEquals(2, moves.size());
-
-		assertMoves(moves, 14, 15);
-	}
-
-	@Test
-	public void getLegalMovesNoOpponentsEdge() throws IllegalMoveException {
-		board = board.addStartingPieces();
-
-		// RED
-		List<Space> moves = board.getLegalMoves(21);
-
-		assertEquals(1, moves.size());
-		assertMoves(moves, 17);
-
-		// BLACK
-		moves = board.getLegalMoves(12);
-
-		assertEquals(1, moves.size());
-		assertMoves(moves, 16);
-	}
-
-	@Test
-	public void getLegalMovesFriendlyBlocked() throws IllegalMoveException {
-		board = board.addStartingPieces();
-
-		// RED
-		List<Space> moves = board.getLegalMoves(7);
-
-		assertEquals(0, moves.size());
-	}
-
-	@Test
-	public void getLegalMovesEnemyBlocked() throws IllegalMoveException {
-		board = board.addStartingPieces();
-
-		// RED
-		List<Space> moves = board.getLegalMoves(7);
-
-		assertEquals(0, moves.size());
-	}
-
-	@Test
-	public void getLegalMovesOneJumpForced() throws IllegalMoveException {
-		// Setup - RED
-		board.addPiece(space(22), new Piece(RED));
-		board.addPiece(space(18), new Piece(BLACK));
-
-		// Call Method - RED
-		List<Space> moves = board.getLegalMoves(22);
-
-		// Validate - RED
-		// The jump is forced so only show one legal move
-		assertEquals(1, moves.size());
-		assertMoves(moves, 15);
-
-		// Setup - BLACK
-		board.addPiece(space(3), new Piece(BLACK));
-		board.addPiece(space(7), new Piece(RED));
-
-		// Call Method - BLACK
-		moves = board.getLegalMoves(3);
-
-		// Validate - BLACK
-		assertEquals(1, moves.size());
-		assertMoves(moves, 10);
-	}
-
-	@Test
-	public void getLegalMovesMultiJump() throws IllegalMoveException {
-		// Setup - RED
-		Piece jumper = new Piece(RED);
-		Piece dupe1 = new Piece(BLACK);
-		Piece dupe2 = new Piece(BLACK);
-		Piece dupe3 = new Piece(BLACK);
-		board.addPiece(space(29), jumper);
-		board.addPiece(space(25), dupe1);
-		board.addPiece(space(18), dupe2);
-		board.addPiece(space(11), dupe3);
-
-		// Call Method - RED
-		List<Space> moves = board.getLegalMoves(29);
-
-		// Validate - RED
-		// The jump is forced so only show one legal move
-		assertEquals(1, moves.size());
-		assertMoves(moves, 8);
-
-		// Add another piece
-		Piece dupe3b = new Piece(BLACK);
-		board.addPiece(space(10), dupe3b);
-
-		// Call Method - RED
-		moves = board.getLegalMoves(29);
-
-		// Validate - RED
-		assertEquals(2, moves.size());
-		assertMoves(moves, 8);
-		assertMoves(moves, 6);
-
-		// Add another piece
-		Piece dupe2b = new Piece(BLACK);
-		board.addPiece(space(17), dupe2b);
-
-		// Call Method - RED
-		moves = board.getLegalMoves(29);
-
-		// Validate - RED
-		assertEquals(3, moves.size());
-		assertMoves(moves, 8);
-		assertMoves(moves, 6);
-		assertMoves(moves, 13);
-	}
-
-	@Test
-	public void getLegalMovesKingNoJump() throws IllegalMoveException {
-		board = board.addStartingPieces();
-
-		// BLACK
-		board.kingPiece(space(10));
-		board.movePiece(space(10), space(18));
-
-		List<Space> moves = board.getLegalMoves(18);
-
-		assertEquals(2, moves.size());
-		assertMoves(moves, 14, 15);
-
-		// RED
-		board.kingPiece(space(23));
-		board.movePiece(space(23), space(15));
-
-		moves = board.getLegalMoves(15);
-
-		assertEquals(2, moves.size());
-		// Piece is blocked by black king, but can take his place
-		assertMoves(moves, 10, 19);
-	}
-
-	@Test
-	public void getLegalMovesNoOpponentsKing() throws IllegalMoveException {
-		Piece king = new Piece(RED);
-		king.setKing();
-
-		board.addPiece(space(18), king);
-
-		List<Space> moves = board.getLegalMoves(18);
-
-		assertEquals(4, moves.size());
-		assertMoves(moves, 14, 15, 22, 23);
-	}
+//	@Test
+//	public void getLegalMovesEmptySpace() throws IllegalMoveException {
+//		board = board.addStartingPieces();
+//
+//		List<Space> moves = board.getLegalMoves(18);
+//
+//		assertEquals(0, moves.size());
+//	}
+//
+//	@Test
+//	public void getLegalMovesNoOpponents() throws IllegalMoveException {
+//		board = board.addStartingPieces();
+//		// RED
+//		List<Space> moves = board.getLegalMoves(22);
+//
+//		assertEquals(2, moves.size());
+//
+//		assertMoves(moves, 17, 18);
+//
+//		// BLACK
+//		moves = board.getLegalMoves(10);
+//
+//		assertEquals(2, moves.size());
+//
+//		assertMoves(moves, 14, 15);
+//	}
+//
+//	@Test
+//	public void getLegalMovesNoOpponentsEdge() throws IllegalMoveException {
+//		board = board.addStartingPieces();
+//
+//		// RED
+//		List<Space> moves = board.getLegalMoves(21);
+//
+//		assertEquals(1, moves.size());
+//		assertMoves(moves, 17);
+//
+//		// BLACK
+//		moves = board.getLegalMoves(12);
+//
+//		assertEquals(1, moves.size());
+//		assertMoves(moves, 16);
+//	}
+//
+//	@Test
+//	public void getLegalMovesFriendlyBlocked() throws IllegalMoveException {
+//		board = board.addStartingPieces();
+//
+//		// RED
+//		List<Space> moves = board.getLegalMoves(7);
+//
+//		assertEquals(0, moves.size());
+//	}
+//
+//	@Test
+//	public void getLegalMovesEnemyBlocked() throws IllegalMoveException {
+//		board = board.addStartingPieces();
+//
+//		// RED
+//		List<Space> moves = board.getLegalMoves(7);
+//
+//		assertEquals(0, moves.size());
+//	}
+//
+//	@Test
+//	public void getLegalMovesOneJumpForced() throws IllegalMoveException {
+//		// Setup - RED
+//		board.addPiece(space(22), new Piece(RED));
+//		board.addPiece(space(18), new Piece(BLACK));
+//
+//		// Call Method - RED
+//		List<Space> moves = board.getLegalMoves(22);
+//
+//		// Validate - RED
+//		// The jump is forced so only show one legal move
+//		assertEquals(1, moves.size());
+//		assertMoves(moves, 15);
+//
+//		// Setup - BLACK
+//		board.addPiece(space(3), new Piece(BLACK));
+//		board.addPiece(space(7), new Piece(RED));
+//
+//		// Call Method - BLACK
+//		moves = board.getLegalMoves(3);
+//
+//		// Validate - BLACK
+//		assertEquals(1, moves.size());
+//		assertMoves(moves, 10);
+//	}
+//
+//	@Test
+//	public void getLegalMovesMultiJump() throws IllegalMoveException {
+//		// Setup - RED
+//		Piece jumper = new Piece(RED);
+//		Piece dupe1 = new Piece(BLACK);
+//		Piece dupe2 = new Piece(BLACK);
+//		Piece dupe3 = new Piece(BLACK);
+//		board.addPiece(space(29), jumper);
+//		board.addPiece(space(25), dupe1);
+//		board.addPiece(space(18), dupe2);
+//		board.addPiece(space(11), dupe3);
+//
+//		// Call Method - RED
+//		List<Space> moves = board.getLegalMoves(29);
+//
+//		// Validate - RED
+//		// The jump is forced so only show one legal move
+//		assertEquals(1, moves.size());
+//		assertMoves(moves, 8);
+//
+//		// Add another piece
+//		Piece dupe3b = new Piece(BLACK);
+//		board.addPiece(space(10), dupe3b);
+//
+//		// Call Method - RED
+//		moves = board.getLegalMoves(29);
+//
+//		// Validate - RED
+//		assertEquals(2, moves.size());
+//		assertMoves(moves, 8);
+//		assertMoves(moves, 6);
+//
+//		// Add another piece
+//		Piece dupe2b = new Piece(BLACK);
+//		board.addPiece(space(17), dupe2b);
+//
+//		// Call Method - RED
+//		moves = board.getLegalMoves(29);
+//
+//		// Validate - RED
+//		assertEquals(3, moves.size());
+//		assertMoves(moves, 8);
+//		assertMoves(moves, 6);
+//		assertMoves(moves, 13);
+//	}
+//
+//	@Test
+//	public void getLegalMovesKingNoJump() throws IllegalMoveException {
+//		board = board.addStartingPieces();
+//
+//		// BLACK
+//		board.kingPiece(space(10));
+//		board.movePiece(space(10), space(18));
+//
+//		List<Space> moves = board.getLegalMoves(18);
+//
+//		assertEquals(2, moves.size());
+//		assertMoves(moves, 14, 15);
+//
+//		// RED
+//		board.kingPiece(space(23));
+//		board.movePiece(space(23), space(15));
+//
+//		moves = board.getLegalMoves(15);
+//
+//		assertEquals(2, moves.size());
+//		// Piece is blocked by black king, but can take his place
+//		assertMoves(moves, 10, 19);
+//	}
+//
+//	@Test
+//	public void getLegalMovesNoOpponentsKing() throws IllegalMoveException {
+//		Piece king = new Piece(RED);
+//		king.setKing();
+//
+//		board.addPiece(space(18), king);
+//
+//		List<Space> moves = board.getLegalMoves(18);
+//
+//		assertEquals(4, moves.size());
+//		assertMoves(moves, 14, 15, 22, 23);
+//	}
 	
 	private Space space(int id) {
 		return Grid.getInstance().getSpaceById(id);
@@ -354,8 +354,10 @@ public class BoardTest {
 		board.addPiece(space(11), bPiece2);
 		
 		BoardState possBoardState1 = new BoardState(board, RED);
-		possBoardState1.movePiece(space(22), space(7));
-
+		possBoardState1.movePiece(space(22), space(8));
+		possBoardState1.removePiece(space(18));		
+		possBoardState1.removePiece(space(11));		
+		
 		//Test
 		List<BoardState> actualStates = board.getPossibleStates(space(22), RED);
 		
@@ -370,14 +372,27 @@ public class BoardTest {
 		//Setup - ONE OPTION
 		Piece rPiece = new Piece(RED);
 		board.addPiece(space(22), rPiece);
+		
 		Piece bPiece = new Piece(BLACK);
 		board.addPiece(space(18), bPiece);
+
 		Piece bPiece2 = new Piece(BLACK);
-		board.addPiece(space(17), bPiece2);
+		board.addPiece(space(11), bPiece2);
+		
+		Piece bPiece3 = new Piece(BLACK);
+		board.addPiece(space(10), bPiece3);
+		
+		//TO B1 to B2
 		BoardState possBoardState1 = new BoardState(board, RED);
-		possBoardState1.movePiece(space(22), space(15));
+		possBoardState1.movePiece(space(22), space(8));
+		possBoardState1.removePiece(space(18));		
+		possBoardState1.removePiece(space(11));		
+		
+		//TO B1 to B3
 		BoardState possBoardState2 = new BoardState(board, RED);
-		possBoardState2.movePiece(space(22), space(13));
+		possBoardState2.movePiece(space(22), space(6));
+		possBoardState2.removePiece(space(18));		
+		possBoardState2.removePiece(space(10));		
 		
 		//Test
 		List<BoardState> actualStates = board.getPossibleStates(space(22), RED);
