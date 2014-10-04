@@ -12,6 +12,10 @@ public class PieceMap implements Iterable<Piece> {
 		pieces = new Piece[Grid.USED_SPACES + 1];
 	}
 	
+	public PieceMap(PieceMap pieces) {
+		this.pieces = pieces.pieces.clone();
+	}
+	
 	public void king(Space space) throws IllegalMoveException {
 		if (hasPiece(space) && !pieces[space.id].isKing()) {
 			pieces[space.id] = pieces[space.id].getKing();
@@ -56,10 +60,6 @@ public class PieceMap implements Iterable<Piece> {
 		} else {
 			throw new IllegalMoveException("Cannot add piece to "+space+" : already taken by "+pieces[space.id]);
 		}
-	}
-
-	public PieceMap(PieceMap pieces) {
-		this.pieces = pieces.pieces.clone();
 	}
 	
 	public Piece[] getPieces(){
