@@ -2,10 +2,8 @@ package cosc561.checkers.model;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 
-public class PieceMap implements Iterable<Map.Entry<Space, Piece>> {
+public class PieceMap implements Iterable<Piece> {
 	
 	private Piece[] pieces;
 	private static Grid grid = Grid.getInstance();
@@ -81,46 +79,121 @@ public class PieceMap implements Iterable<Map.Entry<Space, Piece>> {
 	}
 	
 	@Override
-	public Iterator<Map.Entry<Space, Piece>> iterator() {
-		return new Iterator<Map.Entry<Space, Piece>>() {
-			int id = 1;
-
+	public Iterator<Piece> iterator() {
+		return new PieceIterator(null, false);
+	}
+	
+	public Iterable<Piece> iterate(final PlayerColor color) {
+		return new Iterable<Piece>() {
 			@Override
-			public boolean hasNext() {
-				return id < pieces.length;
+			public Iterator<Piece> iterator() {
+				return new PieceIterator(color, false);
 			}
-
-			@Override
-			public Entry<Space, Piece> next() {
-				final int current = id;
-				id++;
-				return new Map.Entry<Space, Piece>() {
-
-					@Override
-					public Space getKey() {
-						return grid.getSpaceById(current);
-					}
-
-					@Override
-					public Piece getValue() {
-						return pieces[current];
-					}
-
-					@Override
-					public Piece setValue(Piece value) {
-						throw new UnsupportedOperationException("No.");
-					}
-					
-				};
-				
-			}
-
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException("No.");
-			}
-			
 		};
+	}
+	
+	public Iterable<Entry> iterateSpaces(final PlayerColor color) {
+		return new Iterable<Entry>() {
+			@Override
+			public Iterator<Entry> iterator() {
+				return new SpaceIterator(color, false);
+			}
+		};
+	}
+	
+	public class Entry {
+		public final Space space;
+		public final Piece piece;
+		
+		private Entry(Space space, Piece piece) {
+			this.space = space;
+			this.piece = piece;
+		}
+	}
+	
+	private abstract class BoardIterator<Type> implements Iterator<Type> {
+		private PlayerColor color;
+		private boolean includeEmpty;
+		
+		private int i;
+		private int last;
+		
+		public BoardIterator(PlayerColor color, boolean includeEmpty) {
+			super();
+			this.color = color;
+			this.includeEmpty = includeEmpty;
+			
+			i = 0;
+			last = pieces.length - 1;
+			
+			iterate();
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return i <= last;
+		}
+		
+		private void iterate() {
+			while (i <= last && !shouldInclude()) {
+				i++;
+			}
+		}
+		
+		private boolean shouldInclude() {
+			if (pieces[i] == null) {
+				return includeEmpty;
+			}
+			else if (color != null) {
+				return color == pieces[i].color;
+			}
+
+			return true;
+		}
+
+		@Override
+		public Type next() {
+			int returnIndex = i;
+			
+			i++;
+			iterate();
+			
+			return getElement(returnIndex);
+		}
+		
+		public abstract Type getElement(int i);
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException("No.");
+		}
+		
+	}
+	
+	private class SpaceIterator extends BoardIterator<Entry> {
+
+		public SpaceIterator(PlayerColor color, boolean includeEmpty) {
+			super(color, includeEmpty);
+		}
+
+		@Override
+		public Entry getElement(int i) {
+			return new Entry(grid.getSpaceById(i), pieces[i]);
+		}
+		
+	}
+	
+	private class PieceIterator extends BoardIterator<Piece> {
+
+		public PieceIterator(PlayerColor color, boolean includeEmpty) {
+			super(color, includeEmpty);
+		}
+
+		@Override
+		public Piece getElement(int i) {
+			return pieces[i];
+		}
+		
 	}
 	
 	public class IllegalMoveException extends Exception {
@@ -134,6 +207,6 @@ public class PieceMap implements Iterable<Map.Entry<Space, Piece>> {
 			super(msg, t);
 		}
 	}
-	
+
 }
 

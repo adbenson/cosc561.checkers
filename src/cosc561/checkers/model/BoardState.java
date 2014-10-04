@@ -1,11 +1,9 @@
 package cosc561.checkers.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
+import cosc561.checkers.model.PieceMap.Entry;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.PlayerTurn.Change;
 
@@ -100,16 +98,13 @@ public class BoardState {
 	public boolean gameOver() {
 		PlayerColor winningColor = null;
 		boolean gameOver = true;
-		for (Entry<Space, Piece> entry : pieces) {
-			Piece piece = entry.getValue();
-			if (piece != null) {
-				if (winningColor == null) { 
-					winningColor = piece.color;
-				}
-				// Both colors must be on the board for the game to be still going
-				if (winningColor != piece.color) {
-					gameOver = false;
-				}
+		for (Piece piece : pieces) {
+			if (winningColor == null) { 
+				winningColor = piece.color;
+			}
+			// Both colors must be on the board for the game to be still going
+			if (winningColor != piece.color) {
+				gameOver = false;
 			}
 		}
 		return gameOver;
@@ -122,11 +117,8 @@ public class BoardState {
 	public List<BoardState> getAllPossibleStates(PlayerColor color) throws IllegalMoveException {
 		List<BoardState> states = new ArrayList<>();
 		
-		for (Map.Entry<Space, Piece> entry : pieces) {
-			Piece piece = entry.getValue();
-			if (piece != null && piece.color == color) {
-				states.addAll(getPossibleStates(entry.getKey(), color));
-			}
+		for (Entry entry : pieces.iterateSpaces(color)) {
+			states.addAll(getPossibleStates(entry.space, color));
 		}
 		
 		return states;
@@ -138,41 +130,41 @@ public class BoardState {
 		List<BoardState> states = new ArrayList<>();
 
 		Piece piece = pieces.get(space);
-		if (piece != null) {
-			ArrayList<Space> emptyAdjacents = new ArrayList<Space>();
-			ArrayList<Jump> jumpOptions = new ArrayList<Jump>();
+
+		ArrayList<Space> emptyAdjacents = new ArrayList<Space>();
+		ArrayList<Jump> jumpOptions = new ArrayList<Jump>();
+		
+		//For Each Direction
+		for (Direction direction : piece.getDirections()) {
 			
-			//For Each Direction
-			for (Direction direction : piece.getDirections()) {
-				
-				//Track the adjacent spaces
-				Space adjacent = grid.getAdjacent(space, direction);
-				if (adjacent != null) {					
-					if (isEmpty(adjacent)) {
-						//log any open spaces
-						emptyAdjacents.add(adjacent);
-					} else {
-						//log any filled spaces and look for jump options
-						if (piece.isOpponent(getPiece(adjacent))) {
-							Space landingSpace = grid.getAdjacent(adjacent, direction);
-							if (landingSpace != null && isEmpty(landingSpace)) {
-								Jump jump = new Jump(space, adjacent, landingSpace);
-								jumpOptions.add(jump);
-							}
+			//Track the adjacent spaces
+			Space adjacent = grid.getAdjacent(space, direction);
+			if (adjacent != null) {					
+				if (isEmpty(adjacent)) {
+					//log any open spaces
+					emptyAdjacents.add(adjacent);
+				} else {
+					//log any filled spaces and look for jump options
+					if (piece.isOpponent(getPiece(adjacent))) {
+						Space landingSpace = grid.getAdjacent(adjacent, direction);
+						if (landingSpace != null && isEmpty(landingSpace)) {
+							Jump jump = new Jump(space, adjacent, landingSpace);
+							jumpOptions.add(jump);
 						}
 					}
 				}
 			}
-			
-			//FORCE JUMP LOGIC
-			if (jumpOptions.isEmpty() && !emptyAdjacents.isEmpty()) {
-				//Consider empty spaces only when no jumps are available
-				for (Space emptySpace : emptyAdjacents) { 
-					BoardState state = new BoardState(this, color);
-					state.movePiece(space, emptySpace);
-					states.add(state);  
-				}
-			} else if (!jumpOptions.isEmpty()) {
+		}
+		
+		//FORCE JUMP LOGIC
+		if (jumpOptions.isEmpty() && !emptyAdjacents.isEmpty()) {
+			//Consider empty spaces only when no jumps are available
+			for (Space emptySpace : emptyAdjacents) { 
+				BoardState state = new BoardState(this, color);
+				state.movePiece(space, emptySpace);
+				states.add(state);  
+			}
+		} else if (!jumpOptions.isEmpty()) {
 //				if (jumpOptions.size() == 1) {
 //					Jump jump = jumpOptions.get(0);
 //					states.addAll(findJumpOptionStates(jump, piece));
@@ -180,17 +172,15 @@ public class BoardState {
 //					
 //					
 //				}
-				for (Jump jump: jumpOptions) { 
-					BoardState state = new BoardState(this, color);
-					state.movePiece(space, jump.landing);
-					state.removePiece(jump.capture);
-					states.addAll(findJumpOptionStates(jump, piece, state, color));
-				}
-				
+			for (Jump jump: jumpOptions) { 
+				BoardState state = new BoardState(this, color);
+				state.movePiece(space, jump.landing);
+				state.removePiece(jump.capture);
+				states.addAll(findJumpOptionStates(jump, piece, state, color));
 			}
-
 			
 		}
+
 		
 		return states;
 	}
