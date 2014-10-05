@@ -1,6 +1,12 @@
 package cosc561.checkers.evaluator;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import cosc561.checkers.evaluator.Evaluator.EvaluatedState;
 import cosc561.checkers.model.BoardState;
+import cosc561.checkers.model.PieceMap;
 import cosc561.checkers.model.PlayerColor;
 
 public abstract class Evaluator {
@@ -9,6 +15,18 @@ public abstract class Evaluator {
 	
 	public Evaluator(PlayerColor playerColor) {
 		this.playerColor = playerColor;
+	}
+	
+	public List<EvaluatedState> evaluate(List<BoardState> states, PlayerColor player) {
+		List<EvaluatedState> evaluated = new ArrayList<EvaluatedState>();
+		
+		for (BoardState state : states) {
+			evaluated.add(evaluate(state, player));
+		}
+		
+		Collections.sort(evaluated);
+		
+		return evaluated;
 	}
 
 	public abstract EvaluatedState evaluate(BoardState state, PlayerColor currentPlayer);
