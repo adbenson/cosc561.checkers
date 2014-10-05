@@ -27,33 +27,6 @@ public class BoardTest {
 		board = new BoardState(RED);
 	}
 
-	@Test
-	public void gameOverFalse() throws IllegalMoveException {
-		// Setup
-		board = board.addStartingPieces();
-		// Test
-		boolean gameOver = board.gameOver();
-
-		// Validate
-		assertFalse(gameOver);
-	}
-
-	@Test
-	public void gameOverTrue() throws IllegalMoveException {
-		// Setup
-		board.addPiece(space(22), Piece.get(RED));
-		board.addPiece(space(18), Piece.get(BLACK));
-		boolean gameOver = board.gameOver();
-		assertFalse(gameOver);
-
-		// Test
-		board.removePiece(space(22));
-		gameOver = board.gameOver();
-
-		// Validate
-		assertTrue(gameOver);
-	}
-
 //	@Test
 //	public void getLegalMovesEmptySpace() throws IllegalMoveException {
 //		board = board.addStartingPieces();
