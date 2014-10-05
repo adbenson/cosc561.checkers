@@ -54,12 +54,17 @@ public class PieceMap implements Iterable<Piece>, Printable {
 		return pieces[space.id];
 	}
 
-	public void add(Space space, Piece piece) throws IllegalMoveException {
+	public void add(Piece piece, Space space) throws IllegalMoveException {
 		if (!hasPiece(space)) {
 			pieces[space.id] = piece;
 		} else {
 			throw new IllegalMoveException("Cannot add piece to "+space+" : already taken by "+pieces[space.id]);
 		}
+	}
+
+	public boolean shouldKing(Space space) {
+		Piece piece = get(space);
+		return (!piece.isKing() && grid.canKing(space, piece.color));
 	}
 	
 	public boolean equals(Object other) {

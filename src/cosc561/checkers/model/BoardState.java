@@ -7,7 +7,7 @@ import java.util.Stack;
 
 import cosc561.checkers.model.PieceMap.Entry;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
-import cosc561.checkers.model.PlayerTurn.Change;
+import cosc561.checkers.model.PlayerTurn.*;
 
 public class BoardState implements Printable {
 	
@@ -16,22 +16,22 @@ public class BoardState implements Printable {
 	private static Grid grid = Grid.getInstance();
 	
 	private final BoardState previous;
+	private final int depth;
 	private final PlayerTurn turn;
 	public final long uid;
 	
 	private boolean played;
 	
 	private PieceMap pieces;
-	private Stack<String> history;
 	
 	private boolean endgame;
 
 	public BoardState(PlayerColor firstPlayer) {
 		pieces = new PieceMap();
 		previous = null;
+		depth = 1;
 		turn = new PlayerTurn(firstPlayer);
 		played = true;
-		history = new Stack<String>();
 		uid = lastId++;
 		
 		setPlayed();
@@ -40,9 +40,9 @@ public class BoardState implements Printable {
 	public BoardState(BoardState board, PlayerColor color) {
 		this.pieces = new PieceMap(board.pieces);
 		this.previous = board;
+		this.depth = board.depth + 1;
 		this.played = false;
 		this.turn = new PlayerTurn(color);
-		history = new Stack<String>();
 		uid = lastId++;
 	}
 
@@ -59,47 +59,62 @@ public class BoardState implements Printable {
 	}
 	
 	private void apply(PlayerTurn turn) throws IllegalMoveException {
-		for (Change change : turn.getMoves()) {
-			change.applyTo(this);
+		for (Change change : turn.getChanges()) {
+			apply(change);
 		}
+	}
+	
+	private void apply(Change change) throws IllegalMoveException {
+		change.applyTo(this.pieces);
+		turn.addChange(change);
+		
+		if (change.to != null && pieces.shouldKing(change.to)) {
+			kingPiece(change.piece, change.to);
+		}
+	}
+
+	public PlayerTurn getTurn() {
+		return turn;
 	}
 
 	public BoardState addStartingPieces() throws IllegalMoveException {		
 		for(Space space : grid.getSpaces()) {
 			PlayerColor color = PlayerColor.getColorForStartingSpace(space.id);
 			if (color != null) {
-				addPiece(space, Piece.get(color));
+				addPiece(Piece.get(color), space);
 			}
 		}
 
 		return this;
 	}
 	
-	public void addPiece(Space space, Piece piece) throws IllegalMoveException {
-		pieces.add(space, piece);
-	}
-	
 	public Piece getPiece(Space space) {
 		return pieces.get(space);
 	}
+	
+	public void addPiece(Piece piece, Space space) throws IllegalMoveException {
+		apply(new Add(piece, space));
+	}
 
-	public void removePiece(Space space) throws IllegalMoveException  {
-		pieces.remove(space);
-		history.push("Removed Piece: " + space.id);
+	public void removePiece(Piece piece, Space space) throws IllegalMoveException  {
+		apply(new Remove(piece, space));
 	}
 	
-	public boolean movePiece(Space from, Space to) throws IllegalMoveException {
-		pieces.move(from, to);
-		if (shouldKing(to)) {
-			pieces.king(to);
-		}
-		history.push("Moved Piece: " + from.id + ", to: " + to.id);
-		return true;
+	public void movePiece(Piece piece, Space from, Space to) throws IllegalMoveException {
+		apply(new Move(piece, from, to));
+	}
+	
+	public void jumpPiece(Piece piece, Space from, Space to, Space capture) throws IllegalMoveException {
+		apply(new Jump(piece, from, to, capture));
+	}
+	
+	public void kingPiece(Piece piece, Space space) throws IllegalMoveException {
+		apply(new King(piece, space));
 	}
 	
 	private boolean isRepeat(Space space) {
 		//Trivial search did this space have the same thing in it last turn?
-		if (previous.previous.getPiece(space) == getPiece(space)) {
+		if (depth > 3 && previous.previous.getPiece(space) == getPiece(space)) {
 			return this.repeats();
 		}
 		
@@ -137,6 +152,9 @@ public class BoardState implements Printable {
 		List<BoardState> states = new ArrayList<>();
 
 		Piece piece = pieces.get(space);
+		if (piece == null) {
+			return states;
+		}
 
 		ArrayList<Space> emptyAdjacents = new ArrayList<Space>();
 		ArrayList<Jump> jumpOptions = new ArrayList<Jump>();
@@ -155,7 +173,7 @@ public class BoardState implements Printable {
 					if (piece.isOpponent(getPiece(adjacent))) {
 						Space landingSpace = grid.getAdjacent(adjacent, direction);
 						if (landingSpace != null && isEmpty(landingSpace)) {
-							Jump jump = new Jump(space, adjacent, landingSpace);
+							Jump jump = new Jump(piece, space, landingSpace, adjacent);
 							jumpOptions.add(jump);
 						}
 					}
@@ -168,7 +186,7 @@ public class BoardState implements Printable {
 			//Consider empty spaces only when no jumps are available
 			for (Space emptySpace : emptyAdjacents) {
 				BoardState state = new BoardState(this, color);
-				state.movePiece(space, emptySpace);
+				state.movePiece(piece, space, emptySpace);
 				
 				//Only kings can repeat moves
 				if (!piece.isKing() || !state.isRepeat(space)) {
@@ -179,10 +197,8 @@ public class BoardState implements Printable {
 		} else if (!jumpOptions.isEmpty()) {
 			for (Jump jump: jumpOptions) { 
 				BoardState state = new BoardState(this, color);
-				
-				state.movePiece(space, jump.landing);
-				state.removePiece(jump.capture);
-				states.addAll(state.findJumpOptionStates(jump.landing, piece, color));
+				state.apply(jump);
+				states.addAll(state.findJumpOptionStates(jump.to, piece, color));
 			}
 		}
 		
@@ -206,20 +222,18 @@ public class BoardState implements Printable {
 				Space landingSpace = grid.getAdjacent(adjacent, direction);
 				
 				if (landingSpace != null && isEmpty(landingSpace)) {
-					Jump newJump = new Jump(space, adjacent, landingSpace);
-					jumpOptions.add(newJump);
+					Jump jump = new Jump(piece, space, landingSpace, adjacent);
+					jumpOptions.add(jump);
 				}//no where to land
 				
 			}//adjacent space was null or empty
 		}
 		
 		if (!jumpOptions.isEmpty()) {
-			for (Jump jumpOption: jumpOptions) { 
-				BoardState newState = new BoardState(this, color);
-				
-				newState.movePiece(jumpOption.origin, jumpOption.landing);
-				newState.removePiece(jumpOption.capture);
-				statesToAdd.addAll(newState.findJumpOptionStates(jumpOption.landing, piece, color));
+			for (Jump jump: jumpOptions) { 
+				BoardState state = new BoardState(this, color);
+				state.apply(jump);
+				statesToAdd.addAll(state.findJumpOptionStates(jump.to, piece, color));
 			}
 		} else {
 			//no options were found. multi jump ends here.
@@ -228,11 +242,6 @@ public class BoardState implements Printable {
 		}
 
 		return statesToAdd;
-	}
-	
-	private boolean shouldKing(Space space) {
-		Piece piece = pieces.get(space);
-		return (!piece.isKing() && grid.canKing(space, piece.color));
 	}
 	
 	public void setPlayed() {
@@ -252,20 +261,6 @@ public class BoardState implements Printable {
 		}
 		
 		return state;
-	}
-	
-	public Stack<String> getHistory() {
-		return history;
-	}
-
-	public String printHistory() {
-		StringBuilder builder = new StringBuilder();
-		Iterator<String> iter = history.iterator();
-		while (iter.hasNext()) { 
-			builder.append(iter.next()+ "\n");
-		}
-		
-		return builder.toString();
 	}
 
 	@Override

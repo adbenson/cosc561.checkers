@@ -41,7 +41,7 @@ public class Player {
 		BoardState play = chosen.getFirstUnplayed();
 		play.setPlayed();
 		
-		System.out.println(this + " has made a move: " + "\n" + play.printHistory());
+		System.out.println(play.getTurn());
 		
 		return play;
 	}

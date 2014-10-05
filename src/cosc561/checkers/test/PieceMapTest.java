@@ -51,10 +51,10 @@ public class PieceMapTest {
 	@Test
 	public void testIteratePartialBoardRed() throws IllegalMoveException {
 		System.out.println(grid);
-		board.removePiece(grid.getSpaceById(21));
-		board.removePiece(grid.getSpaceById(10));
-		board.removePiece(grid.getSpaceById(24));
-		board.removePiece(grid.getSpaceById(31));
+		board.removePiece(null, grid.getSpaceById(21));
+		board.removePiece(null, grid.getSpaceById(10));
+		board.removePiece(null, grid.getSpaceById(24));
+		board.removePiece(null, grid.getSpaceById(31));
 		
 		int i=0;
 		
@@ -68,10 +68,10 @@ public class PieceMapTest {
 	@Test
 	public void testIteratePartialBoardAll() throws IllegalMoveException {
 		System.out.println(grid);
-		board.removePiece(grid.getSpaceById(21));
-		board.removePiece(grid.getSpaceById(10));
-		board.removePiece(grid.getSpaceById(24));
-		board.removePiece(grid.getSpaceById(31));
+		board.removePiece(null, grid.getSpaceById(21));
+		board.removePiece(null, grid.getSpaceById(10));
+		board.removePiece(null, grid.getSpaceById(24));
+		board.removePiece(null, grid.getSpaceById(31));
 		
 		int i=0;
 		
@@ -85,10 +85,10 @@ public class PieceMapTest {
 	@Test
 	public void testIteratePartialBoardSpaces() throws IllegalMoveException {
 		System.out.println(grid);
-		board.removePiece(grid.getSpaceById(21));
-		board.removePiece(grid.getSpaceById(10));
-		board.removePiece(grid.getSpaceById(24));
-		board.removePiece(grid.getSpaceById(31));
+		board.removePiece(null, grid.getSpaceById(21));
+		board.removePiece(null, grid.getSpaceById(10));
+		board.removePiece(null, grid.getSpaceById(24));
+		board.removePiece(null, grid.getSpaceById(31));
 		
 		int i=0;
 		
