@@ -23,6 +23,8 @@ public class BoardState implements Printable {
 	
 	private PieceMap pieces;
 	private Stack<String> history;
+	
+	private boolean endgame;
 
 	public BoardState(PlayerColor firstPlayer) {
 		pieces = new PieceMap();
@@ -31,6 +33,8 @@ public class BoardState implements Printable {
 		played = true;
 		history = new Stack<String>();
 		uid = lastId++;
+		
+		setPlayed();
 	}
 	
 	public BoardState(BoardState board, PlayerColor color) {
@@ -93,30 +97,21 @@ public class BoardState implements Printable {
 		return true;
 	}
 	
-	private boolean hasPreviousMatch(Space moved) {
-		if (previous != null && previous.previous != null) {
-			Piece previouslyAtSpace = previous.previous.getPiece(moved);
-			//TODO this method may be too simplistic; it could false positive 
-			// when another King has moved into the same space.
-			return previouslyAtSpace == pieces.get(moved);
+	private boolean isRepeat(Space space) {
+		//Trivial search did this space have the same thing in it last turn?
+		if (previous.previous.getPiece(space) == getPiece(space)) {
+			return this.repeats();
 		}
 		
 		return false;
 	}
+	
+	private boolean repeats() {
+		return true;
+	}
 
-	public boolean gameOver() {
-		PlayerColor winningColor = null;
-		boolean gameOver = true;
-		for (Piece piece : pieces) {
-			if (winningColor == null) { 
-				winningColor = piece.color;
-			}
-			// Both colors must be on the board for the game to be still going
-			if (winningColor != piece.color) {
-				gameOver = false;
-			}
-		}
-		return gameOver;
+	public boolean isEndgame() {
+		return endgame;
 	}
 	
 	public boolean isEmpty(Space space) {
@@ -128,6 +123,10 @@ public class BoardState implements Printable {
 		
 		for (Entry entry : pieces.iterateSpaces(color)) {
 			states.addAll(getPossibleStates(entry.space, color));
+		}
+		
+		if (states.size() < 1) {
+			endgame = true;
 		}
 		
 		return states;
@@ -144,9 +143,9 @@ public class BoardState implements Printable {
 		
 		//For Each Direction
 		for (Direction direction : piece.getDirections()) {
-			
 			//Track the adjacent spaces
 			Space adjacent = grid.getAdjacent(space, direction);
+			
 			if (adjacent != null) {					
 				if (isEmpty(adjacent)) {
 					//log any open spaces
