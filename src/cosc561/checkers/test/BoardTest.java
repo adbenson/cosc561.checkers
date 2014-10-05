@@ -355,15 +355,32 @@ public class BoardTest {
 	}
 	
 	@Test
-	public void getAllPossibleStates() throws IllegalMoveException { 
+	public void getAllPossibleStatesEmptyBoard() throws IllegalMoveException { 
 		//Setup
 		
 		//Test
-		board.getAllPossibleStates(RED);
+		List<BoardState> red = board.getAllPossibleStates(RED);
+		List<BoardState> black = board.getAllPossibleStates(BLACK);
+		
 		
 		//Validate
+		assertEquals(0, red.size());
+		assertEquals(0, black.size());
 		
+	}
+	
+	@Test
+	public void getAllPossibleStates() throws IllegalMoveException { 
+		//Setup
+		board = board.addStartingPieces();
 		
+		//Test
+		List<BoardState> states = board.getAllPossibleStates(RED);
+		System.out.println(board);
+		System.out.println(states);
+				
+		//Validate
+		assertEquals(7, states.size());
 		
 	}
 	
