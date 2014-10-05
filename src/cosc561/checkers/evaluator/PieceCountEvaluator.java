@@ -17,6 +17,10 @@ public class PieceCountEvaluator extends Evaluator {
 		for (Piece piece : state.getPieces()) {
 			value += (piece.color == playerColor)? 1 : -1;
 		}
+		
+		if (currentPlayer != playerColor) {
+			value = -value;
+		}
 			
 		return new EvaluatedState(state, value);
 	}
