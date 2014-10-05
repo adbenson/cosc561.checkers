@@ -11,8 +11,8 @@ public class NaiveEvaluator extends Evaluator {
 	}
 
 	@Override
-	public int evaluate(BoardState state, PlayerColor currentPlayer) {
-		return 0;
+	public EvaluatedState evaluate(BoardState state, PlayerColor currentPlayer) {
+		return new EvaluatedState(state, 0);
 	}
 
 }

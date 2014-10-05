@@ -10,6 +10,9 @@ public abstract class Evaluator {
 	public Evaluator(PlayerColor playerColor) {
 		this.playerColor = playerColor;
 	}
+
+	public abstract EvaluatedState evaluate(BoardState state, PlayerColor currentPlayer);
+	
 	public static class EvaluatedState implements Comparable<EvaluatedState> {
 		public final BoardState state;
 		private final int score;
@@ -45,6 +48,5 @@ public abstract class Evaluator {
 		}
 	}
 
-	public abstract int evaluate(BoardState state, PlayerColor currentPlayer);
 	
 }

@@ -11,14 +11,14 @@ public class PieceCountEvaluator extends Evaluator {
 	}
 
 	@Override
-	public int evaluate(BoardState state, PlayerColor currentPlayer) {
+	public EvaluatedState evaluate(BoardState state, PlayerColor currentPlayer) {
 		int value = 0;
 		
 		for (Piece piece : state.getPieces()) {
 			value += (piece.color == playerColor)? 1 : -1;
 		}
 			
-		return value;
+		return new EvaluatedState(state, value);
 	}
 
 }
