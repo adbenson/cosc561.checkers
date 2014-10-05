@@ -1,9 +1,11 @@
 package cosc561.checkers.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
+import cosc561.checkers.model.PlayerTurn.Change;
 
 public class PlayerTurn {
 		
@@ -19,8 +21,38 @@ public class PlayerTurn {
 		this.changes.add(change);
 	}
 	
+	public boolean hasChange(Change change) {
+		boolean match = false;
+		for (Change thisChange : changes) {
+			if (thisChange.equals(change)) {
+				match = true;
+			}
+		}
+		return match;
+	}
+	
 	public List<Change> getChanges() {
 		return changes;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof PlayerTurn) {
+			return false;
+		}
+		
+		PlayerTurn that = (PlayerTurn)other;
+		if (this.changes.size() != that.changes.size()) {
+			return false;
+		}
+		
+		for (Change thisChange : changes) {
+			if (!that.hasChange(thisChange)) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	public String toString() {
@@ -48,6 +80,19 @@ public class PlayerTurn {
 		
 		@Override
 		public abstract String toString();
+		
+		@Override
+		public boolean equals(Object other) {
+			if (!this.getClass().equals(other.getClass())) {
+				return false;
+			}
+			Change that = (Change)other;
+			return (this.piece == that.piece) &&
+					(this.to == that.to) &&
+					(this.from == that.from) &&
+					(this.remove == that.remove);
+					
+		}
 	}
 	
 	public static class Add extends Change {
@@ -95,6 +140,10 @@ public class PlayerTurn {
 		@Override
 		public String toString() {
 			return "Move "+piece+" from "+from+" to "+to;
+		}
+
+		public Move reverse() {
+			return new Move(piece, to, from);
 		}
 	}
 	

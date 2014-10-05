@@ -16,6 +16,7 @@ import cosc561.checkers.model.Grid;
 import cosc561.checkers.model.Piece;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.PlayerColor;
+import cosc561.checkers.model.PlayerTurn.Move;
 import cosc561.checkers.model.Space;
 
 public class BoardTest {
@@ -406,6 +407,25 @@ public class BoardTest {
 		
 		b2.movePiece(null, space(22), space(18));
 		assertTrue(board.equals(b2));
+	}
+	
+	@Test
+	public void testIsRepeat() throws IllegalMoveException {
+
+		board.addPiece(Piece.get(RED), space(22));
+		
+		board.movePiece(Piece.get(RED), space(22), space(18));
+		
+		board = new BoardState(board, BLACK);
+		board = new BoardState(board, RED);
+		
+		board.movePiece(Piece.get(RED), space(18), space(22));
+		
+		board = new BoardState(board, BLACK);
+		
+		Move move = new Move(Piece.get(RED), space(22), space(18));
+		assertTrue(board.isRepeat(move));
+		
 	}
 
 }

@@ -64,7 +64,7 @@ public class BoardState implements Printable {
 		}
 	}
 	
-	private void apply(Change change) throws IllegalMoveException {
+	public void apply(Change change) throws IllegalMoveException {
 		change.applyTo(this.pieces);
 		turn.addChange(change);
 		
@@ -112,17 +112,29 @@ public class BoardState implements Printable {
 		apply(new King(piece, space));
 	}
 	
-	private boolean isRepeat(Space space) {
-		//Trivial search did this space have the same thing in it last turn?
-		if (depth > 3 && previous.previous.getPiece(space) == getPiece(space)) {
-			return this.repeats();
+	public boolean isRepeat(Move move) {
+		//Less than 4 depth, no time for back and forth
+		if (depth >= 4) {
+			
+			BoardState s1 = getPrevious(1);
+			PlayerTurn lastTurn = s1.turn;	
+			
+			BoardState s2 = getPrevious(3);
+			PlayerTurn beforeThat = s2.turn;
+
+			return (lastTurn.hasChange(move.reverse())) &&
+					(beforeThat.hasChange(move));
+			
 		}
 		
 		return false;
 	}
 	
-	private boolean repeats() {
-		return true;
+	private BoardState getPrevious(int n) {
+		if (n == 0) {
+			return this;
+		}
+		return previous.getPrevious(n-1);
 	}
 
 	public boolean isEndgame() {
@@ -185,11 +197,12 @@ public class BoardState implements Printable {
 		if (jumpOptions.isEmpty() && !emptyAdjacents.isEmpty()) {
 			//Consider empty spaces only when no jumps are available
 			for (Space emptySpace : emptyAdjacents) {
-				BoardState state = new BoardState(this, color);
-				state.movePiece(piece, space, emptySpace);
-				
+				Move move = new Move(piece, space, emptySpace);
+								
 				//Only kings can repeat moves
-				if (!piece.isKing() || !state.isRepeat(space)) {
+				if (!piece.isKing() || !isRepeat(move)) {
+					BoardState state = new BoardState(this, color);
+					state.apply(move);
 					states.add(state);
 				}
 			}
