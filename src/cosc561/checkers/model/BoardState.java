@@ -83,7 +83,7 @@ public class BoardState implements Printable {
 		return pieces.get(space);
 	}
 
-	public void removePiece(Space space) throws IllegalMoveException {
+	public void removePiece(Space space) throws IllegalMoveException  {
 		pieces.remove(space);
 		history.push("Removed Piece: " + space.id);
 	}
@@ -166,64 +166,66 @@ public class BoardState implements Printable {
 		//FORCE JUMP LOGIC
 		if (jumpOptions.isEmpty() && !emptyAdjacents.isEmpty()) {
 			//Consider empty spaces only when no jumps are available
-			for (Space emptySpace : emptyAdjacents) { 
+			for (Space emptySpace : emptyAdjacents) {
 				BoardState state = new BoardState(this, color);
-				if (state.movePiece(space, emptySpace)) {
+				state.movePiece(space, emptySpace);
+				
+				//Only kings can repeat moves
+				if (!piece.isKing() || !state.isRepeat(space)) {
 					states.add(state);
 				}
 			}
+
 		} else if (!jumpOptions.isEmpty()) {
 			for (Jump jump: jumpOptions) { 
 				BoardState state = new BoardState(this, color);
+				
 				state.movePiece(space, jump.landing);
 				state.removePiece(jump.capture);
-				states.addAll(findJumpOptionStates(jump, piece, state, color));
+				states.addAll(state.findJumpOptionStates(jump.landing, piece, color));
 			}
-			
 		}
-
 		
 		return states;
 	}
-	private ArrayList<BoardState> findJumpOptionStates(Jump jump, Piece piece, BoardState state, PlayerColor color) throws IllegalMoveException {
+	
+	private ArrayList<BoardState> findJumpOptionStates(Space space, Piece piece, PlayerColor color) throws IllegalMoveException {
 		
 		ArrayList<BoardState> statesToAdd = new ArrayList<BoardState>();
 		
-			ArrayList<Jump> jumpOptions = new ArrayList<Jump>();
-			
-			//For Each Direction
-			for (Direction direction : piece.getDirections()) {
-				Space adjacent = grid.getAdjacent(jump.landing, direction);
+		ArrayList<Jump> jumpOptions = new ArrayList<Jump>();
+		
+		//For Each Direction
+		for (Direction direction : piece.getDirections()) {
+			Space adjacent = grid.getAdjacent(space, direction);
 
-				//Make sure we don't consider jumping back over the piece we just captured
-				if (adjacent != null && adjacent != jump.capture) {					
-					
-					if (!isEmpty(adjacent)) {
-						//log any filled spaces and look for jump options
-						if (piece.isOpponent(getPiece(adjacent))) {
-							Space landingSpace = grid.getAdjacent(adjacent, direction);
-							if (landingSpace != null && isEmpty(landingSpace)) {
-								Jump newJump = new Jump(jump.landing, adjacent, landingSpace);
-								jumpOptions.add(newJump);
-							}//no where to land
-						}//piece was adjacent but not our enemy
-					}//adjacent space was empty
-				}//adjacent space is null or where we came from
+			//If the adjacent space is an enemy
+			if (adjacent != null && !isEmpty(adjacent) && piece.isOpponent(getPiece(adjacent))) {
+				
+				//log any filled spaces and look for jump options
+				Space landingSpace = grid.getAdjacent(adjacent, direction);
+				
+				if (landingSpace != null && isEmpty(landingSpace)) {
+					Jump newJump = new Jump(space, adjacent, landingSpace);
+					jumpOptions.add(newJump);
+				}//no where to land
+				
+			}//adjacent space was null or empty
+		}
+		
+		if (!jumpOptions.isEmpty()) {
+			for (Jump jumpOption: jumpOptions) { 
+				BoardState newState = new BoardState(this, color);
+				
+				newState.movePiece(jumpOption.origin, jumpOption.landing);
+				newState.removePiece(jumpOption.capture);
+				statesToAdd.addAll(newState.findJumpOptionStates(jumpOption.landing, piece, color));
 			}
-			
-			if (!jumpOptions.isEmpty()) {
-				for (Jump jumpOption: jumpOptions) { 
-					BoardState newState = new BoardState(state, color);
-					if (newState.movePiece(jumpOption.origin, jumpOption.landing)) {
-						newState.removePiece(jumpOption.capture);
-						statesToAdd.addAll(findJumpOptionStates(jumpOption, piece, newState, color));
-					}
-				}
-			} else {
-				//no options were found. multi jump ends here.
-				//just send back the original state that was passed here
-				statesToAdd.add(state);
-			}
+		} else {
+			//no options were found. multi jump ends here.
+			//just send back the original state that was passed here
+			statesToAdd.add(this);
+		}
 
 		return statesToAdd;
 	}
