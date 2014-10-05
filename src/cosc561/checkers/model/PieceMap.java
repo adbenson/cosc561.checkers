@@ -62,14 +62,6 @@ public class PieceMap implements Iterable<Piece>, Printable {
 		}
 	}
 	
-	public Piece[] getPieces(){
-		return this.pieces;
-	}
-
-	public int getSize() {
-		return pieces.length;
-	}
-	
 	public boolean equals(Object other) {
 		if (!(other instanceof PieceMap)) {
 			return false;
