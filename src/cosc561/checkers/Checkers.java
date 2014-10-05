@@ -23,15 +23,26 @@ public class Checkers {
 		System.out.println(state);
 		
 		Player player = new Player(color, 6);
-		Player opponent = new Player(color.opponent(), 6);
+		Player opponent = new Player(color.opponent(), 1);
 		
-		while (true) {
+		boolean playing = true;
+		while (playing) {
 		
 			state = player.nextMove(state);
 			System.out.println(state);
 			
-			state = opponent.nextMove(state);
-			System.out.println(state);
+			if (state.isEndgame()) {
+				playing = false;
+			}
+			else {
+				state = opponent.nextMove(state);
+				System.out.println(state);
+				
+				if (state.isEndgame()) {
+					playing = false;
+				}
+			}
+
 		}
 
 	}
