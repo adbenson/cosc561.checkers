@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Grid {
+public class Grid implements Printable {
 	
 	public static final boolean FIRST_SPACE_WHITE = true;
 	public static final int SPACES_PER_SIDE = 8;
@@ -128,10 +128,10 @@ public class Grid {
 	}
 	
 	public String toString() {
-		return toString(null);
+		return toString(this);
 	}
 	
-	public String toString(BoardState board) {
+	public String toString(Printable board) {
 		StringBuilder string = new StringBuilder();
 		string.append("   ");
 		for (int col=0; col<SPACES_PER_SIDE; col++) {
@@ -150,24 +150,18 @@ public class Grid {
 					string.append("[]");
 				}
 				else {
-					if (board == null) {
-						string.append((space.id<10? " " : "") + space.id);
-					}
-					else {
-						Piece piece = board.getPiece(space);
-						if (piece != null) {
-							string.append(board.getPiece(space));
-						}
-						else {
-							string.append("  ");
-						}
-					}
+					string.append(board.toString(space));
 				}
 			}
 			string.append("\n");
 		}
 		
 		return string.toString();
+	}
+
+	@Override
+	public String toString(Space space) {
+		return ((space.id < 10)? " " : "") + space.id;
 	}
 
 }

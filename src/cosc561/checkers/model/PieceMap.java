@@ -3,7 +3,7 @@ package cosc561.checkers.model;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class PieceMap implements Iterable<Piece> {
+public class PieceMap implements Iterable<Piece>, Printable {
 	
 	private Piece[] pieces;
 	private static Grid grid = Grid.getInstance();
@@ -76,6 +76,15 @@ public class PieceMap implements Iterable<Piece> {
 		}
 		
 		return Arrays.equals(pieces, ((PieceMap)other).pieces);
+	}
+	
+	public String toString(Space space) {
+		Piece piece = pieces[space.id];
+		return (piece == null)? "  " : piece.toString();
+	}
+	
+	public String toString() {
+		return grid.toString(this);
 	}
 	
 	@Override
@@ -198,13 +207,15 @@ public class PieceMap implements Iterable<Piece> {
 	
 	public class IllegalMoveException extends Exception {
 		private static final long serialVersionUID = 1L;
-
-		public IllegalMoveException(String msg) {
-			super(msg);
+		
+		public IllegalMoveException(String msg) {			
+			this(msg, null);
 		}
 		
 		public IllegalMoveException(String msg, Throwable t) {
 			super(msg, t);
+			System.err.println(msg);
+			System.err.println(PieceMap.this.toString());
 		}
 	}
 

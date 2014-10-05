@@ -9,7 +9,7 @@ import cosc561.checkers.model.PieceMap.Entry;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.PlayerTurn.Change;
 
-public class BoardState {
+public class BoardState implements Printable {
 	
 	private static long lastId = 1;
 
@@ -277,6 +277,8 @@ public class BoardState {
 		return builder.toString();
 	}
 
-
-
+	@Override
+	public String toString(Space space) {
+		return pieces.toString(space);
+	}
 }
