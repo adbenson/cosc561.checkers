@@ -89,9 +89,6 @@ public class BoardState implements Printable {
 		if (shouldKing(to)) {
 			pieces.king(to);
 		}
-		else if (pieces.get(to).isKing()) {
-			return !hasPreviousMatch(to);
-		}
 		history.push("Moved Piece: " + from.id + ", to: " + to.id);
 		return true;
 	}
@@ -189,12 +186,6 @@ public class BoardState implements Printable {
 		
 		return states;
 	}
-
-	private boolean shouldKing(Space space) {
-		Piece piece = pieces.get(space);
-		return (!piece.isKing() && grid.canKing(space, piece.color));
-	}
-
 	private ArrayList<BoardState> findJumpOptionStates(Jump jump, Piece piece, BoardState state, PlayerColor color) throws IllegalMoveException {
 		
 		ArrayList<BoardState> statesToAdd = new ArrayList<BoardState>();
@@ -238,6 +229,11 @@ public class BoardState implements Printable {
 		return statesToAdd;
 	}
 	
+	private boolean shouldKing(Space space) {
+		Piece piece = pieces.get(space);
+		return (!piece.isKing() && grid.canKing(space, piece.color));
+	}
+	
 	public void setPlayed() {
 		played = true;
 	}
@@ -256,12 +252,6 @@ public class BoardState implements Printable {
 		
 		return state;
 	}
-	
-
-	public PieceMap getPieceMap() {
-		return pieces;
-	}
-
 	
 	public Stack<String> getHistory() {
 		return history;
