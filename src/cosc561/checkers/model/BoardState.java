@@ -104,6 +104,22 @@ public class BoardState implements Printable {
 		apply(new Move(piece, from, to));
 	}
 	
+	public void movePiece(int from, ArrayList<Integer> toArr) throws IllegalMoveException { 
+	
+		Piece piece = pieces.get(grid.getSpaceById(from));
+		for (int to : toArr) { 
+			movePiece(piece, grid.getSpaceById(from), grid.getSpaceById(to));
+			from = to;
+		}
+		
+	}
+	
+	public void removePiece(ArrayList<Integer> removes) throws IllegalMoveException { 
+		for (int remove : removes) { 
+			removePiece(pieces.get(grid.getSpaceById(remove)), grid.getSpaceById(remove));
+		}
+	}
+	
 	public void jumpPiece(Piece piece, Space from, Space to, Space capture) throws IllegalMoveException {
 		apply(new Jump(piece, from, to, capture));
 	}
