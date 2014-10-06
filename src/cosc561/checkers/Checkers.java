@@ -1,5 +1,8 @@
 package cosc561.checkers;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -51,50 +54,57 @@ public class Checkers {
 
 	}
 
-	private BoardState getInput(BoardState currentState, PlayerColor player) throws IllegalMoveException {
+	private BoardState getInput(BoardState currentState, PlayerColor player)
+			throws IllegalMoveException, IOException {
+
 		BoardState newState = new BoardState(currentState, player);
-		Scanner scanner = new Scanner(System.in);
 
-		System.out.print("Enter from: ");
-		int from = 0;
-		while (!scanner.hasNextInt()) {
-			scanner.next();
-		}
-		from = scanner.nextInt();
+		try {
 
-		ArrayList<Integer> toCoord = new ArrayList<Integer>();
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					System.in));
+			System.out.print("Enter from: ");
+			int from = Integer.parseInt(br.readLine());
 
-		System.out.println("Enter to: ");
-		while (scanner.hasNextInt()) {
-
-			int num = 0;
-			num = scanner.nextInt();
-			if (num != -1) {
-				toCoord.add(num);
-			} else {
-				break;
+			ArrayList<Integer> toCoord = new ArrayList<Integer>();
+			int to = 0;
+			while (to != -1) {
+				System.out.print("Enter \"to\": (-1 to quit) ");
+				to = Integer.parseInt(br.readLine());
+				if (to != -1) {
+					toCoord.add(to);
+				}
 			}
-		}
-		for (Integer num : toCoord) {
-			System.out.println("to: " + num);
-		}
 
-		System.out.println("Remove piece?: ");
-		ArrayList<Integer> removes = new ArrayList<Integer>();
-		while (scanner.hasNextInt()) {
-
-			int num = 0;
-			num = scanner.nextInt();
-			if (num != -1) {
-				removes.add(num);
-			} else {
-				break;
+			ArrayList<Integer> removes = new ArrayList<Integer>();
+			int remove = 0;
+			try {
+				while (remove != -1) {
+					System.out.print("Remove Piece: (-1 to quit)");
+					remove = Integer.parseInt(br.readLine());
+					if (remove != -1) {
+						removes.add(remove);
+					}
+				}
+			} catch (NumberFormatException nfe) {
+				System.err.println("Invalid Format!");
 			}
-		}
-		newState.removePiece(removes);
-		newState.movePiece(from, toCoord);
 
-		scanner.close();
+			System.out.println("From is: " + from);
+			for (Integer num : toCoord) {
+				System.out.println("to: " + num);
+			}
+			for (Integer num : removes) {
+				System.out.println("remove: " + num);
+			}
+
+			newState.removePiece(removes);
+			newState.movePiece(from, toCoord);
+		} catch (NumberFormatException nfe) {
+			System.err.println("Invalid Format!");
+			newState = getInput(currentState, player);
+		}
+
 		return newState;
 	}
 
