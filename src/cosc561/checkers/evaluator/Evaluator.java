@@ -33,16 +33,16 @@ public abstract class Evaluator {
 	
 	public static class EvaluatedState implements Comparable<EvaluatedState> {
 		public final BoardState state;
-		private final int score;
+		public final double score;
 				
-		public EvaluatedState(BoardState state, int score) {
+		public EvaluatedState(BoardState state, double cumulativeScore) {
 			this.state = state;
-			this.score = score;
+			this.score = cumulativeScore;
 		}
 
 		@Override
 		public int compareTo(EvaluatedState that) {
-			return this.score - that.score;
+			return (int) (this.score - that.score);
 		}
 		
 		public static EvaluatedState best(EvaluatedState s1, EvaluatedState s2) {
