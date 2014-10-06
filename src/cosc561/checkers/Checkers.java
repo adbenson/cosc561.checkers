@@ -30,21 +30,23 @@ public class Checkers {
 		System.out.println(state);
 		
 		Player player = new Player(color, 6);
-		Player opponent = new Player(color.opponent(), 1);
 		
 		boolean playing = true;
 		while (playing) {
 		
 			state = player.nextMove(state);
-			System.out.println(state);
 			
+			System.out.println(state);
+			System.out.println("--------------------------");
+
 			if (state.isEndgame()) {
 				playing = false;
 			}
 			else {
 				state = getInput(state, color.opponent());//opponent.nextMove(state);
 				System.out.println(state);
-				
+				System.out.println("--------------------------");
+
 				if (state.isEndgame()) {
 					playing = false;
 				}
@@ -100,6 +102,7 @@ public class Checkers {
 
 			newState.removePiece(removes);
 			newState.movePiece(from, toCoord);
+			newState.setPlayed();
 		} catch (NumberFormatException nfe) {
 			System.err.println("Invalid Format!");
 			newState = getInput(currentState, player);
