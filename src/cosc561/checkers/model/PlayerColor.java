@@ -13,7 +13,7 @@ public enum PlayerColor {
 	public static final int LAST_BLACK = 12;
 	public static final int FIRST_RED = 21;
 	
-	public static final PlayerColor startingPlayer = RED;
+	public static final PlayerColor startingPlayer = BLACK;
 	
 	public final Direction[] directions;
 	public final String shortName;
