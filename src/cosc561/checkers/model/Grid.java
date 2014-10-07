@@ -119,14 +119,6 @@ public class Grid implements Printable {
 		return adjacent;
 	}
 	
-	public boolean canKing(Space space, PlayerColor color) {
-		//If the space is on either far row, but not on it's own side
-		boolean endRow = (space.row == 0 || space.row == SPACES_PER_SIDE - 1);
-		boolean oppositeSide = PlayerColor.getColorForStartingSpace(space.id) != color;
-		
-		return endRow && oppositeSide;
-	}
-	
 	public String toString() {
 		return toString(this);
 	}
