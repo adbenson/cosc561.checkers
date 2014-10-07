@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -56,6 +55,7 @@ public class Checkers {
 
 	}
 
+	@SuppressWarnings("unused")
 	private BoardState getInput(BoardState currentState, PlayerColor player)
 			throws IllegalMoveException, IOException {
 
@@ -111,6 +111,7 @@ public class Checkers {
 		return newState;
 	}
 
+	@SuppressWarnings("unused")
 	private PlayerColor inquireColor() {
 		
 		int n = JOptionPane.showOptionDialog(new JFrame(),

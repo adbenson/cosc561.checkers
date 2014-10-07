@@ -1,6 +1,6 @@
 package cosc561.checkers.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +26,7 @@ public class PieceMapTest {
 		pieces = board.getPieces();
 	}
 	
+	@SuppressWarnings("unused")
 	@Test
 	public void testIterateAll() {
 		int i=0;
@@ -37,6 +38,7 @@ public class PieceMapTest {
 		assertEquals(24, i);
 	}
 	
+	@SuppressWarnings("unused")
 	@Test
 	public void testIterateRed() {
 		int i=0;
@@ -48,6 +50,7 @@ public class PieceMapTest {
 		assertEquals(12, i);
 	}
 	
+	@SuppressWarnings("unused")
 	@Test
 	public void testIteratePartialBoardRed() throws IllegalMoveException {
 		System.out.println(grid);
@@ -65,6 +68,7 @@ public class PieceMapTest {
 		assertEquals(9, i);
 	}
 	
+	@SuppressWarnings("unused")
 	@Test
 	public void testIteratePartialBoardAll() throws IllegalMoveException {
 		System.out.println(grid);
@@ -82,6 +86,7 @@ public class PieceMapTest {
 		assertEquals(20, i);
 	}
 
+	@SuppressWarnings("unused")
 	@Test
 	public void testIteratePartialBoardSpaces() throws IllegalMoveException {
 		System.out.println(grid);

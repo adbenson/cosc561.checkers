@@ -2,8 +2,8 @@ package cosc561.checkers.test;
 
 import static cosc561.checkers.model.PlayerColor.BLACK;
 import static cosc561.checkers.model.PlayerColor.RED;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.same;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -19,7 +19,6 @@ import cosc561.checkers.evaluator.Evaluator;
 import cosc561.checkers.evaluator.Evaluator.EvaluatedState;
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
-import cosc561.checkers.model.PlayerColor;
 
 public class SearchTest {
 	

@@ -1,13 +1,16 @@
 package cosc561.checkers.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Stack;
 
 import cosc561.checkers.model.PieceMap.Entry;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
-import cosc561.checkers.model.PlayerTurn.*;
+import cosc561.checkers.model.PlayerTurn.Add;
+import cosc561.checkers.model.PlayerTurn.Change;
+import cosc561.checkers.model.PlayerTurn.Jump;
+import cosc561.checkers.model.PlayerTurn.King;
+import cosc561.checkers.model.PlayerTurn.Move;
+import cosc561.checkers.model.PlayerTurn.Remove;
 
 public class BoardState implements Printable {
 	
@@ -58,7 +61,7 @@ public class BoardState implements Printable {
 		return pieces;
 	}
 	
-	private void apply(PlayerTurn turn) throws IllegalMoveException {
+	public void apply(PlayerTurn turn) throws IllegalMoveException {
 		for (Change change : turn.getChanges()) {
 			apply(change);
 		}
