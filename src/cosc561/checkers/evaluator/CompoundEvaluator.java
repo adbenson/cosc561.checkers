@@ -15,6 +15,9 @@ public class CompoundEvaluator extends Evaluator {
 		evaluators = new HashMap<>();
 		
 		evaluators.put(new PieceCountEvaluator(playerColor), 1.0);
+		//Winning or losing should eclipse all other evaluations
+		//It will normally return 0 to have no impact
+		evaluators.put(new EndgameEvaluator(playerColor), 10.0);
 	}
 
 	@Override
