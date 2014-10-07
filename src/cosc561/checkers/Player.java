@@ -78,10 +78,10 @@ public class Player {
 		
 		
 		if (s1.score > s2.score ^ color == currentPlayer) {
-			return s1;
+			return s2;
 		}
 		else {
-			return s2;
+			return s1;
 		}
 	}
 	
