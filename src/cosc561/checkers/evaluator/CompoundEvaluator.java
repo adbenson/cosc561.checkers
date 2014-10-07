@@ -14,18 +14,25 @@ public class CompoundEvaluator extends Evaluator {
 		super(playerColor);
 		evaluators = new HashMap<>();
 		
-		evaluators.put(new PieceCountEvaluator(playerColor), 0.5);
+		evaluators.put(new PieceCountEvaluator(playerColor), 1.0);
 	}
 
 	@Override
-	public EvaluatedState evaluate(BoardState state, PlayerColor currentPlayer) {
+	protected double evaluateInternal(BoardState state) {
 		double cumulativeScore = 0;
 		
 		for (Map.Entry<Evaluator, Double> entry : evaluators.entrySet()) {
-			cumulativeScore += entry.getKey().evaluate(state, currentPlayer).score * entry.getValue();
+			double score = (entry.getKey()).evaluateInternal(state);
+			//Weight the value appropriately
+			cumulativeScore += super.normalize(score) * entry.getValue();
 		}
 		
-		return new EvaluatedState(state, cumulativeScore);
+		return cumulativeScore;
+	}
+
+	//This is so parent class doesn't re-normalize our scores
+	protected double normalize(double score) {
+		return score;
 	}
 
 }
