@@ -4,7 +4,6 @@ import java.util.List;
 
 import cosc561.checkers.evaluator.Evaluator;
 import cosc561.checkers.evaluator.Evaluator.EvaluatedState;
-import cosc561.checkers.evaluator.EvaluatorManager;
 import cosc561.checkers.evaluator.PieceCountEvaluator;
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;

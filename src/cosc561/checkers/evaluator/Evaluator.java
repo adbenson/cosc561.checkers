@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import cosc561.checkers.evaluator.Evaluator.EvaluatedState;
 import cosc561.checkers.model.BoardState;
-import cosc561.checkers.model.PieceMap;
 import cosc561.checkers.model.PlayerColor;
 
 public abstract class Evaluator {
