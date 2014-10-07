@@ -24,7 +24,7 @@ public class BoardState implements Printable {
 	
 	private PieceMap pieces;
 	
-	private boolean endgame;
+	private PlayerColor winner;
 
 	public BoardState(PlayerColor firstPlayer) {
 		pieces = new PieceMap();
@@ -154,7 +154,7 @@ public class BoardState implements Printable {
 	}
 
 	public boolean isEndgame() {
-		return endgame;
+		return winner != null;
 	}
 	
 	public boolean isEmpty(Space space) {
@@ -169,7 +169,7 @@ public class BoardState implements Printable {
 		}
 		
 		if (states.size() < 1) {
-			endgame = true;
+			winner = color.opponent();
 		}
 		
 		return states;
@@ -295,5 +295,9 @@ public class BoardState implements Printable {
 	@Override
 	public String toString(Space space) {
 		return pieces.toString(space);
+	}
+
+	public PlayerColor winner() {
+		return winner;
 	}
 }
