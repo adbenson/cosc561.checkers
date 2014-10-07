@@ -107,6 +107,15 @@ public class PieceMap implements Iterable<Piece>, Printable {
 		};
 	}
 	
+	public Iterable<Entry> iterateSpaces() {
+		return new Iterable<Entry>() {
+			@Override
+			public Iterator<Entry> iterator() {
+				return new SpaceIterator(null, false);
+			}
+		};
+	}
+	
 	public class Entry {
 		public final Space space;
 		public final Piece piece;
