@@ -139,7 +139,7 @@ public class Grid implements Printable {
 				Space space = grid[row][col];
 				
 				if (space == null) {
-					string.append("[]");
+					string.append("· ");
 				}
 				else {
 					string.append(board.toString(space));
