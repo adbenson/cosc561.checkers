@@ -62,10 +62,31 @@ public class Player {
 		EvaluatedState bestState = null;
 		for (EvaluatedState child : evaluated) {
 			EvaluatedState childResult = negamax(child, depth - 1, player.opponent());
-			bestState = EvaluatedState.worst(bestState, childResult);
+			bestState = optimum(bestState, childResult, player);
 		}
 		
 		return bestState;
+	}
+	
+	public EvaluatedState optimum(EvaluatedState s1, EvaluatedState s2, PlayerColor currentPlayer) {
+		if (s1 == null) {
+			return s2;
+		}
+		if (s2 == null) {
+			return s1;
+		}
+		
+		
+		if (s1.score > s2.score ^ color == currentPlayer) {
+			return s1;
+		}
+		else {
+			return s2;
+		}
+	}
+	
+	public void setEvaluator(Evaluator e) {
+		this.evaluator = e;
 	}
 	
 	public String toString() {

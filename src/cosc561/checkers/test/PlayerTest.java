@@ -16,9 +16,11 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import cosc561.checkers.Player;
+import cosc561.checkers.evaluator.Evaluator;
+import cosc561.checkers.evaluator.Evaluator.EvaluatedState;
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
-import cosc561.checkers.model.PlayerColor;
+import static cosc561.checkers.model.PlayerColor.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PlayerTest {
@@ -29,67 +31,55 @@ public class PlayerTest {
 	BoardState state;
 	BoardState next;
 	
+	EvaluatedState evaluated;
+	EvaluatedState chosen;
+	Evaluator eval;
+	
 	BoardState unplayed;
 	
 	@Before
 	public void setUp() throws IllegalMoveException {
 		state = mock(BoardState.class);
+		unplayed = mock(BoardState.class);
+		eval = mock(Evaluator.class);
+		evaluated = new EvaluatedState(state, 1);
+		
+		
+		
+		player = new Player(RED, 0);
 	}
 	
-	private void initReturnStates() throws IllegalMoveException {
-		List<BoardState> returnStates = new ArrayList<>();
+	@Test
+	public void testNextMoveZeroDepth() throws IllegalMoveException {
+				
+		player = new Player(RED, 0);
+		player.setEvaluator(eval);
 		
-		when(state.getAllPossibleStates(PlayerColor.RED)).thenReturn(returnStates);
-		when(state.getAllPossibleStates(PlayerColor.BLACK)).thenReturn(returnStates);
-		
-		unplayed = mock(BoardState.class);
 		when(state.getFirstUnplayed()).thenReturn(unplayed);
 		
-		returnStates.add(state);
-		returnStates.add(state);
-		returnStates.add(state);
-	}
-
-	@Test
-	public void testNextMoveDepth1() throws IllegalMoveException {
-
-		initReturnStates();
-		
-		player = new Player(PlayerColor.RED, 1);
+		EvaluatedState evalulated = new EvaluatedState(state, 1);
+		when(eval.evaluate(state, RED)).thenReturn(evalulated);
 		
 		next = player.nextMove(state); 
 		
 		assertEquals(unplayed, next);
-		verify(state, times(1)).getAllPossibleStates(PlayerColor.RED);
-		verify(state, times(0)).getAllPossibleStates(PlayerColor.BLACK);
 	}
 	
 	@Test
-	public void testNextMoveDepth2() throws IllegalMoveException {
-		
-		initReturnStates();
-		
-		player = new Player(PlayerColor.RED, 2);
-		
-		next = player.nextMove(state); 
-		
-		assertEquals(unplayed, next);
-		verify(state, times(1)).getAllPossibleStates(PlayerColor.RED);
-		verify(state, times(3)).getAllPossibleStates(PlayerColor.BLACK);
-	}
-	
-	@Test
-	public void testNextMoveDepth3() throws IllegalMoveException {
-		
-		initReturnStates();
+	public void testNextMoveEndgame() throws IllegalMoveException {
 				
-		player = new Player(PlayerColor.RED, 3);
+		player = new Player(RED, 6);
+		player.setEvaluator(eval);
+		
+		when(state.getFirstUnplayed()).thenReturn(unplayed);
+		when(state.isEndgame()).thenReturn(true);
+		
+		EvaluatedState evalulated = new EvaluatedState(state, 1);
+		when(eval.evaluate(state, RED)).thenReturn(evalulated);
 		
 		next = player.nextMove(state); 
 		
-		assertEquals(unplayed, next);
-		verify(state, times(10)).getAllPossibleStates(PlayerColor.RED);
-		verify(state, times(3)).getAllPossibleStates(PlayerColor.BLACK);
+		assertEquals(state, next);
 	}
 
 }
