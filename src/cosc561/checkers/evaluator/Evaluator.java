@@ -13,10 +13,24 @@ public abstract class Evaluator {
 	
 	protected final PlayerColor playerColor;
 	
+	private double factor;
+	
 	public Evaluator(PlayerColor playerColor) {
 		this.playerColor = playerColor;
+		
+		this.factor = 1 / (getRangeMax() - getRangeMin());
 	}
 	
+	/* Default Ranges */
+	
+	protected double getRangeMin() {
+		return 0;
+	}
+
+	protected double getRangeMax() {
+		return 1;
+	}
+
 	public List<EvaluatedState> evaluate(List<BoardState> states, PlayerColor player) {
 		List<EvaluatedState> evaluated = new ArrayList<EvaluatedState>();
 		
@@ -28,8 +42,22 @@ public abstract class Evaluator {
 		
 		return evaluated;
 	}
+	
+	public EvaluatedState evaluate(BoardState state, PlayerColor currentPlayer) {
+		double score = normalize(evaluateInternal(state));
+		
+		if (currentPlayer != playerColor) {
+			score = -score;
+		}
+		
+		return new EvaluatedState(state, score);
+	}
 
-	public abstract EvaluatedState evaluate(BoardState state, PlayerColor currentPlayer);
+	protected double normalize(double score) {		
+		return (score + getRangeMin()) * factor;
+	}
+
+	protected abstract double evaluateInternal(BoardState state);
 	
 	public static class EvaluatedState implements Comparable<EvaluatedState> {
 		public final BoardState state;
@@ -45,25 +73,10 @@ public abstract class Evaluator {
 			return (int) (this.score - that.score);
 		}
 		
-		public static EvaluatedState best(EvaluatedState s1, EvaluatedState s2) {
-			if (s1 == null) {
-				return s2;
-			}
-			if (s2 == null) {
-				return s1;
-			}
-			return (s1.score > s2.score)? s1 : s2;
+		public String toString() {
+			return "Board #"+state.uid+", Score: "+score;
 		}
-		
-		public static EvaluatedState worst(EvaluatedState s1, EvaluatedState s2) {
-			if (s1 == null) {
-				return s2;
-			}
-			if (s2 == null) {
-				return s1;
-			}
-			return (s1.score < s2.score)? s1 : s2;
-		}
+
 	}
 
 	

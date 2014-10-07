@@ -11,18 +11,24 @@ public class PieceCountEvaluator extends Evaluator {
 	}
 
 	@Override
-	public EvaluatedState evaluate(BoardState state, PlayerColor currentPlayer) {
+	public double evaluateInternal(BoardState state) {
 		int value = 0;
 		
 		for (Piece piece : state.getPieces()) {
 			value += (piece.color == playerColor)? 1 : -1;
 		}
-		
-		if (currentPlayer != playerColor) {
-			value = -value;
-		}
 			
-		return new EvaluatedState(state, value);
+		return value;
+	}
+
+	@Override
+	protected double getRangeMin() {
+		return -12;
+	}
+
+	@Override
+	protected double getRangeMax() {
+		return 12;
 	}
 
 }
