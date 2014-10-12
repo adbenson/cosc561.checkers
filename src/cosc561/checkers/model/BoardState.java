@@ -165,10 +165,21 @@ public class BoardState implements Printable {
 	}
 
 	public List<BoardState> getAllPossibleStates(PlayerColor color) throws IllegalMoveException {
+		List<BoardState> jumpStates = new ArrayList<>();
+		List<BoardState> moveStates = new ArrayList<>();
 		List<BoardState> states = new ArrayList<>();
-		
+
 		for (Entry entry : pieces.iterateSpaces(color)) {
-			states.addAll(getPossibleStates(entry.space, color));
+			jumpStates.addAll(getPossibleJumps(entry.space, color));
+			if (jumpStates.isEmpty()) {
+				moveStates.addAll(getPossibleMoves(entry.space, color));
+			}
+		}
+		
+		if (jumpStates.isEmpty()) {
+			states = moveStates;
+		} else {
+			states = jumpStates;
 		}
 		
 		if (states.size() < 1) {
@@ -232,6 +243,87 @@ public class BoardState implements Printable {
 				state.apply(jump);
 				states.addAll(state.findJumpOptionStates(jump.to, piece, color));
 			}
+		}
+		
+		return states;
+	}
+	
+	public List<BoardState> getPossibleJumps(Space space, PlayerColor color) throws IllegalMoveException {
+		List<BoardState> states = new ArrayList<>();
+
+		Piece piece = pieces.get(space);
+		if (piece == null) {
+			return states;
+		}
+
+		ArrayList<Jump> jumpOptions = new ArrayList<Jump>();
+		
+		//For Each Direction
+		for (Direction direction : piece.getDirections()) {
+			//Track the adjacent spaces
+			Space adjacent = grid.getAdjacent(space, direction);
+			
+			if (adjacent != null) {					
+				if (!isEmpty(adjacent)) {
+					//log any filled spaces and look for jump options
+					if (piece.isOpponent(getPiece(adjacent))) {
+						Space landingSpace = grid.getAdjacent(adjacent, direction);
+						if (landingSpace != null && isEmpty(landingSpace)) {
+							Jump jump = new Jump(piece, space, landingSpace, adjacent);
+							jumpOptions.add(jump);
+						}
+					}
+				}
+			}
+		}
+		
+		if (!jumpOptions.isEmpty()) {
+			for (Jump jump: jumpOptions) { 
+				BoardState state = new BoardState(this, color);
+				state.apply(jump);
+				states.addAll(state.findJumpOptionStates(jump.to, piece, color));
+			}
+		}
+		
+		return states;
+	}
+	
+	//non jumps only
+	public List<BoardState> getPossibleMoves(Space space, PlayerColor color) throws IllegalMoveException {
+		List<BoardState> states = new ArrayList<>();
+
+		Piece piece = pieces.get(space);
+		if (piece == null) {
+			return states;
+		}
+
+		ArrayList<Space> emptyAdjacents = new ArrayList<Space>();
+		
+		//For Each Direction
+		for (Direction direction : piece.getDirections()) {
+			//Track the adjacent spaces
+			Space adjacent = grid.getAdjacent(space, direction);
+			
+			if (adjacent != null) {					
+				if (isEmpty(adjacent)) {
+					//log any open spaces
+					emptyAdjacents.add(adjacent);
+				}
+			}
+		}
+		
+		if (!emptyAdjacents.isEmpty()) {
+			for (Space emptySpace : emptyAdjacents) {
+				Move move = new Move(piece, space, emptySpace);
+								
+				//Only kings can repeat moves
+				if (!piece.isKing() || !isRepeat(move)) {
+					BoardState state = new BoardState(this, color);
+					state.apply(move);
+					states.add(state);
+				}
+			}
+
 		}
 		
 		return states;

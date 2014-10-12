@@ -427,5 +427,50 @@ public class BoardTest {
 		assertTrue(board.isRepeat(move));
 		
 	}
+	
+	@Test
+	public void testForceJumpGlobal() throws IllegalMoveException {
+		//Setup - Red has two pieces
+		//This one has two open spaces
+		Piece rPiece1 = Piece.get(RED);
+		board.addPiece(rPiece1, space(14));
+
+		//This one has two jump options
+		Piece rPiece2 = Piece.get(RED);
+		board.addPiece(rPiece2, space(27));
+
+		//This is the piece to be jumped
+		Piece bPiece1 = Piece.get(BLACK);
+		board.addPiece(bPiece1, space(23));
+		
+		//This is a piece to be multi-jumped
+		Piece bPiece3 = Piece.get(BLACK);
+		board.addPiece(bPiece3, space(15));
+		
+		//This is another piece to be single jumped
+		Piece bPiece2 = Piece.get(BLACK);
+		board.addPiece(bPiece2, space(24));
+		
+		//Jumping 23 & 15
+		BoardState jumpOption1 = new BoardState(board, RED);
+		jumpOption1.movePiece(null, space(27), space(11));
+		jumpOption1.removePiece(null, space(23));
+		jumpOption1.removePiece(null, space(15));
+
+		//Jumping 24
+		BoardState jumpOption2 = new BoardState(board, RED);
+		jumpOption2.movePiece(null, space(27), space(20));
+		jumpOption2.removePiece(null, space(24));
+
+		// Test
+		List<BoardState> actualStates = board.getAllPossibleStates(RED);
+
+		// Validate
+		assertTrue(actualStates.size() == 2);
+		assertStates(actualStates, jumpOption1, jumpOption2);
+
+	}
+	
+	
 
 }
