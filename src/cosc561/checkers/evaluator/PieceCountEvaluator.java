@@ -21,7 +21,7 @@ public class PieceCountEvaluator extends Evaluator {
 			if (piece.isKing()) {
 				pValue *= KING_FACTOR;
 			}
-			return pValue;
+			value += pValue;
 		}
 			
 		return value;
