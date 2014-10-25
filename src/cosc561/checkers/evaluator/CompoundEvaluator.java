@@ -8,6 +8,8 @@ import cosc561.checkers.model.PlayerColor;
 
 public class CompoundEvaluator extends Evaluator {
 	
+	private static boolean debug = false;
+	
 	Map<Evaluator, Double> evaluators;
 
 	public CompoundEvaluator(PlayerColor playerColor) {
@@ -24,10 +26,24 @@ public class CompoundEvaluator extends Evaluator {
 	protected double evaluateInternal(BoardState state) {
 		double cumulativeScore = 0;
 		
+		if (debug) {
+			System.out.println(state);
+		}
+		
 		for (Map.Entry<Evaluator, Double> entry : evaluators.entrySet()) {
 			double score = (entry.getKey()).evaluateInternal(state);
 			//Weight the value appropriately
-			cumulativeScore += super.normalize(score) * entry.getValue();
+			double normalized = entry.getKey().normalize(score) * entry.getValue();
+			
+			if (debug) {
+				System.out.println(entry.getKey().getClass().getSimpleName()+": "+normalized);
+			}
+			
+			cumulativeScore += normalized * entry.getValue();
+		}
+		
+		if (debug) {
+			System.out.println("Cumulative: "+cumulativeScore);
 		}
 		
 		return cumulativeScore;
