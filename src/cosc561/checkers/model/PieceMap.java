@@ -64,7 +64,7 @@ public class PieceMap implements Iterable<Piece>, Printable {
 
 	public boolean shouldKing(Space space) {
 		Piece piece = get(space);
-		return (!piece.isKing() && grid.canKing(space, piece.color));
+		return (!piece.isKing() && space.canKing(piece.color));
 	}
 	
 	public boolean equals(Object other) {
@@ -103,6 +103,15 @@ public class PieceMap implements Iterable<Piece>, Printable {
 			@Override
 			public Iterator<Entry> iterator() {
 				return new SpaceIterator(color, false);
+			}
+		};
+	}
+	
+	public Iterable<Entry> iterateSpaces() {
+		return new Iterable<Entry>() {
+			@Override
+			public Iterator<Entry> iterator() {
+				return new SpaceIterator(null, false);
 			}
 		};
 	}

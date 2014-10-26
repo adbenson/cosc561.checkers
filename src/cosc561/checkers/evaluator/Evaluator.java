@@ -11,18 +11,20 @@ public abstract class Evaluator {
 	
 	protected final PlayerColor playerColor;
 	
-	private double factor;
+	private final double factor;
 	
 	public Evaluator(PlayerColor playerColor) {
 		this.playerColor = playerColor;
 		
-		this.factor = 1 / (getRangeMax() - getRangeMin());
+		double range = getRangeMax() - getRangeMin();
+		//Normalize over a range of two : -1 to +1
+		this.factor = 2 / range;
 	}
 	
 	/* Default Ranges */
 	
 	protected double getRangeMin() {
-		return 0;
+		return -1;
 	}
 
 	protected double getRangeMax() {
@@ -52,7 +54,7 @@ public abstract class Evaluator {
 	}
 
 	protected double normalize(double score) {		
-		return (score + getRangeMin()) * factor;
+		return score * factor;
 	}
 
 	protected abstract double evaluateInternal(BoardState state);

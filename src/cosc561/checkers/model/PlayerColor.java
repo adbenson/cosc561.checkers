@@ -7,8 +7,8 @@ import static cosc561.checkers.model.Direction.SW;
 
 
 public enum PlayerColor {
-	RED (new Direction[] {NE, NW}, "X"), 
-	BLACK (new Direction[] {SE, SW}, "O"); 
+	RED (new Direction[] {NE, NW}, "r"), 
+	BLACK (new Direction[] {SE, SW}, "b"); 
 	
 	public static final int LAST_BLACK = 12;
 	public static final int FIRST_RED = 21;
