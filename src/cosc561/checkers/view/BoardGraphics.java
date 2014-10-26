@@ -25,7 +25,7 @@ public class BoardGraphics {
 	private static final int SPACE_LABEL_OFFSET_PX = 5;
 	private static final double PIECE_TO_SPACE_SIZE_RATIO = 0.8;
 	private static final Map<PlayerColor, Color> PIECE_COLORS;
-	private static final Stroke PIECE_BORDER_STROKE = new BasicStroke(2);
+	private static final int PIECE_BORDER_WIDTH = 2;
 	
 	static {
 		PIECE_COLORS = new HashMap<PlayerColor, Color>();
@@ -37,34 +37,28 @@ public class BoardGraphics {
 	private Image offScreenBuffer;
 	
 	private final Container panel;
-	private final Grid grid;
 	
-	private final int width;
-	private final int height;
+	private final int sideLength;
 	
-	private final int spaceWidth;
-	private final int spaceHeight;
+	private final int spaceSize;
 	
-	private final int pieceOffsetX;
-	private final int pieceOffsetY;
-	private final int pieceWidth;
-	private final int pieceHeight;
+	private final int pieceOffset;
+	private final int pieceSize;
+	
+	private final Stroke pieceBorderStroke;
 	
 	public BoardGraphics(Container panel, Grid grid) {
 		this.panel = panel;
-		this.grid = grid;
 		
-		width = panel.getWidth();
-		height = panel.getHeight();
+		sideLength = Math.min(panel.getWidth(), panel.getHeight());
 		
-		spaceWidth = width / Grid.SPACES_PER_SIDE;
-		spaceHeight = height / Grid.SPACES_PER_SIDE;
+		spaceSize = sideLength / Grid.SPACES_PER_SIDE;
 		
-		pieceWidth = (int) (spaceWidth * PIECE_TO_SPACE_SIZE_RATIO);
-		pieceHeight = (int) (spaceHeight * PIECE_TO_SPACE_SIZE_RATIO);
+		pieceSize = (int) (spaceSize * PIECE_TO_SPACE_SIZE_RATIO);
 		
-		pieceOffsetX = (int) ((spaceWidth - pieceWidth) / 2);
-		pieceOffsetY = (int) ((spaceHeight - pieceHeight) / 2);
+		pieceOffset = (int) ((spaceSize - pieceSize) / 2);
+		
+		pieceBorderStroke = new BasicStroke(PIECE_BORDER_WIDTH);
 	}
 	
 	public void init() {
@@ -110,16 +104,16 @@ public class BoardGraphics {
 	}
 
 	private void drawSpace(Space space) {
-		int x = spaceWidth * space.column;
-		int y = spaceHeight * space.row;
+		int x = spaceSize * space.column;
+		int y = spaceSize * space.row;
 		
 		g.setColor(SPACE_COLOR);
-		g.fillRect(x, y, spaceWidth, spaceWidth);
+		g.fillRect(x, y, spaceSize, spaceSize);
 		
 		g.setColor(SPACE_LABEL_COLOR);
 		//For now, draw the label in the lower left
 		//because Java draws text from the lower left so it's easier to register
-		g.drawString(Integer.toString(space.id), x + SPACE_LABEL_OFFSET_PX, y - SPACE_LABEL_OFFSET_PX + spaceWidth);
+		g.drawString(Integer.toString(space.id), x + SPACE_LABEL_OFFSET_PX, y - SPACE_LABEL_OFFSET_PX + spaceSize);
 	}
 
 	public void drawBoard(BoardState board) {
@@ -129,17 +123,18 @@ public class BoardGraphics {
 	}
 
 	private void drawPiece(Entry piece) {
-		int x = (spaceWidth * piece.space.column) + pieceOffsetX;
-		int y = (spaceHeight * piece.space.row) + pieceOffsetY;
+		int x = (spaceSize * piece.space.column) + pieceOffset;
+		int y = (spaceSize * piece.space.row) + pieceOffset;
 		
 		Color color = PIECE_COLORS.get(piece.piece.color);
 		g.setColor(color);
-		g.fillOval(x, y, pieceWidth, pieceHeight);
+		g.fillOval(x, y, pieceSize, pieceSize);
+		
+		g.setStroke(pieceBorderStroke);
 		
 		Color border = color.brighter();
-		g.setStroke(PIECE_BORDER_STROKE);
 		g.setColor(border);
-		g.drawOval(x, y, pieceWidth, pieceHeight);
+		g.drawOval(x, y, pieceSize, pieceSize);
 	}
 	
 }
