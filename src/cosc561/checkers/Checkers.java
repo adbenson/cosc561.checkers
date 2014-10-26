@@ -19,41 +19,58 @@ public class Checkers {
 	public static void main(String[] args) throws Exception {
 		new Checkers();
 	}
-	
+
 	public Checkers() throws Exception {
-		
+
 		BoardWindow window = new BoardWindow();
-		
+
 		System.out.println(Grid.getInstance());
-		
-		PlayerColor color = PlayerColor.RED; //inquireColor();
-		
+
+		PlayerColor color = PlayerColor.RED; // inquireColor();
+
 		BoardState state = new BoardState(PlayerColor.startingPlayer).addStartingPieces();
 		window.render(state);
 		System.out.println(state);
-		
+
 		Player player = new Player(color, 6);
-		
+
 		boolean playing = true;
 		while (playing) {
-		
-			state = player.nextMove(state);
-			
-			window.render(state);
-			window.logAction(state.getTurn().toString());
-			System.out.println(state);
-			System.out.println("--------------------------");
+			boolean p1MadeMove = false;
+			boolean p2MadeMove = false;
 
+			while (p1MadeMove == false) {
+				try {
+					state = player.nextMove(state);
+
+					window.render(state);
+					window.logAction(state.getTurn().toString());
+					System.out.println(state);
+					System.out.println("--------------------------");
+					p1MadeMove = true;
+				} catch (IllegalMoveException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
 			if (state.isEndgame()) {
 				playing = false;
-			}
-			else {
-				state = getInput(state, color.opponent());//opponent.nextMove(state);
-				window.render(state);
-				window.logAction(state.getTurn().toString());
-				System.out.println(state);
-				System.out.println("--------------------------");
+			} else {
+				while (p2MadeMove == false) {
+					try {
 
+						state = getInput(state, color.opponent());// opponent.nextMove(state);
+						window.render(state);
+						window.logAction(state.getTurn().toString());
+						System.out.println(state);
+						System.out.println("--------------------------");
+						p2MadeMove = true;
+					} catch (IllegalMoveException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 				if (state.isEndgame()) {
 					playing = false;
 				}
