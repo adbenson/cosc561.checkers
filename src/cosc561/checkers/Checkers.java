@@ -12,6 +12,7 @@ import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Grid;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.PlayerColor;
+import cosc561.checkers.view.BoardWindow;
 
 public class Checkers {
 	
@@ -21,11 +22,14 @@ public class Checkers {
 	
 	public Checkers() throws Exception {
 		
+		BoardWindow window = new BoardWindow();
+		
 		System.out.println(Grid.getInstance());
 		
 		PlayerColor color = PlayerColor.RED; //inquireColor();
 		
 		BoardState state = new BoardState(PlayerColor.startingPlayer).addStartingPieces();
+		window.render(state);
 		System.out.println(state);
 		
 		Player player = new Player(color, 6);
@@ -35,6 +39,7 @@ public class Checkers {
 		
 			state = player.nextMove(state);
 			
+			window.render(state);
 			System.out.println(state);
 			System.out.println("--------------------------");
 
@@ -43,6 +48,7 @@ public class Checkers {
 			}
 			else {
 				state = getInput(state, color.opponent());//opponent.nextMove(state);
+				window.render(state);
 				System.out.println(state);
 				System.out.println("--------------------------");
 
