@@ -4,13 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 
 import cosc561.checkers.model.BoardState;
+import cosc561.checkers.model.Grid;
 
 public class BoardWindow {
 
@@ -26,8 +29,18 @@ public class BoardWindow {
 	
 	BoardGraphics graphics;
 	
-	public BoardWindow() {
+	Grid grid = Grid.getInstance();
+	
+	public BoardWindow() throws InvocationTargetException, InterruptedException {
 		
+		SwingUtilities.invokeAndWait(new Runnable() {
+			public void run() {
+				initialize();
+			};
+		});
+	}
+
+	protected void initialize() {
 		window = new JFrame();
 		
 		content = window.getContentPane();
@@ -46,7 +59,7 @@ public class BoardWindow {
 		window.pack();
 		window.setVisible(true);
 		
-		graphics = new BoardGraphics(boardPanel);
+		graphics = new BoardGraphics(boardPanel, grid);
 		
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
@@ -69,12 +82,17 @@ public class BoardWindow {
 		return controlPanel;
 	}
 
-	public void render(BoardState board) {
-		graphics.initDraw();
+	public void render(final BoardState board) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				graphics.init();
 
-		graphics.drawBoard(board);
-		
-		graphics.display();
+				graphics.drawGrid(grid);
+				graphics.drawBoard(board);
+				
+				graphics.display();
+			};
+		});
 	}
 
 }
