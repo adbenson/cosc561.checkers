@@ -22,6 +22,7 @@ public class BoardGraphics {
 	private static final Color BOARD_COLOR = Color.WHITE;
 	private static final Color SPACE_COLOR = Color.GRAY;
 	private static final Color SPACE_LABEL_COLOR = Color.WHITE;
+	private static final Color KING_BORDER_COLOR = Color.YELLOW;
 	private static final int SPACE_LABEL_OFFSET_PX = 5;
 	private static final double PIECE_TO_SPACE_SIZE_RATIO = 0.8;
 	private static final Map<PlayerColor, Color> PIECE_COLORS;
@@ -45,6 +46,8 @@ public class BoardGraphics {
 	private final int pieceOffset;
 	private final int pieceSize;
 	
+	private final int kingBorderSize;
+	
 	private final Stroke pieceBorderStroke;
 	
 	public BoardGraphics(Container panel, Grid grid) {
@@ -58,6 +61,8 @@ public class BoardGraphics {
 		
 		pieceOffset = (int) ((spaceSize - pieceSize) / 2);
 		
+		kingBorderSize = pieceSize + (2 * PIECE_BORDER_WIDTH);
+				
 		pieceBorderStroke = new BasicStroke(PIECE_BORDER_WIDTH);
 	}
 	
@@ -135,6 +140,12 @@ public class BoardGraphics {
 		Color border = color.brighter();
 		g.setColor(border);
 		g.drawOval(x, y, pieceSize, pieceSize);
+		
+		
+		if (piece.piece.isKing()) {
+			g.setColor(KING_BORDER_COLOR);
+			g.drawOval(x - PIECE_BORDER_WIDTH, y - PIECE_BORDER_WIDTH, kingBorderSize, kingBorderSize);
+		}
 	}
 	
 }
