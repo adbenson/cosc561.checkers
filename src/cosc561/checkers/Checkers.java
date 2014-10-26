@@ -40,6 +40,7 @@ public class Checkers {
 			state = player.nextMove(state);
 			
 			window.render(state);
+			window.logAction(state.getTurn().toString());
 			System.out.println(state);
 			System.out.println("--------------------------");
 
@@ -49,6 +50,7 @@ public class Checkers {
 			else {
 				state = getInput(state, color.opponent());//opponent.nextMove(state);
 				window.render(state);
+				window.logAction(state.getTurn().toString());
 				System.out.println(state);
 				System.out.println("--------------------------");
 

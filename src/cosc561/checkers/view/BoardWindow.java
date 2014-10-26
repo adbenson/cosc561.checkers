@@ -1,6 +1,7 @@
 package cosc561.checkers.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -9,6 +10,8 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 
@@ -30,6 +33,8 @@ public class BoardWindow {
 	BoardGraphics graphics;
 	
 	Grid grid = Grid.getInstance();
+	
+	JTextArea logArea;
 	
 	public BoardWindow() throws InvocationTargetException, InterruptedException {
 		
@@ -70,7 +75,21 @@ public class BoardWindow {
 		
 		outputPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		outputPanel.setPreferredSize(new Dimension(OUTPUT_WIDTH, 0));
-		outputPanel.setLayout(new GridLayout(0, 2));
+		outputPanel.setLayout(new BorderLayout());
+		
+		JScrollPane scroll = new JScrollPane(logArea);
+		scroll.setPreferredSize(new Dimension(OUTPUT_WIDTH, 0));
+		scroll.setBackground(Color.yellow);
+		outputPanel.add(scroll, BorderLayout.CENTER);
+		
+		logArea = new JTextArea();
+		logArea.setPreferredSize(new Dimension(OUTPUT_WIDTH, 0));
+		logArea.setEditable(false);
+		logArea.setWrapStyleWord(true);
+		logArea.setLineWrap(true);
+		logArea.setBackground(Color.white);
+		
+		outputPanel.add(logArea);
 		
 		return outputPanel;
 	}
@@ -82,6 +101,14 @@ public class BoardWindow {
 		return controlPanel;
 	}
 
+	public void logAction(final String message) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				logArea.append(message);
+			};
+		});
+	}
+	
 	public void render(final BoardState board) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
