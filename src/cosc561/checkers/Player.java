@@ -38,7 +38,6 @@ public class Player {
 		BoardState chosen = chosenEvaluated.state;
 		
 		BoardState play = chosen.getFirstUnplayed();
-		play.setPlayed();
 		
 		System.out.println(play.getTurn());
 		

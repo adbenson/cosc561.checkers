@@ -5,11 +5,15 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.lang.reflect.InvocationTargetException;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -29,6 +33,7 @@ import cosc561.checkers.model.Space;
 public class BoardWindow {
 
 	public static final int OUTPUT_WIDTH = 300;	
+	public static final int PENDING_TURN_HEIGHT = 200;
 	public static final Dimension DIMENSIONS = new Dimension(800, 800);
 	
 	private JFrame window;
@@ -52,6 +57,7 @@ public class BoardWindow {
 	private Grid grid = Grid.getInstance();
 	
 	private JTextArea logArea;
+	private JTextArea pendingTurn;
 	
 	public BoardWindow(Checkers game) throws InvocationTargetException, InterruptedException {
 		
@@ -118,7 +124,22 @@ public class BoardWindow {
 		logArea.setLineWrap(true);
 		logArea.setBackground(Color.white);
 		
-		outputPanel.add(logArea);
+		outputPanel.add(logArea, BorderLayout.CENTER);
+		
+		JPanel pendingPanel = new JPanel();
+		
+		pendingPanel.add(new JLabel("Pending Turn:"));
+		
+		pendingTurn = new JTextArea();
+		pendingTurn.setPreferredSize(new Dimension(OUTPUT_WIDTH, PENDING_TURN_HEIGHT));
+		pendingTurn.setEditable(false);
+		pendingTurn.setWrapStyleWord(true);
+		pendingTurn.setLineWrap(true);
+		pendingTurn.setBackground(Color.LIGHT_GRAY);
+		
+		pendingPanel.add(pendingTurn);
+		
+		outputPanel.add(pendingPanel, BorderLayout.SOUTH);
 		
 		return outputPanel;
 	}
@@ -127,21 +148,80 @@ public class BoardWindow {
 		JPanel controlPanel = new JPanel();
 		controlPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		
-		JButton next = new JButton("Next Turn");
+		JButton start = new JButton("Start New Game");
+		start.addActionListener(startButtonAction());
+		controlPanel.add(start);
+		
+		JButton next = new JButton("Complete Turn");
+		next.addActionListener(nextTurnButtonAction());
 		controlPanel.add(next);
 		
-		JButton apply = new JButton("Apply Turn");
-		controlPanel.add(apply);
-		
-		JButton reset = new JButton("Reset");
+		JButton reset = new JButton("Reset Turn");
 		controlPanel.add(reset);
 		
-		JButton undo = new JButton("Undo");
+		JButton undo = new JButton("Undo Last Turn");
 		controlPanel.add(undo);
 		
 		return controlPanel;
 	}
+	
+	public final Action startButtonAction() {
+		return new AbstractAction("Start New Game") {
+			public void actionPerformed(ActionEvent event) {
+				new Thread(new Runnable() {
+					public void run() {
+						startNewGame();
+					}
+				}).start();
+			}	
+		};
+	};
 
+	public void startNewGame() {
+		PlayerColor color = inquireColor();
+		try {
+			game.startGame(color);
+			
+			logAction("Starting new game as "+ color);
+			logAction(PlayerColor.startingPlayer + " starts\n");
+			
+			if (color == PlayerColor.startingPlayer) {
+				game.playerTurn();
+				logAction(game.getState().getTurn());
+				game.endTurn();
+			}
+			
+		} catch (IllegalMoveException e) {
+			System.err.println("Exception starting new game");
+			e.printStackTrace();
+		}
+		
+		render();
+	}
+	
+	public final Action nextTurnButtonAction() {
+		return new AbstractAction("Complete Turn") {
+			public void actionPerformed(ActionEvent event) {
+				new Thread(new Runnable() {
+					public void run() {
+						try {
+							logAction(game.getState().getTurn());
+							game.endTurn();
+							
+							game.playerTurn();
+							logAction(game.getState().getTurn());
+							game.endTurn();
+						} catch (IllegalMoveException e) {
+							System.err.println("Exception starting new game");
+							e.printStackTrace();
+						}
+						render();
+					}
+				}).start();
+			}	
+		};
+	};
+	
 	private PlayerColor inquireColor() {
 		
 		int n = JOptionPane.showOptionDialog(new JFrame(),
@@ -160,11 +240,14 @@ public class BoardWindow {
 		return PlayerColor.values()[n];
 	}
 	
+	public void logAction(PlayerTurn turn) {
+		logAction(turn.toString());
+	}
 
 	public void logAction(final String message) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				logArea.append(message);
+				logArea.append(message + "\n");
 			};
 		});
 	}
@@ -180,18 +263,9 @@ public class BoardWindow {
 
 				graphics.drawGrid();
 				
-				BoardState temp = new BoardState(board, game.getCurrentPlayer());
-				
-				Piece piece = null;
-				
-				if (dragging()) {
-					piece = removeDraggedPiece(temp);
-				}
-				
-				graphics.drawBoard(temp);
-				
-				if (piece != null) {
-					graphics.drawDraggedPiece(piece, dragTo);
+				if (board != null) {
+					renderBoard(board);
+					pendingTurn.setText(board.getTurn().toString());
 				}
 				
 				graphics.display();
@@ -199,7 +273,21 @@ public class BoardWindow {
 		});
 	}
 	
-//	private void drawInteractedBoard()
+	private void renderBoard(BoardState board) {
+		BoardState temp = new BoardState(board, game.getCurrentPlayer());
+		
+		Piece piece = null;
+		
+		if (dragging()) {
+			piece = removeDraggedPiece(temp);
+		}
+		
+		graphics.drawBoard(temp);
+		
+		if (piece != null) {
+			graphics.drawDraggedPiece(piece, dragTo);
+		}
+	}
 	
 	protected Piece removeDraggedPiece(BoardState temp) {
 		BoardState current = game.getState();

@@ -153,7 +153,7 @@ public class BoardState implements Printable {
 		return false;
 	}
 	
-	private BoardState getPrevious(int n) {
+	public BoardState getPrevious(int n) {
 		if (n == 0) {
 			return this;
 		}
@@ -379,6 +379,10 @@ public class BoardState implements Printable {
 	public String toString() {
 		return turn.player+" Turn "+turnNumber+", Board ID " + uid + "\n" + grid.toString(this);
 	}
+	
+	public BoardState getLastPlayed() {
+		return getFirstUnplayed().previous;
+	}
 
 	public BoardState getFirstUnplayed() {
 		BoardState state = this;
@@ -399,4 +403,5 @@ public class BoardState implements Printable {
 	public PlayerColor winner() {
 		return winner;
 	}
+
 }

@@ -9,37 +9,60 @@ import cosc561.checkers.view.BoardWindow;
 
 public class Checkers {
 	
+	public static final int SEARCH_DEPTH = 6;
+	
 	public static void main(String[] args) throws Exception {
 		new Checkers();
 	}
+	
+	private boolean playing = false;
 
 	private BoardState state;
+	
+	private Player player;
+	
+	private PlayerColor currentPlayer;
 	
 	public Checkers() throws Exception {
 
 		BoardWindow window = new BoardWindow(this);
 
 		System.out.println(Grid.getInstance());
+
+		window.render();
 		
-		startGame(PlayerColor.RED);
-		
-		window.render(state);
+		window.startNewGame();
 	}
 
-	public BoardState startGame(PlayerColor computerPlayer) throws IllegalMoveException {
-		state = new BoardState(computerPlayer).addStartingPieces();
+	public void startGame(PlayerColor computerPlayer) throws IllegalMoveException {
+		player = new Player(computerPlayer, SEARCH_DEPTH);
+		currentPlayer = PlayerColor.startingPlayer;
 		
-		return state;
+		state = new BoardState(null).addStartingPieces();
+		state = new BoardState(state, currentPlayer);
+		playing = true;
 	}
 
-	public void nextTurn() {
+	public void playerTurn() throws IllegalMoveException {
+		state = player.nextMove(state);
+	}
+
+	public void endTurn() {
+		if (state.isEndgame()) {
+			playing = false;
+		}
+		currentPlayer = currentPlayer.opponent();
 		
+		state.setPlayed();
+		state = new BoardState(state, currentPlayer);
 	}
 	
-	public void applyTurn(PlayerTurn turn) throws IllegalMoveException {
-		state = new BoardState(state, turn.player);
-		
-		state.apply(turn);
+	private void resetTurn() {
+		state = new BoardState(state.getLastPlayed(), currentPlayer);
+	}
+	
+	private void undoTurn() {
+		state = state.getPrevious(0);
 	}
 
 	public BoardState getState() {
@@ -47,8 +70,11 @@ public class Checkers {
 	}
 
 	public PlayerColor getCurrentPlayer() {
-		// TODO Track current player color
-		return PlayerColor.RED;
+		return currentPlayer;
+	}
+	
+	public boolean isPlaying() {
+		return playing;
 	}
 	
 }
