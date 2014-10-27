@@ -6,7 +6,6 @@ import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.util.HashMap;
@@ -44,6 +43,7 @@ public class BoardGraphics {
 	private final int sideLength;
 	
 	private final int spaceSize;
+	private final int halfSpace;
 	
 	private final int pieceOffset;
 	private final int pieceSize;
@@ -62,6 +62,7 @@ public class BoardGraphics {
 		sideLength = Math.min(panel.getWidth(), panel.getHeight());
 		
 		spaceSize = sideLength / Grid.SPACES_PER_SIDE;
+		halfSpace = spaceSize / 2;
 		
 		pieceSize = (int) (spaceSize * PIECE_TO_SPACE_SIZE_RATIO);
 		pieceRadius = pieceSize / 2;
@@ -117,16 +118,15 @@ public class BoardGraphics {
 	}
 
 	private void drawSpace(Space space) {
-		int x = spaceSize * space.column;
-		int y = spaceSize * space.row;
+		Point origin = getOrigin(space);
 		
 		g.setColor(SPACE_COLOR);
-		g.fillRect(x, y, spaceSize, spaceSize);
+		g.fillRect(origin.x, origin.y, spaceSize, spaceSize);
 		
 		g.setColor(SPACE_LABEL_COLOR);
 		//For now, draw the label in the lower left
 		//because Java draws text from the lower left so it's easier to register
-		g.drawString(Integer.toString(space.id), x + SPACE_LABEL_OFFSET_PX, y - SPACE_LABEL_OFFSET_PX + spaceSize);
+		g.drawString(Integer.toString(space.id), origin.x + SPACE_LABEL_OFFSET_PX, origin.y - SPACE_LABEL_OFFSET_PX + spaceSize);
 	}
 
 	public void drawBoard(BoardState board) {
@@ -136,33 +136,31 @@ public class BoardGraphics {
 	}
 
 	private void drawPiece(Entry piece) {
-		int x = (spaceSize * piece.space.column) + pieceOffset;
-		int y = (spaceSize * piece.space.row) + pieceOffset;
-		
-		drawPiece(piece.piece, x, y);
+		Point location = getOrigin(piece.space).add(pieceOffset);
+		drawPiece(piece.piece, location);
 	}
 	
 
-	public void drawDraggedPiece(Piece piece, Point to) {
+	public void drawDraggedPiece(Piece piece, Point to, Point dragOffset) {
 		//Later we can add shadow and shit
-		drawPiece(piece, to.x - pieceRadius, to.y - pieceRadius);
+		drawPiece(piece, to.subtract(dragOffset));
 	}
 	
-	private void drawPiece(Piece piece, int x, int y) {
+	private void drawPiece(Piece piece, Point location) {
 		Color color = PIECE_COLORS.get(piece.color);
 		g.setColor(color);
-		g.fillOval(x, y, pieceSize, pieceSize);
+		g.fillOval(location.x, location.y, pieceSize, pieceSize);
 		
 		g.setStroke(pieceBorderStroke);
 		
 		Color border = color.brighter();
 		g.setColor(border);
-		g.drawOval(x, y, pieceSize, pieceSize);
+		g.drawOval(location.x, location.y, pieceSize, pieceSize);
 		
 		
 		if (piece.isKing()) {
 			g.setColor(KING_BORDER_COLOR);
-			g.drawOval(x - PIECE_BORDER_WIDTH, y - PIECE_BORDER_WIDTH, kingBorderSize, kingBorderSize);
+			g.drawOval(location.x - PIECE_BORDER_WIDTH, location.y - PIECE_BORDER_WIDTH, kingBorderSize, kingBorderSize);
 		}
 	}
 
@@ -184,6 +182,19 @@ public class BoardGraphics {
 
 	public Space getSpaceAt(Point point) {
 		return getSpaceAt(point.x, point.y);
+	}
+	
+	private Point getOrigin(Space space) {
+		int x = spaceSize * space.column;
+		int y = spaceSize * space.row;
+		
+		return new Point(x, y);
+	}
+
+	public Point getOffset(Space from, Point to) {
+		Point origin = getOrigin(from);
+		
+		return to.subtract(origin);
 	}
 	
 }

@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.lang.reflect.InvocationTargetException;
 
@@ -53,6 +52,7 @@ public class BoardWindow {
 	private Space selected;
 	private Space dragFrom;
 	private Point dragTo;
+	private Point dragOffset;
 	
 	private Grid grid = Grid.getInstance();
 	
@@ -352,7 +352,7 @@ public class BoardWindow {
 		graphics.drawBoard(temp);
 		
 		if (piece != null) {
-			graphics.drawDraggedPiece(piece, dragTo);
+			graphics.drawDraggedPiece(piece, dragTo, dragOffset);
 		}
 	}
 	
@@ -399,6 +399,11 @@ public class BoardWindow {
 	}
 	
 	public void dragPiece(Space from, Point to) {
+		//Check if this is a new dragging action
+		if (dragFrom == null && from != null) {
+			dragOffset = graphics.getOffset(from, to);
+		}
+		
 		//Allow null 'from' to reset dragging, otherwise check if there's a piece there.
 		if (from == null || game.getState().getPiece(from) != null) {
 			dragFrom = from;
