@@ -19,7 +19,7 @@ public class BoardState implements Printable {
 	private static Grid grid = Grid.getInstance();
 	
 	private final BoardState previous;
-	private final int turnNumber;
+//	private final int turnNumber;
 	private final PlayerTurn turn;
 	public final long uid;
 	
@@ -32,8 +32,7 @@ public class BoardState implements Printable {
 	public BoardState(PlayerColor firstPlayer) {
 		pieces = new PieceMap();
 		previous = null;
-		turnNumber = 1;
-		turn = new PlayerTurn(firstPlayer);
+		turn = new PlayerTurn(firstPlayer, 1);
 		played = true;
 		uid = lastId++;
 		
@@ -43,9 +42,8 @@ public class BoardState implements Printable {
 	public BoardState(BoardState board, PlayerColor color) {
 		this.pieces = new PieceMap(board.pieces);
 		this.previous = board;
-		this.turnNumber = board.turnNumber + 1;
 		this.played = false;
-		this.turn = new PlayerTurn(color);
+		this.turn = new PlayerTurn(color, board.turn.turnNumber + 1);
 		uid = lastId++;
 	}
 
@@ -137,7 +135,7 @@ public class BoardState implements Printable {
 	
 	public boolean isRepeat(Move move) {
 		//Less than 4 depth, no time for back and forth
-		if (turnNumber >= 4) {
+		if (turn.turnNumber >= 4) {
 			
 			BoardState s1 = getPrevious(1);
 			PlayerTurn lastTurn = s1.turn;	
@@ -377,7 +375,7 @@ public class BoardState implements Printable {
 	}
 
 	public String toString() {
-		return turn.player+" Turn "+turnNumber+", Board ID " + uid + "\n" + grid.toString(this);
+		return turn.player+" Turn "+turn.turnNumber+", Board ID " + uid + "\n" + grid.toString(this);
 	}
 	
 	public BoardState getLastPlayed() {

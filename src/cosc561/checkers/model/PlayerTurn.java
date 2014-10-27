@@ -9,10 +9,12 @@ public class PlayerTurn {
 		
 	private final List<Change> changes;
 	public final PlayerColor player;
+	public final int turnNumber;
 	
-	public PlayerTurn(PlayerColor player) {
+	public PlayerTurn(PlayerColor player, int turnNumber) {
 		this.changes = new ArrayList<>();
 		this.player = player;
+		this.turnNumber = turnNumber;
 	}
 	
 	public void addChange(Change change) {
