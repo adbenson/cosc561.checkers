@@ -33,8 +33,8 @@ import cosc561.checkers.model.Space;
 public class BoardWindow {
 
 	public static final int OUTPUT_WIDTH = 300;	
-	public static final int PENDING_TURN_HEIGHT = 200;
-	public static final Dimension DIMENSIONS = new Dimension(800, 800);
+	public static final int PENDING_TURN_HEIGHT = 150;
+	public static final Dimension DIMENSIONS = new Dimension(750, 750);
 	
 	private JFrame window;
 	private Container content;
@@ -106,29 +106,33 @@ public class BoardWindow {
 	}
 
 	private JPanel createOutputPanel() {
-		JPanel outputPanel = new JPanel();
+		JPanel outputPanel = new JPanel(new BorderLayout());
 		
 		outputPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		outputPanel.setPreferredSize(new Dimension(OUTPUT_WIDTH, 0));
-		outputPanel.setLayout(new BorderLayout());
 		
 		JScrollPane scroll = new JScrollPane(logArea);
 		scroll.setPreferredSize(new Dimension(OUTPUT_WIDTH, 0));
 		scroll.setBackground(Color.yellow);
 		outputPanel.add(scroll, BorderLayout.CENTER);
 		
+		JPanel logPanel = new JPanel();
+		logPanel.add(new JLabel("Play Log"));
+		
 		logArea = new JTextArea();
-		logArea.setPreferredSize(new Dimension(OUTPUT_WIDTH, 0));
+		logArea.setPreferredSize(new Dimension(OUTPUT_WIDTH, DIMENSIONS.height - PENDING_TURN_HEIGHT));
 		logArea.setEditable(false);
 		logArea.setWrapStyleWord(true);
 		logArea.setLineWrap(true);
 		logArea.setBackground(Color.white);
+
+		logPanel.add(logArea);
 		
-		outputPanel.add(logArea, BorderLayout.CENTER);
+		outputPanel.add(logPanel, BorderLayout.CENTER);
 		
 		JPanel pendingPanel = new JPanel();
 		
-		pendingPanel.add(new JLabel("Pending Turn:"));
+		pendingPanel.add(new JLabel("Pending Turn"));
 		
 		pendingTurn = new JTextArea();
 		pendingTurn.setPreferredSize(new Dimension(OUTPUT_WIDTH, PENDING_TURN_HEIGHT));
