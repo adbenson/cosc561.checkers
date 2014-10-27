@@ -56,7 +56,7 @@ public class PlayerTurn {
 	}
 	
 	public String toString() {
-		String turn = player + " turn:\n";
+		String turn = "** Turn #"+turnNumber+": "+player + " **\n";
 		for (Change change : changes) {
 			turn += change + "\n";
 		}
@@ -67,13 +67,13 @@ public class PlayerTurn {
 		public final Piece piece;
 		public final Space from;
 		public final Space to;
-		public final Space remove;
+		public final Remove capture;
 		
-		public Change(Piece piece, Space from, Space to, Space remove) {
+		public Change(Piece piece, Space from, Space to, Remove remove) {
 			this.piece = piece;
 			this.from = from;
 			this.to = to;
-			this.remove = remove;
+			this.capture = remove;
 		}
 
 		public abstract void applyTo(PieceMap pieces) throws IllegalMoveException;
@@ -90,7 +90,7 @@ public class PlayerTurn {
 			return (this.piece == that.piece) &&
 					(this.to == that.to) &&
 					(this.from == that.from) &&
-					(this.remove == that.remove);
+					(this.capture == that.capture);
 					
 		}
 	}
@@ -113,17 +113,17 @@ public class PlayerTurn {
 	
 	public static class Remove extends Change {
 		public Remove(Piece piece, Space remove) {
-			super(piece, null, null, remove);
+			super(piece, remove, null, null);
 		}
 
 		@Override
 		public void applyTo(PieceMap pieces) throws IllegalMoveException {
-			pieces.remove(remove);
+			pieces.remove(from);
 		}
 
 		@Override
 		public String toString() {
-			return "Remove "+piece+" from "+remove;
+			return "Remove "+piece+" from "+from;
 		}
 	}
 	
@@ -164,19 +164,23 @@ public class PlayerTurn {
 	}
 
 	public static class Jump extends Change {
-		public Jump(Piece piece, Space from, Space to, Space capture) {
+		public Jump(Piece piece, Space from, Space to, Remove capture) {
 			super(piece, from, to, capture);
+		}
+
+		public Jump(Piece piece, Space from, Space to, Piece captured, Space capture) {
+			this(piece, from, to, new Remove(captured, capture));
 		}
 
 		@Override
 		public void applyTo(PieceMap pieces) throws IllegalMoveException {
 			pieces.move(from, to);
-			pieces.remove(remove);
+			capture.applyTo(pieces);
 		}
 
 		@Override
 		public String toString() {
-			return "Jumped "+piece+" from "+from+" to "+to+" capturing "+remove;
+			return "Jumped "+piece+" from "+from+" to "+to+",\n\tCapturing "+capture.piece+" at "+capture.from;
 		}
 		
 	}

@@ -125,7 +125,8 @@ public class BoardState implements Printable {
 	
 	public void jumpPiece(Space from, Space to, Space capture) throws IllegalMoveException {
 		Piece piece = pieces.get(from);
-		apply(new Jump(piece, from, to, capture));
+		Piece captured = pieces.get(capture);
+		apply(new Jump(piece, from, to, captured, capture));
 	}
 	
 	public void kingPiece(Space space) throws IllegalMoveException {
@@ -214,10 +215,11 @@ public class BoardState implements Printable {
 					emptyAdjacents.add(adjacent);
 				} else {
 					//log any filled spaces and look for jump options
-					if (piece.isOpponent(getPiece(adjacent))) {
+					Piece adjacentPiece = getPiece(adjacent);
+					if (piece.isOpponent(adjacentPiece)) {
 						Space landingSpace = grid.getAdjacent(adjacent, direction);
 						if (landingSpace != null && isEmpty(landingSpace)) {
-							Jump jump = new Jump(piece, space, landingSpace, adjacent);
+							Jump jump = new Jump(piece, space, landingSpace, adjacentPiece, adjacent);
 							jumpOptions.add(jump);
 						}
 					}
@@ -268,10 +270,11 @@ public class BoardState implements Printable {
 			if (adjacent != null) {					
 				if (!isEmpty(adjacent)) {
 					//log any filled spaces and look for jump options
-					if (piece.isOpponent(getPiece(adjacent))) {
+					Piece adjacentPiece = getPiece(adjacent);
+					if (piece.isOpponent(adjacentPiece)) {
 						Space landingSpace = grid.getAdjacent(adjacent, direction);
 						if (landingSpace != null && isEmpty(landingSpace)) {
-							Jump jump = new Jump(piece, space, landingSpace, adjacent);
+							Jump jump = new Jump(piece, space, landingSpace, adjacentPiece, adjacent);
 							jumpOptions.add(jump);
 						}
 					}
@@ -342,13 +345,14 @@ public class BoardState implements Printable {
 			Space adjacent = grid.getAdjacent(space, direction);
 
 			//If the adjacent space is an enemy
-			if (adjacent != null && !isEmpty(adjacent) && piece.isOpponent(getPiece(adjacent))) {
+			Piece adjacentPiece = getPiece(adjacent);
+			if (adjacent != null && !isEmpty(adjacent) && piece.isOpponent(adjacentPiece)) {
 				
 				//log any filled spaces and look for jump options
 				Space landingSpace = grid.getAdjacent(adjacent, direction);
 				
 				if (landingSpace != null && isEmpty(landingSpace)) {
-					Jump jump = new Jump(piece, space, landingSpace, adjacent);
+					Jump jump = new Jump(piece, space, landingSpace, adjacentPiece, adjacent);
 					jumpOptions.add(jump);
 				}//no where to land
 				
