@@ -36,25 +36,30 @@ public class Checkers {
 
 	public void startGame(PlayerColor computerPlayer) throws IllegalMoveException {
 		player = new Player(computerPlayer, SEARCH_DEPTH);
-		currentPlayer = PlayerColor.startingPlayer;
+		//We'll be immediately ending a turn, so start with the starting player's opponent
+		currentPlayer = PlayerColor.startingPlayer.opponent();
 		
 		state = new BoardState(null).addStartingPieces();
-		state = new BoardState(state, currentPlayer);
 		playing = true;
+		
+		endTurn(true);
 	}
 
 	public void playerTurn() throws IllegalMoveException {
 		state = player.nextMove(state);
 	}
 
-	public void endTurn() {
+	public synchronized void endTurn(boolean newState) {
 		if (state.isEndgame()) {
 			playing = false;
 		}
 		currentPlayer = currentPlayer.opponent();
 		
 		state.setPlayed();
-		state = new BoardState(state, currentPlayer);
+		
+		if (newState) {
+			state = new BoardState(state, currentPlayer);
+		}
 	}
 	
 	private void resetTurn() {

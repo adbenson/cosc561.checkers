@@ -188,7 +188,7 @@ public class BoardWindow {
 			if (color == PlayerColor.startingPlayer) {
 				game.playerTurn();
 				logAction(game.getState().getTurn());
-				game.endTurn();
+				game.endTurn(true);
 			}
 			
 		} catch (IllegalMoveException e) {
@@ -206,11 +206,11 @@ public class BoardWindow {
 					public void run() {
 						try {
 							logAction(game.getState().getTurn());
-							game.endTurn();
+							game.endTurn(false);
 							
 							game.playerTurn();
 							logAction(game.getState().getTurn());
-							game.endTurn();
+							game.endTurn(true);
 						} catch (IllegalMoveException e) {
 							System.err.println("Exception starting new game");
 							e.printStackTrace();
@@ -346,6 +346,15 @@ public class BoardWindow {
 	
 	public void selectPiece(Space space) {
 		
+	}
+	
+	public void capturePiece(Space space) {
+		try {
+			game.getState().removePiece(space);
+		} catch (IllegalMoveException e) {
+			System.err.println("Exception removing capture piece");
+			e.printStackTrace();
+		}
 	}
 
 	public Space getSpaceAt(Point point) {
