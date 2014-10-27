@@ -1,10 +1,5 @@
 package cosc561.checkers;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -12,6 +7,7 @@ import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Grid;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.PlayerColor;
+import cosc561.checkers.model.PlayerTurn;
 import cosc561.checkers.view.BoardWindow;
 
 public class Checkers {
@@ -28,133 +24,29 @@ public class Checkers {
 
 		System.out.println(Grid.getInstance());
 		
-		PlayerColor color = PlayerColor.RED; //inquireColor();
+		startGame(PlayerColor.RED);
 		
-		state = new BoardState(PlayerColor.startingPlayer).addStartingPieces();
 		window.render(state);
-		System.out.println(state);
-
-		Player player = new Player(color, 6);
-
-		boolean playing = true;
-		while (playing) {
-			boolean p1MadeMove = false;
-			boolean p2MadeMove = false;
-
-			while (p1MadeMove == false) {
-				try {
-					state = player.nextMove(state);
-
-					window.render(state);
-					window.logAction(state.getTurn().toString());
-					System.out.println(state);
-					System.out.println("--------------------------");
-					p1MadeMove = true;
-				} catch (IllegalMoveException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-			}
-			if (state.isEndgame()) {
-				playing = false;
-			} else {
-				while (p2MadeMove == false) {
-					try {
-
-						state = getInput(state, color.opponent());// opponent.nextMove(state);
-						window.render(state);
-						window.logAction(state.getTurn().toString());
-						System.out.println(state);
-						System.out.println("--------------------------");
-						p2MadeMove = true;
-					} catch (IllegalMoveException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				if (state.isEndgame()) {
-					playing = false;
-				}
-			}
-
-		}
-
 	}
 
-	@SuppressWarnings("unused")
-	private BoardState getInput(BoardState currentState, PlayerColor player)
-			throws IllegalMoveException, IOException {
-
-		BoardState newState = new BoardState(currentState, player);
-
-		try {
-
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					System.in));
-			System.out.print("Enter from: ");
-			int from = Integer.parseInt(br.readLine());
-
-			ArrayList<Integer> toCoord = new ArrayList<Integer>();
-			int to = 0;
-			while (to != -1) {
-				System.out.print("Enter \"to\": (-1 to quit) ");
-				to = Integer.parseInt(br.readLine());
-				if (to != -1) {
-					toCoord.add(to);
-				}
-			}
-
-			ArrayList<Integer> removes = new ArrayList<Integer>();
-			int remove = 0;
-			try {
-				while (remove != -1) {
-					System.out.print("Remove Piece: (-1 to quit)");
-					remove = Integer.parseInt(br.readLine());
-					if (remove != -1) {
-						removes.add(remove);
-					}
-				}
-			} catch (NumberFormatException nfe) {
-				System.err.println("Invalid Format!");
-			}
-
-			System.out.println("From is: " + from);
-			for (Integer num : toCoord) {
-				System.out.println("to: " + num);
-			}
-			for (Integer num : removes) {
-				System.out.println("remove: " + num);
-			}
-
-			newState.removePiece(removes);
-			newState.movePiece(from, toCoord);
-			newState.setPlayed();
-		} catch (NumberFormatException nfe) {
-			System.err.println("Invalid Format!");
-			newState = getInput(currentState, player);
-		}
-
-		return newState;
+	public BoardState startGame(PlayerColor computerPlayer) throws IllegalMoveException {
+		state = new BoardState(computerPlayer).addStartingPieces();
+		
+		return state;
 	}
 
-	@SuppressWarnings("unused")
-	private PlayerColor inquireColor() {
+	public void nextTurn() {
 		
-		int n = JOptionPane.showOptionDialog(new JFrame(),
-		    "What color are we playing as today?",
-		    "Choose our color",
-		    JOptionPane.YES_NO_CANCEL_OPTION,
-		    JOptionPane.QUESTION_MESSAGE,
-		    null,
-		    PlayerColor.values(),
-		    null);
+	}
+	
+	public void applyTurn(PlayerTurn turn) throws IllegalMoveException {
+		state = new BoardState(state, turn.player);
 		
-		if (n < 0) {
-			throw new RuntimeException("No color choice made");
-		}
-		
-		return PlayerColor.values()[n];
+		state.apply(turn);
+	}
+
+	public BoardState getState() {
+		return state;
 	}
 	
 }
