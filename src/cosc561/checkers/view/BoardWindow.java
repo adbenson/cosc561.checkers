@@ -4,11 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.Point;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -18,6 +19,8 @@ import javax.swing.border.EtchedBorder;
 import cosc561.checkers.Checkers;
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Grid;
+import cosc561.checkers.model.PlayerColor;
+import cosc561.checkers.model.Space;
 
 public class BoardWindow {
 
@@ -55,11 +58,15 @@ public class BoardWindow {
 	protected void initialize() {
 		window = new JFrame();
 		
+		controlHandler = new ControlHandler(this);
+		
 		content = window.getContentPane();
 		content.setLayout(new BorderLayout());
 		
 		boardPanel = new JPanel();
 		boardPanel.setPreferredSize(DIMENSIONS);
+		boardPanel.addMouseListener(controlHandler);
+		boardPanel.addMouseMotionListener(controlHandler);
 		content.add(boardPanel, BorderLayout.CENTER);
 		
 		controlPanel = createControlPanel();		
@@ -146,6 +153,24 @@ public class BoardWindow {
 				graphics.display();
 			};
 		});
+	}
+	public void movePiece(Space from, Space to) {
+		
+	}
+	
+	public void dragPiece(Space from, Point to) {
+	}
+
+	public void hover(Space space) {
+		
+	}
+	
+	public void selectPiece(Space space) {
+		
+	}
+
+	public Space getSpaceAt(Point point) {
+		return graphics.getSpaceAt(point);
 	}
 
 }
