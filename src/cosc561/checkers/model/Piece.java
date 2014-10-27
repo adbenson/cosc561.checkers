@@ -49,6 +49,10 @@ public class Piece {
 	}
 	
 	public String toString() {
+		return color.name().toLowerCase();
+	}
+	
+	public String toShortString() {
 		return color.shortName + " ";
 	}
 	
@@ -70,6 +74,10 @@ public class Piece {
 		}
 		
 		public String toString() {
+			return color.name().toLowerCase() + " king";
+		}
+		
+		public String toShortString() {
 			return color.shortName + color.shortName;
 		}
 	}

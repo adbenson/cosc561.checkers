@@ -77,7 +77,7 @@ public class PieceMap implements Iterable<Piece>, Printable {
 	
 	public String toString(Space space) {
 		Piece piece = pieces[space.id];
-		return (piece == null)? "  " : piece.toString();
+		return (piece == null)? "  " : piece.toShortString();
 	}
 	
 	public String toString() {
