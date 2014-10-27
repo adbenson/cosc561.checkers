@@ -117,7 +117,7 @@ public class BoardWindow {
 			public void run() {
 				graphics.init();
 
-				graphics.drawGrid(grid);
+				graphics.drawGrid();
 				graphics.drawBoard(board);
 				
 				graphics.display();
