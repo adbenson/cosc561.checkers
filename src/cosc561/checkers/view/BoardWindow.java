@@ -111,22 +111,21 @@ public class BoardWindow {
 		outputPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		outputPanel.setPreferredSize(new Dimension(OUTPUT_WIDTH, 0));
 		
-		JScrollPane scroll = new JScrollPane(logArea);
-		scroll.setPreferredSize(new Dimension(OUTPUT_WIDTH, 0));
-		scroll.setBackground(Color.yellow);
-		outputPanel.add(scroll, BorderLayout.CENTER);
-		
 		JPanel logPanel = new JPanel();
 		logPanel.add(new JLabel("Play Log"));
 		
 		logArea = new JTextArea();
-		logArea.setPreferredSize(new Dimension(OUTPUT_WIDTH, DIMENSIONS.height - PENDING_TURN_HEIGHT));
+//		logArea.setPreferredSize(new Dimension(OUTPUT_WIDTH, DIMENSIONS.height - PENDING_TURN_HEIGHT));
 		logArea.setEditable(false);
 		logArea.setWrapStyleWord(true);
 		logArea.setLineWrap(true);
 		logArea.setBackground(Color.white);
+		
+		JScrollPane scroll = new JScrollPane(logArea);
+		scroll.setPreferredSize(new Dimension(OUTPUT_WIDTH, DIMENSIONS.height - PENDING_TURN_HEIGHT));
+		scroll.setBackground(Color.yellow);
 
-		logPanel.add(logArea);
+		logPanel.add(scroll);
 		
 		outputPanel.add(logPanel, BorderLayout.CENTER);
 		
