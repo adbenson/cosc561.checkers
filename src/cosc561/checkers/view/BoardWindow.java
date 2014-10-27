@@ -182,6 +182,7 @@ public class BoardWindow {
 		try {
 			game.startGame(color);
 			
+			logArea.setText("");
 			logAction("Starting new game as "+ color);
 			logAction(PlayerColor.startingPlayer + " starts\n");
 			
