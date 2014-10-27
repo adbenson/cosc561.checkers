@@ -166,7 +166,12 @@ public class BoardGraphics {
 		int column = x / spaceSize;
 		int row = y / spaceSize;
 		
-		return grid.getSpaceByCoordinates(row, column);
+		try {
+			return grid.getSpaceByCoordinates(row, column);
+		}
+		catch (ArrayIndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 
 	public Space getSpaceAt(Point point) {
