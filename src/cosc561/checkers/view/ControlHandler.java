@@ -1,5 +1,6 @@
 package cosc561.checkers.view;
 
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import javax.swing.event.MouseInputAdapter;
@@ -12,6 +13,7 @@ public class ControlHandler extends MouseInputAdapter {
 
 	private Space hovered;
 	private Space dragFrom;
+	private Point dragOffset;
 	
 	public ControlHandler(BoardWindow window) {
 		super();
@@ -21,7 +23,7 @@ public class ControlHandler extends MouseInputAdapter {
 	@Override
 	public void mouseDragged(MouseEvent event) {
 		if (dragFrom == null) {
-			dragFrom = getSpace(event);
+			throw new RuntimeException("Drag continued without starting?");
 		}
 		window.dragPiece(dragFrom, event.getPoint());
 	}
@@ -55,10 +57,10 @@ public class ControlHandler extends MouseInputAdapter {
 
 	@Override
 	public void mouseExited(MouseEvent event) {
-		dragFrom = null;
+//		dragFrom = null;
 		hovered = null;
 		
-		window.dragPiece(null, null);
+//		window.dragPiece(null, null);
 		window.selectPiece(null);
 		window.hover(null);
 	}
