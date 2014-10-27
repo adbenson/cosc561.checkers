@@ -161,6 +161,7 @@ public class BoardWindow {
 		controlPanel.add(reset);
 		
 		JButton undo = new JButton("Undo Last Turn");
+		undo.addActionListener(undoButtonAction());
 		controlPanel.add(undo);
 		
 		return controlPanel;
@@ -201,7 +202,7 @@ public class BoardWindow {
 		render();
 	}
 	
-	public final Action nextTurnButtonAction() {
+	private final Action nextTurnButtonAction() {
 		return new AbstractAction("Complete Turn") {
 			public void actionPerformed(ActionEvent event) {
 				new Thread(new Runnable() {
@@ -235,6 +236,40 @@ public class BoardWindow {
 				}).start();
 			}	
 		};
+	}
+	
+	private final Action undoButtonAction() {
+		return new AbstractAction("Undo Last Turn") {
+			public void actionPerformed(ActionEvent event) {
+				new Thread(new Runnable() {
+					public void run() {
+						undoTurn();
+					}
+				}).start();
+			}	
+		};
+	}
+	
+	private boolean confirmUndo() {
+		
+		int n = JOptionPane.showConfirmDialog(
+			    window,
+			    "This will undo the last opponent player's turn and this player's response.\nAre you sure?",
+			    "Confirm Undo Last Turn",
+			    JOptionPane.YES_NO_OPTION);
+
+		return n == 0;
+	}
+	
+	private void undoTurn() {
+		if (confirmUndo()) {
+			BoardState lastState = game.getState().getPrevious(1);
+			int lastTurn = lastState.getTurn().turnNumber;
+			int previousTurn = lastState.getPrevious(1).getTurn().turnNumber;
+			logAction("Turn #"+previousTurn+" and #"+lastTurn+" NEVER HAPPENED. Don't speak of it to anyone.");
+			game.undoTurn();
+			render();
+		}
 	}
 	
 	private PlayerColor inquireColor() {
