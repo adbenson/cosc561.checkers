@@ -29,58 +29,40 @@ public class Player {
 			return currentState;
 		}
 		
-		EvaluatedState evaluated = evaluator.evaluate(currentState, color);
-		
-		EvaluatedState chosenEvaluated = negamax(evaluated, searchDepth, color);
-		if (chosenEvaluated == null) {
-			System.out.println();
-		}
+		EvaluatedState chosenEvaluated = negamax(currentState, searchDepth, color);
+
 		BoardState chosen = chosenEvaluated.state;
 		
 		BoardState play = chosen.getFirstUnplayed();
-		
-		System.out.println(play.getTurn());
-		
+		play.setPlayed();
 		return play;
 	}
 	
-	public EvaluatedState negamax(EvaluatedState state, int depth, PlayerColor player) throws IllegalMoveException {
+	public EvaluatedState negamax(BoardState state, int depth, PlayerColor player) throws IllegalMoveException {
 		if (depth == 0) {
-			return state;
+			if (player == color) {
+				return evaluator.evaluate(state, player);
+			}
+			else {
+				return evaluator.evaluate(state, player.opponent());
+			}
 		}
 				
-		List<BoardState> childStates = state.state.getAllPossibleStates(player);
+		List<BoardState> childStates = state.getAllPossibleStates(player);
 		
-		if (state.state.isEndgame()) {
-			return state;
+		if (state.isEndgame()) {
+			return new EvaluatedState(state, 0);
 		}
 		
-		List<EvaluatedState> evaluated = evaluator.evaluate(childStates, player);
-		
 		EvaluatedState bestState = null;
-		for (EvaluatedState child : evaluated) {
+		for (BoardState child : childStates) {
 			EvaluatedState childResult = negamax(child, depth - 1, player.opponent());
-			bestState = optimum(bestState, childResult, player);
+			if (bestState == null || -childResult.score > bestState.score) {
+				bestState = childResult;
+			}
 		}
 		
 		return bestState;
-	}
-	
-	public EvaluatedState optimum(EvaluatedState s1, EvaluatedState s2, PlayerColor currentPlayer) {
-		if (s1 == null) {
-			return s2;
-		}
-		if (s2 == null) {
-			return s1;
-		}
-		
-		
-		if (s1.score > s2.score ^ color == currentPlayer) {
-			return s2;
-		}
-		else {
-			return s1;
-		}
 	}
 	
 	public void setEvaluator(Evaluator e) {
