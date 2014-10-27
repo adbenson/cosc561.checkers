@@ -157,6 +157,7 @@ public class BoardWindow {
 		controlPanel.add(next);
 		
 		JButton reset = new JButton("Reset Turn");
+		reset.addActionListener(resetButtonAction());
 		controlPanel.add(reset);
 		
 		JButton undo = new JButton("Undo Last Turn");
@@ -222,6 +223,19 @@ public class BoardWindow {
 			}	
 		};
 	};
+	
+	private final Action resetButtonAction() {
+		return new AbstractAction("Reset Turn") {
+			public void actionPerformed(ActionEvent event) {
+				new Thread(new Runnable() {
+					public void run() {
+						game.resetTurn();
+						render();
+					}
+				}).start();
+			}	
+		};
+	}
 	
 	private PlayerColor inquireColor() {
 		
