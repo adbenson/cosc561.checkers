@@ -32,7 +32,7 @@ public class BoardState implements Printable {
 	public BoardState(PlayerColor firstPlayer) {
 		pieces = new PieceMap();
 		previous = null;
-		turn = new PlayerTurn(firstPlayer, 1);
+		turn = new PlayerTurn(firstPlayer, 0);
 		played = true;
 		uid = lastId++;
 		
