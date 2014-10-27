@@ -6,6 +6,7 @@ import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.util.HashMap;
@@ -155,6 +156,21 @@ public class BoardGraphics {
 			g.setColor(KING_BORDER_COLOR);
 			g.drawOval(x - PIECE_BORDER_WIDTH, y - PIECE_BORDER_WIDTH, kingBorderSize, kingBorderSize);
 		}
+	}
+
+	public Space getSpaceAt(int x, int y) {
+		if (spaceSize < 1) {
+			return null;
+		}
+		
+		int column = x / spaceSize;
+		int row = y / spaceSize;
+		
+		return grid.getSpaceByCoordinates(row, column);
+	}
+
+	public Space getSpaceAt(Point point) {
+		return getSpaceAt(point.x, point.y);
 	}
 	
 }
