@@ -2,8 +2,8 @@ package cosc561.checkers.evaluator;
 
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Grid;
-import cosc561.checkers.model.PlayerColor;
 import cosc561.checkers.model.PieceMap.Entry;
+import cosc561.checkers.model.PlayerColor;
 
 public class CenterBoardEvaluator extends Evaluator {
 	

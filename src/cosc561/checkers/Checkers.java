@@ -1,8 +1,5 @@
 package cosc561.checkers;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Grid;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
