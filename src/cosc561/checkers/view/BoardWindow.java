@@ -24,17 +24,20 @@ public class BoardWindow {
 	public static final Dimension DIMENSIONS = new Dimension(800, 800);
 	
 	private JFrame window;
-	Container content;
+	private Container content;
 	
-	JPanel boardPanel;
-	JPanel controlPanel;
-	JPanel outputPanel;
+	private JPanel boardPanel;
+	private JPanel controlPanel;
+	private JPanel outputPanel;
 	
-	BoardGraphics graphics;
+	private BoardGraphics graphics;
 	
-	Grid grid = Grid.getInstance();
+	private ControlHandler controlHandler;
 	
-	JTextArea logArea;
+	
+	private Grid grid = Grid.getInstance();
+	
+	private JTextArea logArea;
 	
 	public BoardWindow() throws InvocationTargetException, InterruptedException {
 		
