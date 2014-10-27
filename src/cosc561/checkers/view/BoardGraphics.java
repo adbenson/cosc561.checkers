@@ -50,8 +50,11 @@ public class BoardGraphics {
 	
 	private final Stroke pieceBorderStroke;
 	
+	private final Grid grid;
+	
 	public BoardGraphics(Container panel, Grid grid) {
 		this.panel = panel;
+		this.grid = grid;
 		
 		sideLength = Math.min(panel.getWidth(), panel.getHeight());
 		
@@ -102,7 +105,7 @@ public class BoardGraphics {
 		}
 	}
 	
-	public void drawGrid(Grid grid) {
+	public void drawGrid() {
 		for (Space space : grid.getSpaces()) {
 			drawSpace(space);
 		}
