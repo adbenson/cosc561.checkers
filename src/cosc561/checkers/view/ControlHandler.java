@@ -40,7 +40,12 @@ public class ControlHandler extends MouseInputAdapter {
 
 	@Override
 	public void mouseClicked(MouseEvent event) {
-		window.selectPiece(getSpace(event));
+		if (event.getClickCount() > 1) {
+			window.capturePiece(getSpace(event));
+		}
+		else {
+			window.selectPiece(getSpace(event));
+		}
 	}
 
 	@Override
