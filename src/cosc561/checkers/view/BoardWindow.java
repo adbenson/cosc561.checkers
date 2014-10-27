@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -19,7 +20,10 @@ import javax.swing.border.EtchedBorder;
 import cosc561.checkers.Checkers;
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Grid;
+import cosc561.checkers.model.Piece;
+import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.PlayerColor;
+import cosc561.checkers.model.PlayerTurn;
 import cosc561.checkers.model.Space;
 
 public class BoardWindow {
@@ -40,6 +44,11 @@ public class BoardWindow {
 	
 	private Checkers game;
 	
+	private Space hovered;
+	private Space selected;
+	private Space dragFrom;
+	private Point dragTo;
+	
 	private Grid grid = Grid.getInstance();
 	
 	private JTextArea logArea;
@@ -47,6 +56,11 @@ public class BoardWindow {
 	public BoardWindow(Checkers game) throws InvocationTargetException, InterruptedException {
 		
 		this.game = game;
+		
+		hovered = null;
+		selected = null;
+		dragFrom = null;
+		dragTo = null;
 		
 		SwingUtilities.invokeAndWait(new Runnable() {
 			public void run() {
@@ -78,6 +92,7 @@ public class BoardWindow {
 		window.pack();
 		window.setVisible(true);
 		
+		//Note: this has to be initialized AFTER window.pack(), or dimensions will be zero.
 		graphics = new BoardGraphics(boardPanel, grid);
 		
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -112,6 +127,18 @@ public class BoardWindow {
 		JPanel controlPanel = new JPanel();
 		controlPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		
+		JButton next = new JButton("Next Turn");
+		controlPanel.add(next);
+		
+		JButton apply = new JButton("Apply Turn");
+		controlPanel.add(apply);
+		
+		JButton reset = new JButton("Reset");
+		controlPanel.add(reset);
+		
+		JButton undo = new JButton("Undo");
+		controlPanel.add(undo);
+		
 		return controlPanel;
 	}
 
@@ -142,25 +169,89 @@ public class BoardWindow {
 		});
 	}
 	
+	public void render() {
+		render(game.getState());
+	}
+	
 	public void render(final BoardState board) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				graphics.init();
 
 				graphics.drawGrid();
-				graphics.drawBoard(board);
+				
+				BoardState temp = new BoardState(board, game.getCurrentPlayer());
+				
+				Piece piece = null;
+				
+				if (dragging()) {
+					piece = removeDraggedPiece(temp);
+				}
+				
+				graphics.drawBoard(temp);
+				
+				if (piece != null) {
+					graphics.drawDraggedPiece(piece, dragTo);
+				}
 				
 				graphics.display();
 			};
 		});
 	}
-	public void movePiece(Space from, Space to) {
+	
+//	private void drawInteractedBoard()
+	
+	protected Piece removeDraggedPiece(BoardState temp) {
+		BoardState current = game.getState();
 		
+		Piece piece = current.getPiece(dragFrom);
+		if (piece != null) {
+			try {
+				temp.removePiece(dragFrom);
+			} catch (IllegalMoveException e) {
+				System.err.println("Exception removing piece for drag");
+				e.printStackTrace();
+				return null;
+			}
+		}
+		else {
+			System.out.println("Piece to drag not found");
+		}
+				
+		return piece;
+	}
+
+	protected boolean dragging() {
+		return (dragFrom != null && dragTo != null);
+	}
+
+	public void movePiece(Space from, Space to) {
+		Piece piece = getPiece(from);
+		
+		if (piece == null) {
+			System.out.println("Could not find piece to move");
+			return;
+		}
+		
+		try {
+			game.getState().movePiece(from, to);
+		} catch (IllegalMoveException e) {
+			System.err.println("Exception applying drag move to board state");
+			e.printStackTrace();
+		}
+		
+		render();
 	}
 	
 	public void dragPiece(Space from, Point to) {
+		//Allow null 'from' to reset dragging, otherwise check if there's a piece there.
+		if (from == null || game.getState().getPiece(from) != null) {
+			dragFrom = from;
+			dragTo = to;
+		}
+		render();
 	}
-
+	
 	public void hover(Space space) {
 		
 	}
@@ -171,6 +262,10 @@ public class BoardWindow {
 
 	public Space getSpaceAt(Point point) {
 		return graphics.getSpaceAt(point);
+	}
+	
+	public Piece getPiece(Space space) {
+		return game.getState().getPiece(space);
 	}
 
 }

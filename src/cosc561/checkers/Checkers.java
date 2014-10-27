@@ -45,5 +45,10 @@ public class Checkers {
 	public BoardState getState() {
 		return state;
 	}
+
+	public PlayerColor getCurrentPlayer() {
+		// TODO Track current player color
+		return PlayerColor.RED;
+	}
 	
 }

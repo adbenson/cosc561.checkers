@@ -47,6 +47,7 @@ public class BoardGraphics {
 	
 	private final int pieceOffset;
 	private final int pieceSize;
+	private final int pieceRadius;
 	
 	private final int kingBorderSize;
 	
@@ -63,12 +64,14 @@ public class BoardGraphics {
 		spaceSize = sideLength / Grid.SPACES_PER_SIDE;
 		
 		pieceSize = (int) (spaceSize * PIECE_TO_SPACE_SIZE_RATIO);
+		pieceRadius = pieceSize / 2;
 		
 		pieceOffset = (int) ((spaceSize - pieceSize) / 2);
 		
 		kingBorderSize = pieceSize + (2 * PIECE_BORDER_WIDTH);
 				
 		pieceBorderStroke = new BasicStroke(PIECE_BORDER_WIDTH);
+		
 	}
 	
 	public void init() {
@@ -140,6 +143,11 @@ public class BoardGraphics {
 	}
 	
 
+	public void drawDraggedPiece(Piece piece, Point to) {
+		//Later we can add shadow and shit
+		drawPiece(piece, to.x - pieceRadius, to.y - pieceRadius);
+	}
+	
 	private void drawPiece(Piece piece, int x, int y) {
 		Color color = PIECE_COLORS.get(piece.color);
 		g.setColor(color);

@@ -30,6 +30,7 @@ public class ControlHandler extends MouseInputAdapter {
 	public void mouseMoved(MouseEvent event) {
 		Space hover = getSpace(event);
 		
+		//Don't bother if the space we're hovering hasn't changed
 		if ((hover != null) && ! hover.equals(hovered)) {
 			window.hover(hover);
 		}
@@ -66,10 +67,17 @@ public class ControlHandler extends MouseInputAdapter {
 	@Override
 	public void mouseReleased(MouseEvent event) {
 		Space dropped = getSpace(event);
+		if (dropped == null) {
+			System.out.println("Piece dropped on non-space");
+		}
+		//Don't bother if the piece hasn't actually moved
+		else if (!dropped.equals(dragFrom)) {
+			window.movePiece(dragFrom, dropped);
+			window.selectPiece(dropped);
+		}
 		
-		window.movePiece(dragFrom, dropped);
-		window.selectPiece(dropped);
 		dragFrom = null;
+		window.dragPiece(null, null);
 	}
 	
 	private Space getSpace(MouseEvent event) {

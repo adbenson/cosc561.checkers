@@ -92,6 +92,9 @@ public class BoardState implements Printable {
 	}
 	
 	public Piece getPiece(Space space) {
+		if (space == null) {
+			return null;
+		}
 		return pieces.get(space);
 	}
 	
