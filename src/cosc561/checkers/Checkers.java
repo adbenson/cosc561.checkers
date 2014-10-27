@@ -20,15 +20,17 @@ public class Checkers {
 		new Checkers();
 	}
 
+	private BoardState state;
+	
 	public Checkers() throws Exception {
 
 		BoardWindow window = new BoardWindow();
 
 		System.out.println(Grid.getInstance());
-
-		PlayerColor color = PlayerColor.RED; // inquireColor();
-
-		BoardState state = new BoardState(PlayerColor.startingPlayer).addStartingPieces();
+		
+		PlayerColor color = PlayerColor.RED; //inquireColor();
+		
+		state = new BoardState(PlayerColor.startingPlayer).addStartingPieces();
 		window.render(state);
 		System.out.println(state);
 
