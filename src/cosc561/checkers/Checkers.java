@@ -62,12 +62,13 @@ public class Checkers {
 		}
 	}
 	
-	private void resetTurn() {
+	public void resetTurn() {
 		state = new BoardState(state.getLastPlayed(), currentPlayer);
 	}
 	
-	private void undoTurn() {
-		state = state.getPrevious(0);
+	public void undoTurn() {
+		//Get the state before the last one; we don't need to undo our AI's turns
+		state = state.getPrevious(1);
 	}
 
 	public BoardState getState() {
