@@ -172,7 +172,9 @@ public class BoardWindow {
 			public void actionPerformed(ActionEvent event) {
 				new Thread(new Runnable() {
 					public void run() {
-						startNewGame();
+						if (!game.isPlaying() || confirmStartNewGame()) {
+							startNewGame();
+						}
 					}
 				}).start();
 			}	
@@ -200,6 +202,17 @@ public class BoardWindow {
 		}
 		
 		render();
+	}
+	
+	private boolean confirmStartNewGame() {
+		
+		int n = JOptionPane.showConfirmDialog(
+			    window,
+			    "This will start a new game and erase all data from the current game.\nAre you sure?",
+			    "Confirm Undo Last Turn",
+			    JOptionPane.YES_NO_OPTION);
+
+		return n == 0;
 	}
 	
 	private final Action nextTurnButtonAction() {
