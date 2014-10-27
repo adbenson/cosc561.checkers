@@ -67,8 +67,10 @@ public class Checkers {
 	}
 	
 	public void undoTurn() {
-		//Get the state before the last one; we don't need to undo our AI's turns
-		state = state.getPrevious(1);
+		//We want to go back to before the opponent's last turn.
+		//Previous 1 gets us our last turn, 2 gets us their last turn, 3 gets us before their last turn
+		state = state.getPrevious(3);
+		state = new BoardState(state, currentPlayer);
 	}
 
 	public BoardState getState() {
