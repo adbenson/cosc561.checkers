@@ -171,8 +171,8 @@ public class BoardTest {
 		board = board.addStartingPieces();
 
 		// BLACK
-		board.kingPiece(null, space(10));
-		board.movePiece(null, space(10), space(18));
+		board.kingPiece(space(10));
+		board.movePiece(space(10), space(18));
 
 		List<BoardState> moves = board.getPossibleStates(space(18), RED);
 
@@ -180,8 +180,8 @@ public class BoardTest {
 		assertMoves(moves, Piece.get(BLACK).getKing(), 14, 15);
 
 		// RED
-		board.kingPiece(null, space(23));
-		board.movePiece(null, space(23), space(15));
+		board.kingPiece(space(23));
+		board.movePiece(space(23), space(15));
 
 		moves = board.getPossibleStates(space(15), RED);
 
@@ -195,7 +195,7 @@ public class BoardTest {
 		Piece king = Piece.get(RED);
 
 		board.addPiece(king, space(18));
-		board.kingPiece(king, space(18));
+		board.kingPiece(space(18));
 
 		List<BoardState> moves = board.getPossibleStates(space(18), RED);
 
@@ -241,9 +241,9 @@ public class BoardTest {
 		Piece piece = Piece.get(RED);
 		board.addPiece(piece, space(22));
 		BoardState possBoardState1 = new BoardState(board, RED);
-		possBoardState1.movePiece(null, space(22), space(17));
+		possBoardState1.movePiece(space(22), space(17));
 		BoardState possBoardState2 = new BoardState(board, RED);
-		possBoardState2.movePiece(null, space(22), space(18));
+		possBoardState2.movePiece(space(22), space(18));
 		
 		//Test
 		List<BoardState> actualStates = board.getPossibleStates(space(22), RED);
@@ -262,8 +262,8 @@ public class BoardTest {
 		Piece bPiece = Piece.get(BLACK);
 		board.addPiece(bPiece, space(18));
 		BoardState possBoardState1 = new BoardState(board, RED);
-		possBoardState1.movePiece(null, space(22), space(15));
-		possBoardState1.removePiece(null, space(18));
+		possBoardState1.movePiece(space(22), space(15));
+		possBoardState1.removePiece(space(18));
 
 		//Test
 		List<BoardState> actualStates = board.getPossibleStates(space(22), RED);
@@ -284,11 +284,11 @@ public class BoardTest {
 		Piece bPiece2 = Piece.get(BLACK);
 		board.addPiece(bPiece2, space(17));
 		BoardState possBoardState1 = new BoardState(board, RED);
-		possBoardState1.movePiece(null, space(22), space(15));
-		possBoardState1.removePiece(null, space(18));
+		possBoardState1.movePiece(space(22), space(15));
+		possBoardState1.removePiece(space(18));
 		BoardState possBoardState2 = new BoardState(board, RED);
-		possBoardState2.movePiece(null, space(22), space(13));
-		possBoardState2.removePiece(null, space(17));		
+		possBoardState2.movePiece(space(22), space(13));
+		possBoardState2.removePiece(space(17));		
 		//Test
 		List<BoardState> actualStates = board.getPossibleStates(space(22), RED);
 		
@@ -309,9 +309,9 @@ public class BoardTest {
 		board.addPiece(bPiece2, space(11));
 		
 		BoardState possBoardState1 = new BoardState(board, RED);
-		possBoardState1.movePiece(null, space(22), space(8));
-		possBoardState1.removePiece(null, space(18));		
-		possBoardState1.removePiece(null, space(11));
+		possBoardState1.movePiece(space(22), space(8));
+		possBoardState1.removePiece(space(18));		
+		possBoardState1.removePiece(space(11));
 		
 		//Test
 		List<BoardState> actualStates = board.getPossibleStates(space(22), RED);
@@ -339,15 +339,15 @@ public class BoardTest {
 		
 		//TO B1 to B2
 		BoardState possBoardState1 = new BoardState(board, RED);
-		possBoardState1.movePiece(null, space(22), space(8));
-		possBoardState1.removePiece(null, space(18));		
-		possBoardState1.removePiece(null, space(11));		
+		possBoardState1.movePiece(space(22), space(8));
+		possBoardState1.removePiece(space(18));		
+		possBoardState1.removePiece(space(11));		
 		
 		//TO B1 to B3
 		BoardState possBoardState2 = new BoardState(board, RED);
-		possBoardState2.movePiece(null, space(22), space(6));
-		possBoardState2.removePiece(null, space(18));		
-		possBoardState2.removePiece(null, space(10));		
+		possBoardState2.movePiece(space(22), space(6));
+		possBoardState2.removePiece(space(18));		
+		possBoardState2.removePiece(space(10));		
 		
 		//Test
 		List<BoardState> actualStates = board.getPossibleStates(space(22), RED);
@@ -402,10 +402,10 @@ public class BoardTest {
 		board = board.addStartingPieces();
 		assertTrue(board.equals(b2));
 		
-		board.movePiece(null, space(22), space(18));
+		board.movePiece(space(22), space(18));
 		assertFalse(board.equals(b2));
 		
-		b2.movePiece(null, space(22), space(18));
+		b2.movePiece(space(22), space(18));
 		assertTrue(board.equals(b2));
 	}
 	
@@ -414,12 +414,12 @@ public class BoardTest {
 
 		board.addPiece(Piece.get(RED), space(22));
 		
-		board.movePiece(Piece.get(RED), space(22), space(18));
+		board.movePiece(space(22), space(18));
 		
 		board = new BoardState(board, BLACK);
 		board = new BoardState(board, RED);
 		
-		board.movePiece(Piece.get(RED), space(18), space(22));
+		board.movePiece(space(18), space(22));
 		
 		board = new BoardState(board, BLACK);
 		
@@ -453,14 +453,14 @@ public class BoardTest {
 		
 		//Jumping 23 & 15
 		BoardState jumpOption1 = new BoardState(board, RED);
-		jumpOption1.movePiece(null, space(27), space(11));
-		jumpOption1.removePiece(null, space(23));
-		jumpOption1.removePiece(null, space(15));
+		jumpOption1.movePiece(space(27), space(11));
+		jumpOption1.removePiece(space(23));
+		jumpOption1.removePiece(space(15));
 
 		//Jumping 24
 		BoardState jumpOption2 = new BoardState(board, RED);
-		jumpOption2.movePiece(null, space(27), space(20));
-		jumpOption2.removePiece(null, space(24));
+		jumpOption2.movePiece(space(27), space(20));
+		jumpOption2.removePiece(space(24));
 
 		// Test
 		List<BoardState> actualStates = board.getAllPossibleStates(RED);

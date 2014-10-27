@@ -72,7 +72,7 @@ public class BoardState implements Printable {
 		turn.addChange(change);
 		
 		if (change.to != null && pieces.shouldKing(change.to)) {
-			kingPiece(change.piece, change.to);
+			kingPiece(change.to);
 		}
 	}
 
@@ -99,35 +99,36 @@ public class BoardState implements Printable {
 		apply(new Add(piece, space));
 	}
 
-	public void removePiece(Piece piece, Space space) throws IllegalMoveException  {
+	public void removePiece(Space space) throws IllegalMoveException  {
+		Piece piece = pieces.get(space);
 		apply(new Remove(piece, space));
 	}
 	
-	public void movePiece(Piece piece, Space from, Space to) throws IllegalMoveException {
+	public void movePiece(Space from, Space to) throws IllegalMoveException {
+		Piece piece = pieces.get(from);
 		apply(new Move(piece, from, to));
 	}
 	
 	public void movePiece(int from, ArrayList<Integer> toArr) throws IllegalMoveException { 
-	
-		Piece piece = pieces.get(grid.getSpaceById(from));
 		for (int to : toArr) { 
-			movePiece(piece, grid.getSpaceById(from), grid.getSpaceById(to));
+			movePiece(grid.getSpaceById(from), grid.getSpaceById(to));
 			from = to;
 		}
-		
 	}
 	
 	public void removePiece(ArrayList<Integer> removes) throws IllegalMoveException { 
 		for (int remove : removes) { 
-			removePiece(pieces.get(grid.getSpaceById(remove)), grid.getSpaceById(remove));
+			removePiece(grid.getSpaceById(remove));
 		}
 	}
 	
-	public void jumpPiece(Piece piece, Space from, Space to, Space capture) throws IllegalMoveException {
+	public void jumpPiece(Space from, Space to, Space capture) throws IllegalMoveException {
+		Piece piece = pieces.get(from);
 		apply(new Jump(piece, from, to, capture));
 	}
 	
-	public void kingPiece(Piece piece, Space space) throws IllegalMoveException {
+	public void kingPiece(Space space) throws IllegalMoveException {
+		Piece piece = pieces.get(space);
 		apply(new King(piece, space));
 	}
 	
