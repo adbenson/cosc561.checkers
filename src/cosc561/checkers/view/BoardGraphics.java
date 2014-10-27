@@ -134,7 +134,12 @@ public class BoardGraphics {
 		int x = (spaceSize * piece.space.column) + pieceOffset;
 		int y = (spaceSize * piece.space.row) + pieceOffset;
 		
-		Color color = PIECE_COLORS.get(piece.piece.color);
+		drawPiece(piece.piece, x, y);
+	}
+	
+
+	private void drawPiece(Piece piece, int x, int y) {
+		Color color = PIECE_COLORS.get(piece.color);
 		g.setColor(color);
 		g.fillOval(x, y, pieceSize, pieceSize);
 		
@@ -145,7 +150,7 @@ public class BoardGraphics {
 		g.drawOval(x, y, pieceSize, pieceSize);
 		
 		
-		if (piece.piece.isKing()) {
+		if (piece.isKing()) {
 			g.setColor(KING_BORDER_COLOR);
 			g.drawOval(x - PIECE_BORDER_WIDTH, y - PIECE_BORDER_WIDTH, kingBorderSize, kingBorderSize);
 		}
