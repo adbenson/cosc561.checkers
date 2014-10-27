@@ -121,7 +121,7 @@ public class PlayerTurn {
 
 		@Override
 		public String toString() {
-			return "Remove "+piece+" from "+from;
+			return "Remove "+piece+" from "+remove;
 		}
 	}
 	
