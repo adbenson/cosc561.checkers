@@ -15,6 +15,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 
+import cosc561.checkers.Checkers;
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Grid;
 
@@ -34,12 +35,15 @@ public class BoardWindow {
 	
 	private ControlHandler controlHandler;
 	
+	private Checkers game;
 	
 	private Grid grid = Grid.getInstance();
 	
 	private JTextArea logArea;
 	
-	public BoardWindow() throws InvocationTargetException, InterruptedException {
+	public BoardWindow(Checkers game) throws InvocationTargetException, InterruptedException {
+		
+		this.game = game;
 		
 		SwingUtilities.invokeAndWait(new Runnable() {
 			public void run() {

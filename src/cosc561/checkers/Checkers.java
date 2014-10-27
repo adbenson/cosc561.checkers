@@ -20,7 +20,7 @@ public class Checkers {
 	
 	public Checkers() throws Exception {
 
-		BoardWindow window = new BoardWindow();
+		BoardWindow window = new BoardWindow(this);
 
 		System.out.println(Grid.getInstance());
 		
