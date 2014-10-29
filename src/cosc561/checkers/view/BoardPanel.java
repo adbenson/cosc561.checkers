@@ -83,6 +83,8 @@ public class BoardPanel extends JPanel implements ControlListener, ComponentList
 					//TODO figure out how to show pending turn after refactor
 				}
 				
+				graphics.drawTurn(state.getTurn());
+				
 				graphics.display();
 			};
 		});

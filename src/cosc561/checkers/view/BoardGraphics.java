@@ -16,6 +16,8 @@ import cosc561.checkers.model.Grid;
 import cosc561.checkers.model.Piece;
 import cosc561.checkers.model.PieceMap.Entry;
 import cosc561.checkers.model.PlayerColor;
+import cosc561.checkers.model.PlayerTurn;
+import cosc561.checkers.model.PlayerTurn.Change;
 import cosc561.checkers.model.Space;
 
 public class BoardGraphics {
@@ -191,6 +193,30 @@ public class BoardGraphics {
 		Point origin = getOrigin(from);
 		
 		return to.subtract(origin);
+	}
+
+	public void drawTurn(PlayerTurn turn) {
+		for (PlayerTurn.Change change : turn.getChanges()) {
+			drawChange(change);
+		}
+	}
+
+	private void drawChange(Change change) {
+		if (change instanceof PlayerTurn.King) {
+			drawKing(change);
+		}
+		else {
+			
+			//TODO Actually draw change
+			
+			if (change.capture != null) {
+				drawChange(change.capture);
+			}
+		}
+	}
+
+	private void drawKing(Change change) {
+		//TODO Actually draw king
 	}
 	
 }
