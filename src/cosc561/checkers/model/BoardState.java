@@ -40,6 +40,14 @@ public class BoardState implements Printable {
 		setPlayed();
 	}
 	
+	public BoardState(BoardState that) {
+		this.pieces = new PieceMap(that.pieces);
+		this.previous = that.previous;
+		this.played = that.played;
+		this.turn = new PlayerTurn(that.turn);
+		uid = lastId++;
+	}
+	
 	public BoardState(BoardState board, PlayerColor color) {
 		this.pieces = new PieceMap(board.pieces);
 		this.previous = board;
@@ -362,7 +370,8 @@ public class BoardState implements Printable {
 		
 		if (!jumpOptions.isEmpty()) {
 			for (Jump jump: jumpOptions) { 
-				BoardState state = new BoardState(this, color);
+				//Just clone this state, don't fork it.
+				BoardState state = new BoardState(this);
 				state.apply(jump);
 				statesToAdd.addAll(state.findJumpOptionStates(jump.to, piece, color));
 			}

@@ -17,6 +17,13 @@ public class PlayerTurn {
 		this.turnNumber = turnNumber;
 	}
 	
+	public PlayerTurn(PlayerTurn that) {
+		this.player = that.player;
+		this.turnNumber = that.turnNumber;
+		//Should be safe to not deep-copy the changes themselves, as they are immutable
+		this.changes = new ArrayList<>(that.changes);
+	}
+
 	public void addChange(Change change) {
 		this.changes.add(change);
 	}
