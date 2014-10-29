@@ -2,9 +2,9 @@ package cosc561.checkers;
 
 import java.util.List;
 
+import cosc561.checkers.evaluator.CompoundEvaluator;
 import cosc561.checkers.evaluator.Evaluator;
 import cosc561.checkers.evaluator.Evaluator.EvaluatedState;
-import cosc561.checkers.evaluator.PieceCountEvaluator;
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.PlayerColor;
@@ -29,13 +29,39 @@ public class Player {
 			return currentState;
 		}
 		
-		EvaluatedState chosenEvaluated = negamax(currentState, searchDepth, color);
-
-		BoardState chosen = chosenEvaluated.state;
+		BoardState bestState = null;
+		double bestValue = Double.NEGATIVE_INFINITY;
 		
-		BoardState play = chosen.getFirstUnplayed();
-		play.setPlayed();
-		return play;
+		for (BoardState child : currentState.getAllPossibleStates(color)) {
+			double val = negamax(child, searchDepth, 1);
+			System.out.println(child);
+			System.out.println("score " + val);
+			
+			if (val > bestValue) {
+				bestValue = val;
+				bestState = child;
+			}
+		}
+		
+		System.out.println("Chosen:");
+		System.out.println(bestState);
+		return bestState;
+	}
+	
+	public double negamax(BoardState node, int depth, int colorInt) throws IllegalMoveException {
+		if (depth == 0 || node.isEndgame()) {
+			return colorInt * evaluator.evaluate(node, color).score;
+		}
+		
+		double bestValue = Double.NEGATIVE_INFINITY;
+		
+		PlayerColor player = (colorInt > 0)? color : color.opponent();
+		for (BoardState child : node.getAllPossibleStates(player)) {
+			double val = - negamax(child, depth - 1, -colorInt);
+			bestValue = Math.max(bestValue,  val);
+		}
+		
+		return bestValue;
 	}
 	
 	public EvaluatedState negamax(BoardState state, int depth, PlayerColor player) throws IllegalMoveException {
