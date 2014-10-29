@@ -14,11 +14,13 @@ public class Player {
 	private PlayerColor color;
 	private int searchDepth;
 	
-	private Evaluator evaluator = new PieceCountEvaluator(color);
+	private Evaluator evaluator;
 	
 	public Player(PlayerColor color, int searchDepth) {
 		this.color = color;
 		this.searchDepth = searchDepth;
+		
+		evaluator = new PieceCountEvaluator(color);
 	}
 
 	public BoardState nextMove(BoardState currentState) throws IllegalMoveException {
