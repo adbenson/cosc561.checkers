@@ -29,10 +29,11 @@ public class BoardState implements Printable {
 	
 	private PlayerColor winner;
 
-	public BoardState(PlayerColor firstPlayer) {
+	public BoardState() {
 		pieces = new PieceMap();
 		previous = null;
-		turn = new PlayerTurn(firstPlayer, 0);
+		//The original board state doesn't have a "player", per se.
+		turn = new PlayerTurn(null, 0);
 		played = true;
 		uid = lastId++;
 		

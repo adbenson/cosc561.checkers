@@ -1,6 +1,5 @@
 package cosc561.checkers.view;
 
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,21 +7,20 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import cosc561.checkers.model.Piece;
-import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.PlayerColor;
 import cosc561.checkers.model.Space;
 
 @SuppressWarnings("serial")
 class BoardContextMenu extends JPopupMenu {
 	
-	private final BoardWindow window;
+	private final BoardPanel board;
 	
-	public BoardContextMenu(Space space, BoardWindow window) {
+	public BoardContextMenu(Space space, BoardPanel boardPanel, boolean hasPiece) {
 		super();
 		
-		this.window = window;
+		this.board = boardPanel;
 		
-		if (window.getPiece(space) != null) {
+		if (hasPiece) {
 			addItemsForPiece(space);
 		}
 		else {
@@ -64,13 +62,7 @@ class BoardContextMenu extends JPopupMenu {
 		return new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					window.getGame().getState().removePiece(space);
-				} catch (IllegalMoveException e) {
-					System.err.println("Exception removing piece by context menu");
-					e.printStackTrace();
-				}
-				window.render();
+				board.removePiece(space);
 			}
 		};
 	}
@@ -79,13 +71,7 @@ class BoardContextMenu extends JPopupMenu {
 		return new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					window.getGame().getState().kingPiece(space);
-				} catch (IllegalMoveException e) {
-					System.err.println("Exception kinging piece by context menu");
-					e.printStackTrace();
-				}
-				window.render();
+				board.kingPiece(space);
 			}
 		};
 	}
@@ -94,13 +80,7 @@ class BoardContextMenu extends JPopupMenu {
 		return new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					window.getGame().getState().addPiece(Piece.get(color), space);
-				} catch (IllegalMoveException e) {
-					System.err.println("Exception adding king piece by context menu");
-					e.printStackTrace();
-				}
-				window.render();
+				board.addPiece(Piece.get(color), space);
 			}
 		};
 	}
@@ -109,13 +89,7 @@ class BoardContextMenu extends JPopupMenu {
 		return new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					window.getGame().getState().addPiece(Piece.get(color).getKing(), space);
-				} catch (IllegalMoveException e) {
-					System.err.println("Exception adding piece by context menu");
-					e.printStackTrace();
-				}
-				window.render();
+				board.addPiece(Piece.get(color).getKing(), space);
 			}
 		};
 	}

@@ -4,6 +4,7 @@ import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Grid;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.PlayerColor;
+import cosc561.checkers.model.PlayerTurn;
 import cosc561.checkers.view.BoardWindow;
 
 public class Checkers {
@@ -27,57 +28,51 @@ public class Checkers {
 		BoardWindow window = new BoardWindow(this);
 
 		System.out.println(Grid.getInstance());
-
-		window.render();
 		
 		window.startNewGame();
 	}
 
-	public void startGame(StartGameOptions options) throws IllegalMoveException {
+	public BoardState startGame(StartGameOptions options) throws IllegalMoveException {
 		player = new Player(options.player, SEARCH_DEPTH);
 		//We'll be immediately ending a turn, so start with the starting player's opponent
 		currentPlayer = PlayerColor.startingPlayer.opponent();
 		
-		state = new BoardState(null);
+		state = new BoardState();
 		
 		if (options.addStartingPieces) {
 			state.addStartingPieces();
-		}
+		} 
 		
 		playing = true;
-		endTurn(true);
+
+		return newState();
 	}
 
-	public void playerTurn() throws IllegalMoveException {
-		state = player.nextMove(state);
+	public BoardState newState() {
+		return new BoardState(state, currentPlayer.opponent());
 	}
 
-	public synchronized void endTurn(boolean newState) {
+	public BoardState playerTurn() throws IllegalMoveException {
+		return player.nextMove(state);
+	}
+
+	public synchronized BoardState endTurn(PlayerTurn turn) throws IllegalMoveException {
+		state = new BoardState(state, currentPlayer);
+		state.apply(turn);
+		state.setPlayed();
+		
 		if (state.isEndgame()) {
 			playing = false;
 		}
+		
 		currentPlayer = currentPlayer.opponent();
 		
-		state.setPlayed();
-		
-		if (newState) {
-			state = new BoardState(state, currentPlayer);
-		}
+		return newState();
 	}
 	
-	public void resetTurn() {
-		state = new BoardState(state.getLastPlayed(), currentPlayer);
-	}
-	
-	public void undoTurn() {
-		//We want to go back to before the opponent's last turn.
-		//Previous 1 gets us our last turn, 2 gets us their last turn, 3 gets us before their last turn
-		state = state.getPrevious(3);
-		state = new BoardState(state, currentPlayer);
-	}
-
-	public BoardState getState() {
-		return state;
+	public BoardState undoTurn() {
+		state = state.getPrevious(1);
+		return newState();
 	}
 
 	public PlayerColor getCurrentPlayer() {

@@ -16,7 +16,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
@@ -24,12 +23,9 @@ import javax.swing.border.EtchedBorder;
 
 import cosc561.checkers.Checkers;
 import cosc561.checkers.model.BoardState;
-import cosc561.checkers.model.Grid;
-import cosc561.checkers.model.Piece;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.PlayerColor;
 import cosc561.checkers.model.PlayerTurn;
-import cosc561.checkers.model.Space;
 
 public class BoardWindow {
 
@@ -40,35 +36,18 @@ public class BoardWindow {
 	private JFrame window;
 	private Container content;
 	
-	private JPanel boardPanel;
+	private BoardPanel boardPanel;
 	private JPanel controlPanel;
 	private JPanel outputPanel;
-	
-	private BoardGraphics graphics;
-	
-	private ControlHandler controlHandler;
-	
+
 	private Checkers game;
-	
-	private Space hovered;
-	private Space selected;
-	private Space dragFrom;
-	private Point dragTo;
-	private Point dragOffset;
-	
-	private Grid grid = Grid.getInstance();
-	
+
 	private JTextArea logArea;
 	private JTextArea pendingTurn;
 	
 	public BoardWindow(Checkers game) throws InvocationTargetException, InterruptedException {
 		
 		this.game = game;
-		
-		hovered = null;
-		selected = null;
-		dragFrom = null;
-		dragTo = null;
 		
 		SwingUtilities.invokeAndWait(new Runnable() {
 			public void run() {
@@ -80,15 +59,10 @@ public class BoardWindow {
 	protected void initialize() {
 		window = new JFrame();
 		
-		controlHandler = new ControlHandler(this);
-		
 		content = window.getContentPane();
 		content.setLayout(new BorderLayout());
 		
-		boardPanel = new JPanel();
-		boardPanel.setPreferredSize(DIMENSIONS);
-		boardPanel.addMouseListener(controlHandler);
-		boardPanel.addMouseMotionListener(controlHandler);
+		boardPanel = new BoardPanel(DIMENSIONS);
 		content.add(boardPanel, BorderLayout.CENTER);
 		
 		controlPanel = createControlPanel();		
@@ -101,10 +75,12 @@ public class BoardWindow {
 		window.setVisible(true);
 		
 		//Note: this has to be initialized AFTER window.pack(), or dimensions will be zero.
-		graphics = new BoardGraphics(boardPanel, grid);
+		boardPanel.init();
 		
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
+		
+		boardPanel.render();
 	}
 
 	private JPanel createOutputPanel() {
@@ -172,6 +148,7 @@ public class BoardWindow {
 		return controlPanel;
 	}
 	
+	@SuppressWarnings("serial")
 	public final Action startButtonAction() {
 		return new AbstractAction("Start New Game") {
 			public void actionPerformed(ActionEvent event) {
@@ -190,24 +167,28 @@ public class BoardWindow {
 		Checkers.StartGameOptions options = getStartGameChoices();
 		
 		try {
-			game.startGame(options);
+			BoardState state = game.startGame(options);
 			
 			logArea.setText("");
 			logAction("Starting new game as "+ options.player);
 			logAction(PlayerColor.startingPlayer + " starts\n");
 			
 			if (options.player == PlayerColor.startingPlayer) {
-				game.playerTurn();
-				logAction(game.getState().getTurn());
-				game.endTurn(true);
+				state = game.playerTurn();
+				PlayerTurn turn = state.getTurn();
+				
+				logAction(turn);
+				state = game.endTurn(turn);
 			}
+			
+			boardPanel.setState(state);
 			
 		} catch (IllegalMoveException e) {
 			System.err.println("Exception starting new game");
 			e.printStackTrace();
 		}
 		
-		render();
+		boardPanel.render();
 	}
 
 	private boolean confirmStartNewGame() {
@@ -221,48 +202,63 @@ public class BoardWindow {
 		return n == 0;
 	}
 	
+	@SuppressWarnings("serial")
 	private final Action nextTurnButtonAction() {
 		return new AbstractAction("Complete Turn") {
 			public void actionPerformed(ActionEvent event) {
 				new Thread(new Runnable() {
 					public void run() {
-						try {
-							logAction(game.getState().getTurn());
-							game.endTurn(false);
-							
-							game.playerTurn();
-							logAction(game.getState().getTurn());
-							game.endTurn(true);
-						} catch (IllegalMoveException e) {
-							System.err.println("Exception starting new game");
-							e.printStackTrace();
-						}
-						render();
+						completeTurn();
 					}
 				}).start();
 			}	
 		};
 	};
 	
+	private void completeTurn() {
+		try {
+			BoardState state = boardPanel.getState();
+			state = applyTurn(state);
+			
+			state = game.playerTurn();
+			state = applyTurn(state);
+			
+			boardPanel.setState(state);
+			
+		} catch (IllegalMoveException e) {
+			System.err.println("Exception ending turn");
+			e.printStackTrace();
+		}
+	}
+	
+	public BoardState applyTurn(BoardState state) throws IllegalMoveException {
+		PlayerTurn turn = state.getTurn();
+		logAction(turn);
+		return game.endTurn(turn);
+	}
+	
+	@SuppressWarnings("serial")
 	private final Action resetButtonAction() {
 		return new AbstractAction("Reset Turn") {
 			public void actionPerformed(ActionEvent event) {
 				new Thread(new Runnable() {
 					public void run() {
-						game.resetTurn();
-						render();
+						boardPanel.setState(game.newState());
 					}
 				}).start();
 			}	
 		};
 	}
 	
+	@SuppressWarnings("serial")
 	private final Action undoButtonAction() {
 		return new AbstractAction("Undo Last Turn") {
 			public void actionPerformed(ActionEvent event) {
 				new Thread(new Runnable() {
 					public void run() {
-						undoTurn();
+						if (confirmUndo()) {
+							undoTurn();
+						}
 					}
 				}).start();
 			}	
@@ -281,14 +277,15 @@ public class BoardWindow {
 	}
 	
 	private void undoTurn() {
-		if (confirmUndo()) {
-			BoardState lastState = game.getState().getPrevious(1);
-			int lastTurn = lastState.getTurn().turnNumber;
-			int previousTurn = lastState.getPrevious(1).getTurn().turnNumber;
-			logAction("Turn #"+previousTurn+" and #"+lastTurn+" NEVER HAPPENED. Don't speak of it to anyone.");
-			game.undoTurn();
-			render();
-		}
+			
+		BoardState lastState = game.undoTurn();
+		BoardState previousState = game.undoTurn();
+		
+		int lastTurn = lastState.getTurn().turnNumber;
+		int previousTurn = previousState.getTurn().turnNumber;
+		logAction("Turn #"+previousTurn+" and #"+lastTurn+" NEVER HAPPENED. Don't speak of it to anyone.");
+		
+		boardPanel.setState(previousState);
 	}
 	
 	
@@ -328,139 +325,7 @@ public class BoardWindow {
 			};
 		});
 	}
-	
-	public void render() {
-		render(game.getState());
-	}
-	
-	public void render(final BoardState board) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				graphics.init();
 
-				graphics.drawGrid();
-				
-				if (board != null) {
-					renderBoard(board);
-					pendingTurn.setText(board.getTurn().toString());
-				}
-				
-				graphics.display();
-			};
-		});
-	}
-	
-	private void renderBoard(BoardState board) {
-		BoardState temp = new BoardState(board, game.getCurrentPlayer());
-		
-		Piece piece = null;
-		
-		if (dragging()) {
-			piece = removeDraggedPiece(temp);
-		}
-		
-		graphics.drawBoard(temp);
-		
-		if (piece != null) {
-			graphics.drawDraggedPiece(piece, dragTo, dragOffset);
-		}
-	}
-	
-	protected Piece removeDraggedPiece(BoardState temp) {
-		BoardState current = game.getState();
-		
-		Piece piece = current.getPiece(dragFrom);
-		if (piece != null) {
-			try {
-				temp.removePiece(dragFrom);
-			} catch (IllegalMoveException e) {
-				System.err.println("Exception removing piece for drag");
-				e.printStackTrace();
-				return null;
-			}
-		}
-		else {
-			System.out.println("Piece to drag not found");
-		}
-				
-		return piece;
-	}
-
-	protected boolean dragging() {
-		return (dragFrom != null && dragTo != null);
-	}
-
-	public void movePiece(Space from, Space to) {
-		Piece piece = getPiece(from);
-		
-		if (piece == null) {
-			System.out.println("Could not find piece to move");
-			return;
-		}
-		
-		try {
-			game.getState().movePiece(from, to);
-		} catch (IllegalMoveException e) {
-			System.err.println("Exception applying drag move to board state");
-			e.printStackTrace();
-		}
-		
-		render();
-	}
-	
-	public void dragPiece(Space from, Point to) {
-		//Check if this is a new dragging action
-		if (dragFrom == null && from != null) {
-			dragOffset = graphics.getOffset(from, to);
-		}
-		
-		//Allow null 'from' to reset dragging, otherwise check if there's a piece there.
-		if (from == null || game.getState().getPiece(from) != null) {
-			dragFrom = from;
-			dragTo = to;
-		}
-		render();
-	}
-	
-	public void hover(Space space) {
-		
-	}
-	
-	public void selectPiece(Space space) {
-		
-	}
-	
-	public void capturePiece(Space space) {
-		if (getPiece(space) != null) {
-			try {
-				game.getState().removePiece(space);
-			} catch (IllegalMoveException e) {
-				System.err.println("Exception removing capture piece");
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	public Checkers getGame() {
-		return game;
-	}
-	
-	public Space getSpaceAt(Point point) {
-		return graphics.getSpaceAt(point);
-	}
-	
-	public Piece getPiece(Space space) {
-		return game.getState().getPiece(space);
-	}
-
-	public void createContextMenu(Point point) {
-		Space space = getSpaceAt(point);
-		
-		if (space != null) {
-			JPopupMenu menu = new BoardContextMenu(space, this);
-			menu.show(boardPanel, point.x, point.y);
-		}
-	}
 }
 
 

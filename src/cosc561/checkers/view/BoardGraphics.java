@@ -43,11 +43,9 @@ public class BoardGraphics {
 	private final int sideLength;
 	
 	private final int spaceSize;
-	private final int halfSpace;
 	
 	private final int pieceOffset;
 	private final int pieceSize;
-	private final int pieceRadius;
 	
 	private final int kingBorderSize;
 	
@@ -62,10 +60,8 @@ public class BoardGraphics {
 		sideLength = Math.min(panel.getWidth(), panel.getHeight());
 		
 		spaceSize = sideLength / Grid.SPACES_PER_SIDE;
-		halfSpace = spaceSize / 2;
 		
 		pieceSize = (int) (spaceSize * PIECE_TO_SPACE_SIZE_RATIO);
-		pieceRadius = pieceSize / 2;
 		
 		pieceOffset = (int) ((spaceSize - pieceSize) / 2);
 		
