@@ -89,6 +89,9 @@ public class ControlHandler extends MouseInputAdapter {
 		Space dropped = getSpace(event);
 		if (dropped == null) {
 			System.out.println("Piece dropped on non-space");
+			
+			dragFrom = null;
+			window.dragPiece(null, null);
 		}
 		//Don't bother if the piece hasn't actually moved
 		else if (!dropped.equals(dragFrom)) {
