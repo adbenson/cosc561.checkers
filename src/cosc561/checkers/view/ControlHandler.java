@@ -65,7 +65,6 @@ public class ControlHandler extends MouseInputAdapter {
 	@Override
 	public void mousePressed(MouseEvent event) {
 		dragFrom = getSpace(event);
-		window.dragPiece(dragFrom, new Point(event.getPoint()));
 	}
 
 	@Override
