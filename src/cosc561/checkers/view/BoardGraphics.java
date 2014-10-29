@@ -143,7 +143,7 @@ public class BoardGraphics {
 
 	public void drawDraggedPiece(Piece piece, Point to, Point dragOffset) {
 		//Later we can add shadow and shit
-		drawPiece(piece, to.subtract(dragOffset));
+		drawPiece(piece, to.subtract(dragOffset).add(pieceOffset));
 	}
 	
 	private void drawPiece(Piece piece, Point location) {
