@@ -68,6 +68,12 @@ public class ControlHandler extends MouseInputAdapter {
 
 	@Override
 	public void mouseReleased(MouseEvent event) {
+		if (dragFrom != null) {
+			completeDrag(event);
+		}
+	}
+	
+	private void completeDrag(MouseEvent event) {
 		Space dropped = getSpace(event);
 		if (dropped == null) {
 			System.out.println("Piece dropped on non-space");
@@ -76,12 +82,12 @@ public class ControlHandler extends MouseInputAdapter {
 		else if (!dropped.equals(dragFrom)) {
 			window.movePiece(dragFrom, dropped);
 			window.selectPiece(dropped);
+			
+			dragFrom = null;
+			window.dragPiece(null, null);
 		}
-		
-		dragFrom = null;
-		window.dragPiece(null, null);
 	}
-	
+
 	private Space getSpace(MouseEvent event) {
 		return window.getSpaceAt(new Point(event.getPoint()));
 	}
