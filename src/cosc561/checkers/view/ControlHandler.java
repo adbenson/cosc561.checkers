@@ -20,10 +20,9 @@ public class ControlHandler extends MouseInputAdapter {
 
 	@Override
 	public void mouseDragged(MouseEvent event) {
-		if (dragFrom == null) {
-			throw new RuntimeException("Drag continued without starting?");
+		if (dragFrom != null) {
+			window.dragPiece(dragFrom, new Point(event.getPoint()));
 		}
-		window.dragPiece(dragFrom, new Point(event.getPoint()));
 	}
 
 	@Override

@@ -420,11 +420,13 @@ public class BoardWindow {
 	}
 	
 	public void capturePiece(Space space) {
-		try {
-			game.getState().removePiece(space);
-		} catch (IllegalMoveException e) {
-			System.err.println("Exception removing capture piece");
-			e.printStackTrace();
+		if (getPiece(space) != null) {
+			try {
+				game.getState().removePiece(space);
+			} catch (IllegalMoveException e) {
+				System.err.println("Exception removing capture piece");
+				e.printStackTrace();
+			}
 		}
 	}
 
