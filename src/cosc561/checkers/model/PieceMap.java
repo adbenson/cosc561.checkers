@@ -22,7 +22,7 @@ public class PieceMap implements Iterable<Piece>, Printable {
 		} else if (!hasPiece(space)) {
 			throw new IllegalMoveException("Cannot king piece in "+space+". No piece in that space");
 		} else {
-			throw new IllegalMoveException("Cannot king piece in "+space+". Piece is already king");
+//			throw new IllegalMoveException("Cannot king piece in "+space+". Piece is already king");
 		}
 	}
 
