@@ -5,17 +5,15 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -189,15 +187,16 @@ public class BoardWindow {
 	};
 
 	public void startNewGame() {
-		PlayerColor color = inquireColor();
+		Checkers.StartGameOptions options = getStartGameChoices();
+		
 		try {
-			game.startGame(color);
+			game.startGame(options);
 			
 			logArea.setText("");
-			logAction("Starting new game as "+ color);
+			logAction("Starting new game as "+ options.player);
 			logAction(PlayerColor.startingPlayer + " starts\n");
 			
-			if (color == PlayerColor.startingPlayer) {
+			if (options.player == PlayerColor.startingPlayer) {
 				game.playerTurn();
 				logAction(game.getState().getTurn());
 				game.endTurn(true);
@@ -210,7 +209,7 @@ public class BoardWindow {
 		
 		render();
 	}
-	
+
 	private boolean confirmStartNewGame() {
 		
 		int n = JOptionPane.showConfirmDialog(
@@ -292,22 +291,30 @@ public class BoardWindow {
 		}
 	}
 	
-	private PlayerColor inquireColor() {
+	
+	private Checkers.StartGameOptions getStartGameChoices() {
 		
-		int n = JOptionPane.showOptionDialog(new JFrame(),
-		    "What color are we playing as today?",
+		JCheckBox addPieces = new JCheckBox("Add starting pieces");
+		addPieces.setSelected(true);
+		
+		Object[] params = {"What color are we playing as today?", addPieces};
+		
+		int n = JOptionPane.showOptionDialog(window,
+		    params,
 		    "Choose our color",
 		    JOptionPane.YES_NO_CANCEL_OPTION,
 		    JOptionPane.QUESTION_MESSAGE,
 		    null,
 		    PlayerColor.values(),
-		    null);
+		    PlayerColor.startingPlayer);
+		
+		System.out.println(addPieces.isSelected());
 		
 		if (n < 0) {
 			throw new RuntimeException("No color choice made");
 		}
 		
-		return PlayerColor.values()[n];
+		return new Checkers.StartGameOptions (PlayerColor.values()[n], addPieces.isSelected());
 	}
 	
 	public void logAction(PlayerTurn turn) {
@@ -454,8 +461,6 @@ public class BoardWindow {
 			menu.show(boardPanel, point.x, point.y);
 		}
 	}
-	
-
 }
 
 

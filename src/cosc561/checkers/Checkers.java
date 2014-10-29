@@ -4,7 +4,6 @@ import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Grid;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.PlayerColor;
-import cosc561.checkers.model.PlayerTurn;
 import cosc561.checkers.view.BoardWindow;
 
 public class Checkers {
@@ -34,14 +33,18 @@ public class Checkers {
 		window.startNewGame();
 	}
 
-	public void startGame(PlayerColor computerPlayer) throws IllegalMoveException {
-		player = new Player(computerPlayer, SEARCH_DEPTH);
+	public void startGame(StartGameOptions options) throws IllegalMoveException {
+		player = new Player(options.player, SEARCH_DEPTH);
 		//We'll be immediately ending a turn, so start with the starting player's opponent
 		currentPlayer = PlayerColor.startingPlayer.opponent();
 		
-		state = new BoardState(null).addStartingPieces();
-		playing = true;
+		state = new BoardState(null);
 		
+		if (options.addStartingPieces) {
+			state.addStartingPieces();
+		}
+		
+		playing = true;
 		endTurn(true);
 	}
 
@@ -83,6 +86,17 @@ public class Checkers {
 	
 	public boolean isPlaying() {
 		return playing;
+	}
+	
+	
+	public static class StartGameOptions {
+		public final PlayerColor player;
+		public final boolean addStartingPieces;
+		
+		public StartGameOptions(PlayerColor player, boolean addStartingPieces) {
+			this.player = player;
+			this.addStartingPieces = addStartingPieces;
+		}
 	}
 	
 }
