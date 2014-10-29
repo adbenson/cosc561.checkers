@@ -1,9 +1,14 @@
 package cosc561.checkers.view;
 
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.event.MouseInputAdapter;
 
+import cosc561.checkers.model.Piece;
+import cosc561.checkers.model.PlayerColor;
 import cosc561.checkers.model.Space;
 
 public class ControlHandler extends MouseInputAdapter {
@@ -48,7 +53,7 @@ public class ControlHandler extends MouseInputAdapter {
 			}
 		}
 	}
-
+	
 	@Override
 	public void mouseEntered(MouseEvent event) {
 		window.hover(getSpace(event));
@@ -64,11 +69,17 @@ public class ControlHandler extends MouseInputAdapter {
 
 	@Override
 	public void mousePressed(MouseEvent event) {
+		//Helps to clear the context menu
+		window.render();
 		dragFrom = getSpace(event);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent event) {
+		if (event.isPopupTrigger()) {
+			window.createContextMenu(new Point(event.getPoint()));
+		}
+		
 		if (dragFrom != null) {
 			completeDrag(event);
 		}
@@ -92,4 +103,5 @@ public class ControlHandler extends MouseInputAdapter {
 	private Space getSpace(MouseEvent event) {
 		return window.getSpaceAt(new Point(event.getPoint()));
 	}
+	
 }

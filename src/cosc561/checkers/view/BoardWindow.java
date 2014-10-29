@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.AbstractAction;
@@ -13,8 +15,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
@@ -429,7 +433,11 @@ public class BoardWindow {
 			}
 		}
 	}
-
+	
+	public Checkers getGame() {
+		return game;
+	}
+	
 	public Space getSpaceAt(Point point) {
 		return graphics.getSpaceAt(point);
 	}
@@ -437,6 +445,16 @@ public class BoardWindow {
 	public Piece getPiece(Space space) {
 		return game.getState().getPiece(space);
 	}
+
+	public void createContextMenu(Point point) {
+		Space space = getSpaceAt(point);
+		
+		if (space != null) {
+			JPopupMenu menu = new BoardContextMenu(space, this);
+			menu.show(boardPanel, point.x, point.y);
+		}
+	}
+	
 
 }
 
