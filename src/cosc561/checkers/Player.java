@@ -2,9 +2,9 @@ package cosc561.checkers;
 
 import java.util.List;
 
-import cosc561.checkers.evaluator.CompoundEvaluator;
 import cosc561.checkers.evaluator.Evaluator;
 import cosc561.checkers.evaluator.Evaluator.EvaluatedState;
+import cosc561.checkers.evaluator.PieceCountEvaluator;
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.PlayerColor;
