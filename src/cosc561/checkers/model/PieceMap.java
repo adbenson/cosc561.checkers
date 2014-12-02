@@ -5,15 +5,22 @@ import java.util.Iterator;
 
 public class PieceMap implements Iterable<Piece>, Printable {
 	
-	private Piece[] pieces;
 	private static Grid grid = Grid.getInstance();
+	
+	private Piece[] pieces;
+	private int[] pieceCounts;
 	
 	public PieceMap() {
 		pieces = new Piece[Grid.USED_SPACES + 1];
+		
+		pieceCounts = new int[PlayerColor.values().length];
+
+		Arrays.fill(pieceCounts, 0);
 	}
 	
 	public PieceMap(PieceMap pieces) {
 		this.pieces = pieces.pieces.clone();
+		this.pieceCounts = pieces.pieceCounts.clone();
 	}
 	
 	public void king(Space space) throws IllegalMoveException {
@@ -44,6 +51,7 @@ public class PieceMap implements Iterable<Piece>, Printable {
 
 	public void remove(Space space) throws IllegalMoveException {
 		if (hasPiece(space)) {
+			pieceCounts[pieces[space.id].color.ordinal()]--;
 			pieces[space.id] = null;
 		} else {
 			throw new IllegalMoveException("Cannot remove piece from "+space+". No piece in that space");
@@ -57,6 +65,7 @@ public class PieceMap implements Iterable<Piece>, Printable {
 	public void add(Piece piece, Space space) throws IllegalMoveException {
 		if (!hasPiece(space)) {
 			pieces[space.id] = piece;
+			pieceCounts[pieces[space.id].color.ordinal()]++;
 		} else {
 			throw new IllegalMoveException("Cannot add piece to "+space+" : already taken by "+pieces[space.id]);
 		}
@@ -114,6 +123,10 @@ public class PieceMap implements Iterable<Piece>, Printable {
 				return new SpaceIterator(null, false);
 			}
 		};
+	}
+	
+	public int getPieceCount(PlayerColor color) {
+		return pieceCounts[color.ordinal()];
 	}
 	
 	public class Entry {
