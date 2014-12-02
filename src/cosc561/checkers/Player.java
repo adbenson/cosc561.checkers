@@ -11,6 +11,8 @@ import cosc561.checkers.model.PlayerColor;
 
 public class Player {
 	
+	private static final boolean debug = false;
+	
 	private PlayerColor color;
 	private int searchDepth;
 	
@@ -34,17 +36,20 @@ public class Player {
 		
 		for (BoardState child : currentState.getAllPossibleStates(color)) {
 			double val = negamax(child, searchDepth, 1);
-			System.out.println(child);
-			System.out.println("score " + val);
+			if (debug) {
+				System.out.println(child);
+				System.out.println("score " + val);
+			}
 			
 			if (val > bestValue) {
 				bestValue = val;
 				bestState = child;
 			}
 		}
-		
+
 		System.out.println("Chosen:");
 		System.out.println(bestState);
+
 		return bestState;
 	}
 	
