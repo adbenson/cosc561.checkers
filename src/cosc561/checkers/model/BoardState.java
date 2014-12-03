@@ -165,6 +165,9 @@ public class BoardState implements Printable {
 		if (n == 0) {
 			return this;
 		}
+		else if (previous == null) {
+			return null;
+		}
 		return previous.getPrevious(n-1);
 	}
 
