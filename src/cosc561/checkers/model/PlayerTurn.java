@@ -28,6 +28,10 @@ public class PlayerTurn {
 		this.changes.add(change);
 	}
 	
+	public boolean hasChange() {
+		return changes.size() > 0;
+	}
+	
 	public boolean hasChange(Change change) {
 		boolean match = false;
 		for (Change thisChange : changes) {
@@ -191,5 +195,5 @@ public class PlayerTurn {
 		}
 		
 	}
-	
+
 }
