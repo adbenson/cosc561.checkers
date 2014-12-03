@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.awt.geom.Path2D;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,10 @@ public class BoardGraphics {
 	private static final int SPACE_LABEL_OFFSET_PX = 5;
 	private static final double PIECE_TO_SPACE_SIZE_RATIO = 0.8;
 	private static final Map<PlayerColor, Color> PIECE_COLORS;
-	private static final int PIECE_BORDER_WIDTH = 2;
+	private static final int PIECE_BORDER_WIDTH = 3;
+	
+	private static final double ARROW_ANGLE = Math.PI / 5;
+	private static final double ARROW_SIZE = 10;
 	
 	static {
 		PIECE_COLORS = new HashMap<PlayerColor, Color>();
@@ -46,6 +50,7 @@ public class BoardGraphics {
 	private final int sideLength;
 	
 	private final int spaceSize;
+	private final int halfSpace;
 	
 	private final int pieceOffset;
 	private final int pieceSize;
@@ -63,6 +68,7 @@ public class BoardGraphics {
 		sideLength = Math.min(panel.getWidth(), panel.getHeight());
 		
 		spaceSize = sideLength / Grid.SPACES_PER_SIDE;
+		halfSpace = spaceSize / 2;
 		
 		pieceSize = (int) (spaceSize * PIECE_TO_SPACE_SIZE_RATIO);
 		
@@ -143,12 +149,17 @@ public class BoardGraphics {
 		//Later we can add shadow and shit
 		drawPiece(piece, to.add(pieceOffset));
 	}
+	
+	private void drawPiece(Piece piece, Vector location) {
+		drawPiece(piece, location, false);
 	}
 	
-	private void drawPiece(Piece piece, Point location) {
+	private void drawPiece(Piece piece, Vector location, boolean removed) {
 		Color color = PIECE_COLORS.get(piece.color);
-		g.setColor(color);
-		g.fillOval(location.x, location.y, pieceSize, pieceSize);
+		if (!removed) {
+			g.setColor(color);
+			g.fillOval(location.intX(), location.intY(), pieceSize, pieceSize);
+		}
 		
 		g.setStroke(pieceBorderStroke);
 		
@@ -198,22 +209,79 @@ public class BoardGraphics {
 
 	public void drawTurn(PlayerTurn turn) {
 		for (PlayerTurn.Change change : turn.getChanges()) {
-			drawChange(change);
+			drawChange(change, turn.player);
 		}
 	}
 
-	private void drawChange(Change change) {
+	private void drawChange(Change change, PlayerColor player) {
 		if (change instanceof PlayerTurn.King) {
 			drawKing(change);
 		}
 		else {
 			
-			//TODO Actually draw change
+			if (change.from != null) {
+				drawRemovedPiece(change.piece, change.from);
+			}
+			if (change.from != null && change.to != null) {
+				drawMoveLine(change.from, change.to, change.piece.color);
+			}
+
 			
 			if (change.capture != null) {
-				drawChange(change.capture);
+				drawChange(change.capture, player);
 			}
 		}
+	}
+	
+	public void drawRemovedPiece(Piece piece, Space from) {
+		drawPiece(piece, getOrigin(from).add(pieceOffset), true);
+	}
+
+	public void drawMoveLine(Space from, Space to, PlayerColor player) {
+		drawMoveLine(getCenterPoint(from), getCenterPoint(to), player);
+	}
+
+	public void drawDragLine(Space from, Vector to, PlayerColor player) {
+		drawMoveLine(getCenterPoint(from), to.add(halfSpace), player);
+	}
+
+	public void drawMoveLine(Vector from, Vector to, PlayerColor player) {
+		Color color = PIECE_COLORS.get(player);
+
+		Path2D.Double path = getMoveArc(from, to);
+		
+		g.setStroke(new BasicStroke(5, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		g.setColor(Color.WHITE);
+		g.draw(path);
+		
+		g.setStroke(new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+		g.setColor(color);
+		g.draw(path);
+	}
+	
+	private Path2D.Double getMoveArc(Vector from, Vector to) {
+		int peakX = Math.max((from.intX() + to.intX()) / 2, spaceSize / 4);
+		int peakY = Math.min(from.intY(), to.intY()) - spaceSize / 4;
+		
+		Path2D.Double path = new Path2D.Double();
+		path.moveTo(from.x, from.y);
+		path.quadTo(peakX, peakY, to.x, to.y);
+		
+		Vector endSegment = new Vector(peakX, peakY).subtract(to);
+		double angle = endSegment.getAngle();
+		
+		Vector arrowEnd1 = to.project(angle - ARROW_ANGLE, ARROW_SIZE);
+		Vector arrowEnd2 = to.project(angle + ARROW_ANGLE, ARROW_SIZE);
+		
+		path.lineTo(arrowEnd1.intX(), arrowEnd1.intY());
+		path.moveTo(to.x, to.y);
+		path.lineTo(arrowEnd2.intX(), arrowEnd2.intY());
+		
+		return path;
+	}
+
+	private Vector getCenterPoint(Space to) {
+		return getOrigin(to).add(halfSpace);
 	}
 
 	private void drawKing(Change change) {

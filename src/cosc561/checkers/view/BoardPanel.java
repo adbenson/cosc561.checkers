@@ -12,6 +12,7 @@ import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Grid;
 import cosc561.checkers.model.Piece;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
+import cosc561.checkers.model.PlayerTurn;
 import cosc561.checkers.model.Space;
 import cosc561.checkers.utility.Vector;
 
@@ -84,8 +85,6 @@ public class BoardPanel extends JPanel implements ControlListener, ComponentList
 					//TODO figure out how to show pending turn after refactor
 				}
 				
-				graphics.drawTurn(state.getTurn());
-				
 				graphics.display();
 			};
 		});
@@ -106,8 +105,18 @@ public class BoardPanel extends JPanel implements ControlListener, ComponentList
 		
 		graphics.drawBoard(temp);
 		
+		PlayerTurn turn = state.getTurn();
+		if (! turn.hasChange() && state.getPrevious(1) != null) {
+			turn = state.getPrevious(1).getTurn();
+		}
+		
+		graphics.drawTurn(turn);
+
 		if (piece != null) {
-			graphics.drawDraggedPiece(piece, dragTo, dragOffset);
+			Vector to = dragTo.subtract(dragOffset);
+			graphics.drawRemovedPiece(piece, dragFrom);
+			graphics.drawDraggedPiece(piece, to);
+			graphics.drawDragLine(dragFrom, to, piece.color);
 		}
 		
 		if (hovered != null) {
