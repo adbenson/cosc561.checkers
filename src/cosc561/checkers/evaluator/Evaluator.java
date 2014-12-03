@@ -11,14 +11,19 @@ public abstract class Evaluator {
 	
 	protected final PlayerColor playerColor;
 	
-	private final double factor;
+	private final double normalizationFactor;
+	private final double initialWeight;
+	private final double weightFactor;
 	
-	public Evaluator(PlayerColor playerColor) {
+	public Evaluator(PlayerColor playerColor, double initialWeight, double weightFactor) {
 		this.playerColor = playerColor;
 		
 		double range = getRangeMax() - getRangeMin();
 		//Normalize over a range of two : -1 to +1
-		this.factor = 2 / range;
+		this.normalizationFactor = 2 / range;
+		
+		this.initialWeight = initialWeight;
+		this.weightFactor = weightFactor;
 	}
 	
 	/* Default Ranges */
@@ -52,9 +57,22 @@ public abstract class Evaluator {
 		
 		return new EvaluatedState(state, score);
 	}
+	
+	protected double getWeight(int pieceCount) {
+		//Ranges from 1 (start of game) to 0 (end of game)
+		double progress = pieceCount / 24.0;
+		
+		double weight = initialWeight * ((1.0 - progress) * weightFactor);
+		
+		return initialWeight;//weight + progress;
+	}
+	
+	protected double evaluateNormal(BoardState state) {
+		return normalize(evaluateInternal(state));
+	}
 
 	protected double normalize(double score) {		
-		return score * factor;
+		return score * normalizationFactor;
 	}
 
 	protected abstract double evaluateInternal(BoardState state);

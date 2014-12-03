@@ -1,7 +1,9 @@
 package cosc561.checkers.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 public class PieceMap implements Iterable<Piece>, Printable {
 	
@@ -9,11 +11,13 @@ public class PieceMap implements Iterable<Piece>, Printable {
 	
 	private Piece[] pieces;
 	private int[] pieceCounts;
+	private int totalPieces;
 	
 	public PieceMap() {
 		pieces = new Piece[Grid.USED_SPACES + 1];
 		
 		pieceCounts = new int[PlayerColor.values().length];
+		totalPieces = 0;
 
 		Arrays.fill(pieceCounts, 0);
 	}
@@ -21,6 +25,7 @@ public class PieceMap implements Iterable<Piece>, Printable {
 	public PieceMap(PieceMap pieces) {
 		this.pieces = pieces.pieces.clone();
 		this.pieceCounts = pieces.pieceCounts.clone();
+		this.totalPieces = pieces.totalPieces;
 	}
 	
 	public void king(Space space) throws IllegalMoveException {
@@ -52,6 +57,7 @@ public class PieceMap implements Iterable<Piece>, Printable {
 	public void remove(Space space) throws IllegalMoveException {
 		if (hasPiece(space)) {
 			pieceCounts[pieces[space.id].color.ordinal()]--;
+			totalPieces--;
 			pieces[space.id] = null;
 		} else {
 			throw new IllegalMoveException("Cannot remove piece from "+space+". No piece in that space");
@@ -66,6 +72,7 @@ public class PieceMap implements Iterable<Piece>, Printable {
 		if (!hasPiece(space)) {
 			pieces[space.id] = piece;
 			pieceCounts[pieces[space.id].color.ordinal()]++;
+			totalPieces++;
 		} else {
 			throw new IllegalMoveException("Cannot add piece to "+space+" : already taken by "+pieces[space.id]);
 		}
@@ -107,6 +114,16 @@ public class PieceMap implements Iterable<Piece>, Printable {
 		};
 	}
 	
+	public List<Entry> getPieces(PlayerColor color) {
+		List<Entry> pieces = new ArrayList<>();
+		for (Entry e : iterateSpaces()) {
+			if (color == e.piece.color) {
+				pieces.add(e);
+			}
+		}
+		return pieces;
+	}
+	
 	public Iterable<Entry> iterateSpaces(final PlayerColor color) {
 		return new Iterable<Entry>() {
 			@Override
@@ -114,6 +131,14 @@ public class PieceMap implements Iterable<Piece>, Printable {
 				return new SpaceIterator(color, false);
 			}
 		};
+	}
+	
+	public List<Entry> getPieces() {
+		List<Entry> pieces = new ArrayList<>();
+		for (Entry e : iterateSpaces()) {
+			pieces.add(e);
+		}
+		return pieces;
 	}
 	
 	public Iterable<Entry> iterateSpaces() {
@@ -128,7 +153,11 @@ public class PieceMap implements Iterable<Piece>, Printable {
 	public int getPieceCount(PlayerColor color) {
 		return pieceCounts[color.ordinal()];
 	}
-	
+
+	public int getPieceCount() {
+		return totalPieces;
+	}
+
 	public class Entry {
 		public final Space space;
 		public final Piece piece;
