@@ -16,13 +16,14 @@ public class CompoundEvaluator extends Evaluator {
 		super(playerColor);
 		evaluators = new HashMap<>();
 		
-		evaluators.put(new PieceCountEvaluator(playerColor), 1.0);
+		evaluators.put(new PieceCountEvaluator(playerColor), 5.0);
 		//Winning or losing should eclipse all other evaluations
 		//It will normally return 0 to have no impact
 		evaluators.put(new EndgameEvaluator(playerColor), 10.0);
 		evaluators.put(new KingPieceEvaluator(playerColor), 5.0);
-		evaluators.put(new HomeRowEvaluator(playerColor), 0.25);
+		evaluators.put(new HomeRowEvaluator(playerColor), 0.5);
 		evaluators.put(new CenterBoardEvaluator(playerColor), 1.0);
+		evaluators.put(new RandomEvaluator(playerColor), 0.1);
 	}
 
 	@Override
