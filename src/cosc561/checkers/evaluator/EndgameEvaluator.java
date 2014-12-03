@@ -5,8 +5,10 @@ import cosc561.checkers.model.PlayerColor;
 
 public class EndgameEvaluator extends Evaluator {
 
-	public EndgameEvaluator(PlayerColor playerColor) {
-		super(playerColor);
+
+	public EndgameEvaluator(PlayerColor playerColor, double initialWeight,
+			double weightFactor) {
+		super(playerColor, initialWeight, weightFactor);
 	}
 
 	@Override

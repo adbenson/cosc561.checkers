@@ -18,7 +18,7 @@ public class CompoundEvaluator extends Evaluator {
 		evaluators = new ArrayList<>();
 		
 		//The primary evaluator. Piece count is pretty much always important.
-		evaluators.add(new PieceCountEvaluator(playerColor, 5.0, 2.0));
+		evaluators.add(new PieceCountEvaluator(playerColor, 10.0, 2.0));
 		
 		//Winning or losing should eclipse all other evaluations
 		//It will normally return 0 to have no impact

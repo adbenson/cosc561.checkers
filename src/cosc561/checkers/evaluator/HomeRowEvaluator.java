@@ -5,9 +5,9 @@ import cosc561.checkers.model.PieceMap.Entry;
 import cosc561.checkers.model.PlayerColor;
 
 public class HomeRowEvaluator extends Evaluator {
-	
-	public HomeRowEvaluator(PlayerColor playerColor) {
-		super(playerColor);
+
+	public HomeRowEvaluator(PlayerColor playerColor, double initialWeight, double weightFactor) {
+		super(playerColor, initialWeight, weightFactor);
 	}
 
 	@Override

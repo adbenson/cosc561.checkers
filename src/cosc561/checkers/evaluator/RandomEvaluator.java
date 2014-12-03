@@ -7,12 +7,13 @@ import cosc561.checkers.model.PlayerColor;
 
 public class RandomEvaluator extends Evaluator {
 	
-	private Random random;
-
-	public RandomEvaluator(PlayerColor playerColor) {
-		super(playerColor);
+	public RandomEvaluator(PlayerColor playerColor, double initialWeight,
+			double weightFactor) {
+		super(playerColor, initialWeight, weightFactor);
 		random = new Random(System.currentTimeMillis());
 	}
+
+	private Random random;
 
 	@Override
 	protected double evaluateInternal(BoardState state) {

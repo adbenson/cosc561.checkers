@@ -6,9 +6,9 @@ import cosc561.checkers.model.PlayerTurn.Change;
 import cosc561.checkers.model.PlayerTurn.King;
 
 public class KingPieceEvaluator extends Evaluator {
-	
-	public KingPieceEvaluator(PlayerColor playerColor) {
-		super(playerColor);
+
+	public KingPieceEvaluator(PlayerColor playerColor, double initialWeight, double weightFactor) {
+		super(playerColor, initialWeight, weightFactor);
 	}
 
 	/**

@@ -7,11 +7,13 @@ import cosc561.checkers.model.PlayerColor;
 
 public class CenterBoardEvaluator extends Evaluator {
 	
+	public CenterBoardEvaluator(PlayerColor playerColor, double initialWeight,
+			double weightFactor) {
+		super(playerColor, initialWeight, weightFactor);
+	}
+
 	private static final double HALF_BOARD = (Grid.SPACES_PER_SIDE - 1) / 2.0;
 
-	public CenterBoardEvaluator(PlayerColor playerColor) {
-		super(playerColor);
-	}
 
 	@Override
 	protected double evaluateInternal(BoardState state) {
