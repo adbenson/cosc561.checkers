@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.event.MouseInputAdapter;
 
 import cosc561.checkers.model.Space;
+import cosc561.checkers.utility.Vector;
 
 public class ControlHandler extends MouseInputAdapter {
 	
@@ -21,7 +22,7 @@ public class ControlHandler extends MouseInputAdapter {
 	@Override
 	public void mouseDragged(MouseEvent event) {
 		if (dragFrom != null) {
-			listener.dragPiece(dragFrom, new Point(event.getPoint()));
+			listener.dragPiece(dragFrom, new Vector(event.getPoint()));
 		}
 	}
 
@@ -72,7 +73,7 @@ public class ControlHandler extends MouseInputAdapter {
 	@Override
 	public void mouseReleased(MouseEvent event) {
 		if (event.isPopupTrigger()) {
-			listener.createContextMenu(new Point(event.getPoint()));
+			listener.createContextMenu(new Vector(event.getPoint()));
 		}
 		
 		if (event.getButton() == MouseEvent.BUTTON1 && dragFrom != null) {
@@ -96,7 +97,7 @@ public class ControlHandler extends MouseInputAdapter {
 	}
 
 	private Space getSpace(MouseEvent event) {
-		return listener.getSpaceAt(new Point(event.getPoint()));
+		return listener.getSpaceAt(new Vector(event.getPoint()));
 	}
 	
 }

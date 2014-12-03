@@ -13,6 +13,7 @@ import cosc561.checkers.model.Grid;
 import cosc561.checkers.model.Piece;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
 import cosc561.checkers.model.Space;
+import cosc561.checkers.utility.Vector;
 
 @SuppressWarnings("serial")
 public class BoardPanel extends JPanel implements ControlListener, ComponentListener {
@@ -28,8 +29,8 @@ public class BoardPanel extends JPanel implements ControlListener, ComponentList
 	private Space hovered;
 	private Space selected;
 	private Space dragFrom;
-	private Point dragTo;
-	private Point dragOffset;
+	private Vector dragTo;
+	private Vector dragOffset;
 
 	public BoardPanel(Dimension dimensions) {
 		setPreferredSize(dimensions);
@@ -161,7 +162,7 @@ public class BoardPanel extends JPanel implements ControlListener, ComponentList
 	}
 	
 	@Override
-	public void dragPiece(Space from, Point to) {
+	public void dragPiece(Space from, Vector to) {
 		//Check if this is a new dragging action
 		if (dragFrom == null && from != null) {
 			dragOffset = graphics.getOffset(from, to);
@@ -198,18 +199,18 @@ public class BoardPanel extends JPanel implements ControlListener, ComponentList
 	}
 	
 	@Override
-	public Space getSpaceAt(Point point) {
+	public Space getSpaceAt(Vector point) {
 		return graphics.getSpaceAt(point);
 	}
 	
 	@Override
-	public void createContextMenu(Point point) {
+	public void createContextMenu(Vector point) {
 		Space space = getSpaceAt(point);
 		boolean hasPiece = state.getPiece(space) != null;
 		
 		if (space != null) {
 			JPopupMenu menu = new BoardContextMenu(space, this, hasPiece);
-			menu.show(this, point.x, point.y);
+			menu.show(this, point.intX(), point.intY());
 		}
 	}
 	

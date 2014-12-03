@@ -19,6 +19,7 @@ import cosc561.checkers.model.PlayerColor;
 import cosc561.checkers.model.PlayerTurn;
 import cosc561.checkers.model.PlayerTurn.Change;
 import cosc561.checkers.model.Space;
+import cosc561.checkers.utility.Vector;
 
 public class BoardGraphics {
 
@@ -116,15 +117,15 @@ public class BoardGraphics {
 	}
 
 	private void drawSpace(Space space) {
-		Point origin = getOrigin(space);
+		Vector origin = getOrigin(space);
 		
 		g.setColor(SPACE_COLOR);
-		g.fillRect(origin.x, origin.y, spaceSize, spaceSize);
+		g.fillRect(origin.intX(), origin.intY(), spaceSize, spaceSize);
 		
 		g.setColor(SPACE_LABEL_COLOR);
 		//For now, draw the label in the lower left
 		//because Java draws text from the lower left so it's easier to register
-		g.drawString(Integer.toString(space.id), origin.x + SPACE_LABEL_OFFSET_PX, origin.y - SPACE_LABEL_OFFSET_PX + spaceSize);
+		g.drawString(Integer.toString(space.id), origin.intX() + SPACE_LABEL_OFFSET_PX, origin.intY() - SPACE_LABEL_OFFSET_PX + spaceSize);
 	}
 
 	public void drawBoard(BoardState board) {
@@ -132,16 +133,16 @@ public class BoardGraphics {
 			drawPiece(piece);
 		}
 	}
-
+	
 	private void drawPiece(Entry piece) {
-		Point location = getOrigin(piece.space).add(pieceOffset);
+		Vector location = getOrigin(piece.space).add(pieceOffset);
 		drawPiece(piece.piece, location);
 	}
 	
-
-	public void drawDraggedPiece(Piece piece, Point to, Point dragOffset) {
+	public void drawDraggedPiece(Piece piece, Vector to) {
 		//Later we can add shadow and shit
-		drawPiece(piece, to.subtract(dragOffset).add(pieceOffset));
+		drawPiece(piece, to.add(pieceOffset));
+	}
 	}
 	
 	private void drawPiece(Piece piece, Point location) {
@@ -153,12 +154,12 @@ public class BoardGraphics {
 		
 		Color border = color.brighter();
 		g.setColor(border);
-		g.drawOval(location.x, location.y, pieceSize, pieceSize);
+		g.drawOval(location.intX(), location.intY(), pieceSize, pieceSize);
 		
 		
 		if (piece.isKing()) {
 			g.setColor(KING_BORDER_COLOR);
-			g.drawOval(location.x - PIECE_BORDER_WIDTH, location.y - PIECE_BORDER_WIDTH, kingBorderSize, kingBorderSize);
+			g.drawOval(location.intX() - PIECE_BORDER_WIDTH, location.intY() - PIECE_BORDER_WIDTH, kingBorderSize, kingBorderSize);
 		}
 	}
 
@@ -178,19 +179,19 @@ public class BoardGraphics {
 		}
 	}
 
-	public Space getSpaceAt(Point point) {
-		return getSpaceAt(point.x, point.y);
+	public Space getSpaceAt(Vector point) {
+		return getSpaceAt(point.intX(), point.intY());
 	}
 	
-	private Point getOrigin(Space space) {
+	private Vector getOrigin(Space space) {
 		int x = spaceSize * space.column;
 		int y = spaceSize * space.row;
 		
-		return new Point(x, y);
+		return new Vector(x, y);
 	}
 
-	public Point getOffset(Space from, Point to) {
-		Point origin = getOrigin(from);
+	public Vector getOffset(Space from, Vector to) {
+		Vector origin = getOrigin(from);
 		
 		return to.subtract(origin);
 	}
