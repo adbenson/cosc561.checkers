@@ -50,10 +50,10 @@ public class CenterBoardEvaluator extends Evaluator {
 	}
 
 	protected double getRangeMin() {
-		return -28;
+		return -20;
 	}
 
 	protected double getRangeMax() {
-		return 28;
+		return 20;
 	}
 }
