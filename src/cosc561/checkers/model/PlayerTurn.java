@@ -12,7 +12,7 @@ public class PlayerTurn {
 	public final int turnNumber;
 	
 	public PlayerTurn(PlayerColor player, int turnNumber) {
-		this.changes = new ArrayList<>();
+		this.changes = new ArrayList<>(1);
 		this.player = player;
 		this.turnNumber = turnNumber;
 	}
