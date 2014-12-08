@@ -31,12 +31,16 @@ public class ProximityEvaluator extends Evaluator {
 		
 		return -totalDistance;
 	}
+	
+	public double normalize(double score) {
+		return - (score / getRangeMin());
+	}
 
 	protected double getRangeMin() {
-		return -20;
+		return -1100;
 	}
 
 	protected double getRangeMax() {
-		return 20;
+		return 0;
 	}
 }

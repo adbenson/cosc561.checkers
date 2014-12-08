@@ -22,10 +22,10 @@ public class CompoundEvaluator extends Evaluator {
 		evaluators.add(new EndgameEvaluator(10.0, 10.0));
 		
 		
-		evaluators.add(new KingPieceEvaluator(2.0, 1.0));
-		evaluators.add(new HomeRowEvaluator(1.0, 0.25));
+		evaluators.add(new KingPieceEvaluator(3.0, 1.0));
+		evaluators.add(new HomeRowEvaluator(2.0, 0.0));
 		evaluators.add(new CenterBoardEvaluator(1.0, 1.5));
-		evaluators.add(new ProximityEvaluator(0.5, 3.0));
+		evaluators.add(new ProximityEvaluator(0.25, 100.0));
 		
 		evaluators.add(new RandomEvaluator(0.2, 0.0));
 
