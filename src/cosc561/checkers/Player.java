@@ -68,34 +68,7 @@ public class Player {
 		
 		return bestValue;
 	}
-	
-	public EvaluatedState negamax(BoardState state, int depth, PlayerColor player) throws IllegalMoveException {
-		if (depth == 0) {
-			if (player == color) {
-				return evaluator.evaluate(state, player);
-			}
-			else {
-				return evaluator.evaluate(state, player.opponent());
-			}
-		}
-				
-		List<BoardState> childStates = state.getAllPossibleStates(player);
-		
-		if (state.isEndgame()) {
-			return new EvaluatedState(state, 0);
-		}
-		
-		EvaluatedState bestState = null;
-		for (BoardState child : childStates) {
-			EvaluatedState childResult = negamax(child, depth - 1, player.opponent());
-			if (bestState == null || -childResult.score > bestState.score) {
-				bestState = childResult;
-			}
-		}
-		
-		return bestState;
-	}
-	
+
 	public void setEvaluator(Evaluator e) {
 		this.evaluator = e;
 	}
