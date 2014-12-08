@@ -2,6 +2,7 @@ package cosc561.checkers.evaluator;
 
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.Grid;
+import cosc561.checkers.model.PieceMap;
 import cosc561.checkers.model.PieceMap.Entry;
 import cosc561.checkers.model.PlayerColor;
 
@@ -16,18 +17,36 @@ public class CenterBoardEvaluator extends Evaluator {
 
 	@Override
 	public double evaluate(BoardState state, PlayerColor playerColor) {
-		double value = 0;
+		PieceMap pieces = state.getPieces();
 		
-		for (Entry e : state.getPieces().iterateSpaces()) {
+		double playerValue = 0;
+		double opponentValue = 0;
+		
+		for (Entry e : pieces.iterateSpaces()) {
 			double distance = Math.floor(Math.abs(e.space.row - HALF_BOARD));
+			
 			if (e.piece.color == playerColor) {
-				value -= distance;
+				playerValue -= distance;
 			}
 			else {
-				value += distance;
+				opponentValue -= distance;
 			}
 		}
-		return value;
+		
+		playerValue = average(playerValue, pieces, playerColor);
+		opponentValue = average(opponentValue, pieces, playerColor.opponent());
+		
+		return playerValue - opponentValue;
+	}
+
+	private double average(double value, PieceMap pieces, PlayerColor color) {
+		 int count = pieces.getPieceCount(color);
+		 
+		 if (count > 0) {
+			 return value / count;
+		 }
+		 
+		 return 0;
 	}
 
 	protected double getRangeMin() {
