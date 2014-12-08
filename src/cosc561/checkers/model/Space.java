@@ -37,4 +37,8 @@ public class Space {
 	public boolean isEndRow() {
 		return row == 0 || row == Grid.SPACES_PER_SIDE - 1;
 	}
+
+	public double distance(Space that) {
+		return Math.abs(this.row - that.row) + Math.abs(this.column - that.column);
+	}
 }
