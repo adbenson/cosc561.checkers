@@ -14,7 +14,7 @@ public class PieceCountEvaluator extends Evaluator {
 
 	@Override
 	public double evaluate(BoardState state, PlayerColor playerColor) {
-		int value = 0;
+		double value = 0;
 		
 		for (Piece piece : state.getPieces()) {
 			int pValue = (piece.color == playerColor)? 1 : -1;
