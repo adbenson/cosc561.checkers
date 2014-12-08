@@ -13,7 +13,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import cosc561.checkers.Player;
 import cosc561.checkers.evaluator.Evaluator;
-import cosc561.checkers.evaluator.Evaluator.EvaluatedState;
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.PieceMap.IllegalMoveException;
 

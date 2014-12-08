@@ -1,7 +1,6 @@
 package cosc561.checkers.evaluator;
 
 import cosc561.checkers.model.BoardState;
-import cosc561.checkers.model.Piece;
 import cosc561.checkers.model.PlayerColor;
 
 public class PieceCountEvaluator extends Evaluator {

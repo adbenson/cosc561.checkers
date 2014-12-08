@@ -2,7 +2,6 @@ package cosc561.checkers.evaluator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.PlayerColor;

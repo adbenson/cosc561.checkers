@@ -1,9 +1,5 @@
 package cosc561.checkers.evaluator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import cosc561.checkers.model.BoardState;
 import cosc561.checkers.model.PlayerColor;
 
@@ -17,7 +13,7 @@ public abstract class Evaluator {
 		
 		double range = getRangeMax() - getRangeMin();
 		//Normalize over a range of two : -1 to +1
-		this.normalizationFactor = 2 / range;
+		this.normalizationFactor = 2.0 / range;
 		
 		this.initialWeight = initialWeight;
 		this.weightFactor = weightFactor;
@@ -46,10 +42,6 @@ public abstract class Evaluator {
 
 	public double normalize(double score) {		
 		return score * normalizationFactor;
-	}
-	
-	public double weight(double score, int pieceCount) {
-		return score * getWeight(pieceCount);
 	}
 
 	public abstract double evaluate(BoardState state, PlayerColor player);
