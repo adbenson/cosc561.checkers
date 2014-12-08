@@ -14,17 +14,10 @@ public class PieceCountEvaluator extends Evaluator {
 
 	@Override
 	public double evaluate(BoardState state, PlayerColor playerColor) {
-		double value = 0;
+		int playerCount = state.getPieces().getPieceCount(playerColor);
+		int opponentCount = state.getPieces().getPieceCount(playerColor.opponent());
 		
-		for (Piece piece : state.getPieces()) {
-			int pValue = (piece.color == playerColor)? 1 : -1;
-			if (piece.isKing()) {
-				pValue *= KING_FACTOR;
-			}
-			value += pValue;
-		}
-			
-		return value;
+		return playerCount - opponentCount;		
 	}
 
 	@Override
