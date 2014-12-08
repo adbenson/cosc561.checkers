@@ -35,7 +35,7 @@ public class Player {
 		double bestValue = Double.NEGATIVE_INFINITY;
 		
 		for (BoardState child : currentState.getAllPossibleStates(color)) {
-			double val = negamax(child, searchDepth, 1);
+			double val = negamax(child, searchDepth, -1);
 			if (debug) {
 				System.out.println(child);
 				System.out.println("score " + val);
