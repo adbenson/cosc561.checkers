@@ -25,9 +25,9 @@ public class CompoundEvaluator extends Evaluator {
 		
 		evaluators.add(new KingPieceEvaluator(2.0, 1.0));
 		evaluators.add(new HomeRowEvaluator(1.0, 0.25));
-		evaluators.add(new CenterBoardEvaluator(1.0, 1.0));
+		evaluators.add(new CenterBoardEvaluator(1.0, 1.5));
 		
-		evaluators.add(new RandomEvaluator(0.1, 0.1));
+		evaluators.add(new RandomEvaluator(0.2, 0.0));
 	}
 
 	@Override
