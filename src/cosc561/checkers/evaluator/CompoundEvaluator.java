@@ -67,4 +67,8 @@ public class CompoundEvaluator extends Evaluator {
 		return score;
 	}
 
+	public List<Evaluator> getEvaluators() {
+		return new ArrayList<>(evaluators);
+	}
+
 }
