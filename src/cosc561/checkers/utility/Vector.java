@@ -11,7 +11,7 @@ import java.awt.geom.Rectangle2D;
  * @author adbenson
  *
  */
-public class Vector {
+public class Vector extends Point2D {
 	
 	/**
 	 * A Neutral (0, 0) vector used for reference
@@ -258,6 +258,21 @@ public class Vector {
 
 	public void fill(Graphics2D g, int radius) {
 		g.fillOval(intX()-radius, intY()-radius, radius*2, radius*2);
+	}
+
+	@Override
+	public double getX() {
+		return x;
+	}
+
+	@Override
+	public double getY() {
+		return y;
+	}
+
+	@Override
+	public void setLocation(double x, double y) {
+		throw new UnsupportedOperationException("Vector is an immuatble class. Calls to setLocation(x, y) are not allowed.");
 	}
 	
 }
