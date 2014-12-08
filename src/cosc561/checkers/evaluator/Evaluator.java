@@ -35,11 +35,13 @@ public abstract class Evaluator {
 	
 	public double getWeight(int pieceCount) {
 		//Ranges from 1 (start of game) to 0 (end of game)
+		//TODO: MAGIC NUMBER! We're actually not set up to easily know the total pieces on the board!
 		double progress = pieceCount / 24.0;
 		
-		double weight = initialWeight * ((1.0 - progress) * weightFactor);
+		//Scale will range from 1 (start of game) to weightFactor (end of game)
+		double scale = progress + ((1 - progress) * weightFactor);
 		
-		return initialWeight;//weight + progress;
+		return initialWeight * scale;
 	}
 
 	public double normalize(double score) {		
