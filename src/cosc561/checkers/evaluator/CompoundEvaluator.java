@@ -9,8 +9,6 @@ import cosc561.checkers.model.PlayerColor;
 
 public class CompoundEvaluator extends Evaluator {
 	
-	private static boolean debug = false;
-	
 	List<Evaluator> evaluators;
 
 	public CompoundEvaluator() {
@@ -37,25 +35,10 @@ public class CompoundEvaluator extends Evaluator {
 		
 		double cumulativeScore = 0;
 		
-		if (debug) {
-			System.out.println(state);
-		}
-		
 		for (Evaluator eval : evaluators) {
 			double score = eval.normalize(eval.evaluate(state, player));
-			
-			if (debug) {
-				System.out.println(eval.getClass().getSimpleName()+": "+score);
-			}
-			
-			if (debug) {
-				System.out.println("Weight: "+ eval.getWeight(state.getPieces().getPieceCount()));
-			}
+
 			cumulativeScore += score * eval.getWeight(state.getPieces().getPieceCount());
-		}
-		
-		if (debug) {
-			System.out.println("Cumulative: "+cumulativeScore);
 		}
 		
 		return cumulativeScore;
