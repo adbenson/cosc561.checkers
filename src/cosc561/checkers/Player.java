@@ -38,7 +38,7 @@ public class Player {
 				System.out.println("score " + val);
 			}
 			
-			if (val > bestValue) {
+			if (bestState == null || val > bestValue) {
 				bestValue = val;
 				bestState = child;
 			}
@@ -46,6 +46,10 @@ public class Player {
 
 		System.out.println("Chosen:");
 		System.out.println(bestState);
+		
+		if (bestState == null) {
+			System.out.println("End?");
+		}
 
 		return bestState;
 	}
