@@ -13,7 +13,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -29,8 +28,7 @@ import cosc561.checkers.model.PlayerTurn;
 
 public class BoardWindow {
 
-	public static final int OUTPUT_WIDTH = 300;	
-	public static final int PENDING_TURN_HEIGHT = 150;
+	public static final int OUTPUT_WIDTH = 250;	
 	public static final Dimension DIMENSIONS = new Dimension(750, 750);
 	
 	private JFrame window;
@@ -43,7 +41,6 @@ public class BoardWindow {
 	private Checkers game;
 
 	private JTextArea logArea;
-	private JTextArea pendingTurn;
 	
 	public BoardWindow(Checkers game) throws InvocationTargetException, InterruptedException {
 		
@@ -80,6 +77,8 @@ public class BoardWindow {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
 		
+		window.pack();
+		
 		boardPanel.render();
 	}
 
@@ -89,38 +88,15 @@ public class BoardWindow {
 		outputPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		outputPanel.setPreferredSize(new Dimension(OUTPUT_WIDTH, 0));
 		
-		JPanel logPanel = new JPanel();
-		logPanel.add(new JLabel("Play Log"));
-		
 		logArea = new JTextArea();
-//		logArea.setPreferredSize(new Dimension(OUTPUT_WIDTH, DIMENSIONS.height - PENDING_TURN_HEIGHT));
 		logArea.setEditable(false);
 		logArea.setWrapStyleWord(true);
 		logArea.setLineWrap(true);
 		logArea.setBackground(Color.white);
 		
 		JScrollPane scroll = new JScrollPane(logArea);
-		scroll.setPreferredSize(new Dimension(OUTPUT_WIDTH, DIMENSIONS.height - PENDING_TURN_HEIGHT));
-		scroll.setBackground(Color.yellow);
 
-		logPanel.add(scroll);
-		
-		outputPanel.add(logPanel, BorderLayout.CENTER);
-		
-		JPanel pendingPanel = new JPanel();
-		
-		pendingPanel.add(new JLabel("Pending Turn"));
-		
-		pendingTurn = new JTextArea();
-		pendingTurn.setPreferredSize(new Dimension(OUTPUT_WIDTH, PENDING_TURN_HEIGHT));
-		pendingTurn.setEditable(false);
-		pendingTurn.setWrapStyleWord(true);
-		pendingTurn.setLineWrap(true);
-		pendingTurn.setBackground(Color.LIGHT_GRAY);
-		
-		pendingPanel.add(pendingTurn);
-		
-		outputPanel.add(pendingPanel, BorderLayout.SOUTH);
+		outputPanel.add(scroll, BorderLayout.CENTER);
 		
 		return outputPanel;
 	}
