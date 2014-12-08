@@ -40,8 +40,9 @@ public class BoardGraphics {
 	private static final Color CONTOUR_END_COLOR = new Color(0.0f, 0.0f, 0.0f, 0.3f);
 	private static final Color CONTOUR_START_COLOR = new Color(0.0f, 0.0f, 0.0f, 0.0f);
 	
-	private static final Color KING_HIGHLIGHT_COLOR = new Color(1.0f, 0.770f, 0.035f, 0.6f);
-	private static final Color KING_HIGHLIGHT_END_COLOR = new Color(1.0f, 0.770f, 0.035f, 0.0f);
+	private static final Color KING_BORDER_COLOR = new Color(1.0f, 0.770f, 0.035f, 0.6f);
+	private static final Color KING_OVERLAY_COLOR = new Color(1.0f, 0.770f, 0.035f, 0.25f);
+	private static final Color KING_HIGHLIGHT_COLOR = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 	
 	private static final Map<PlayerColor, Color> PIECE_COLORS;
 	
@@ -189,8 +190,8 @@ public class BoardGraphics {
 		g.setColor(border);
 		g.drawOval(location.intX(), location.intY(), pieceSize, pieceSize);
 		
-		if (piece.isKing()) {
-			g.setColor(KING_HIGHLIGHT_COLOR);
+		if (!removed && piece.isKing()) {
+			g.setColor(KING_BORDER_COLOR);
 			g.drawOval(location.intX(), location.intY(), pieceSize, pieceSize);
 		}
 	}
@@ -209,6 +210,12 @@ public class BoardGraphics {
         g.setColor(color);
         g.fillOval(x, y, pieceSize, pieceSize);
         
+        if (king) {
+            // Fills the circle with solid color
+            g.setColor(KING_OVERLAY_COLOR);
+            g.fillOval(x, y, pieceSize, pieceSize);
+        }
+        
         Vector distance = lightSource.subtract(center);
         Vector proportional = distance.scale(1.0 / sideLength);
         Vector scaled = proportional.scale(pieceSize * 0.3f).add(halfPiece);
@@ -222,7 +229,7 @@ public class BoardGraphics {
             new float[] { 0.0f, 0.5f },
             new Color[] { 
         		king? KING_HIGHLIGHT_COLOR : HIGHLIGHT_START_COLOR,
-        		king? KING_HIGHLIGHT_END_COLOR : HIGHLIGHT_END_COLOR 
+        		HIGHLIGHT_END_COLOR 
     		},
             RadialGradientPaint.CycleMethod.NO_CYCLE
         );
