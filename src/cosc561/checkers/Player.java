@@ -55,7 +55,7 @@ public class Player {
 	
 	public double negamax(BoardState node, int depth, int colorInt) throws IllegalMoveException {
 		if (depth == 0 || node.isEndgame()) {
-			return colorInt * evaluator.evaluate(node, color).score;
+			return colorInt * evaluator.evaluate(node, color);
 		}
 		
 		double bestValue = Double.NEGATIVE_INFINITY;
