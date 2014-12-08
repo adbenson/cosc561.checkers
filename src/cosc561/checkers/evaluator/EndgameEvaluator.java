@@ -6,13 +6,12 @@ import cosc561.checkers.model.PlayerColor;
 public class EndgameEvaluator extends Evaluator {
 
 
-	public EndgameEvaluator(PlayerColor playerColor, double initialWeight,
-			double weightFactor) {
-		super(playerColor, initialWeight, weightFactor);
+	public EndgameEvaluator(double initialWeight, double weightFactor) {
+		super(initialWeight, weightFactor);
 	}
 
 	@Override
-	protected double evaluateInternal(BoardState state) {
+	protected double evaluateInternal(BoardState state, PlayerColor playerColor) {
 		if (state.isEndgame()) {
 			if (state.winner() == playerColor) {
 				return 1;

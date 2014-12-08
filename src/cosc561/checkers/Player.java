@@ -22,7 +22,7 @@ public class Player {
 		this.color = color;
 		this.searchDepth = searchDepth;
 		
-		evaluator = new CompoundEvaluator(color);
+		evaluator = new CompoundEvaluator();
 	}
 
 	public BoardState nextMove(BoardState currentState) throws IllegalMoveException {

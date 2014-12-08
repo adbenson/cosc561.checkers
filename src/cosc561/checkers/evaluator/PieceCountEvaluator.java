@@ -6,14 +6,14 @@ import cosc561.checkers.model.PlayerColor;
 
 public class PieceCountEvaluator extends Evaluator {
 	
-	public PieceCountEvaluator(PlayerColor playerColor, double initialWeight, double weightFactor) {
-		super(playerColor, initialWeight, weightFactor);
+	public PieceCountEvaluator(double initialWeight, double weightFactor) {
+		super(initialWeight, weightFactor);
 	}
 
 	public static final double KING_FACTOR = 1.5;
 
 	@Override
-	public double evaluateInternal(BoardState state) {
+	public double evaluateInternal(BoardState state, PlayerColor playerColor) {
 		int value = 0;
 		
 		for (Piece piece : state.getPieces()) {

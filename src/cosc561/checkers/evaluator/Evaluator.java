@@ -9,14 +9,11 @@ import cosc561.checkers.model.PlayerColor;
 
 public abstract class Evaluator {
 	
-	protected final PlayerColor playerColor;
-	
 	private final double normalizationFactor;
 	private final double initialWeight;
 	private final double weightFactor;
 	
-	public Evaluator(PlayerColor playerColor, double initialWeight, double weightFactor) {
-		this.playerColor = playerColor;
+	public Evaluator(double initialWeight, double weightFactor) {
 		
 		double range = getRangeMax() - getRangeMin();
 		//Normalize over a range of two : -1 to +1
@@ -48,13 +45,9 @@ public abstract class Evaluator {
 		return evaluated;
 	}
 	
-	public EvaluatedState evaluate(BoardState state, PlayerColor currentPlayer) {
-		double score = normalize(evaluateInternal(state));
-		
-		if (currentPlayer != playerColor) {
-			score = -score;
-		}
-		
+	public EvaluatedState evaluate(BoardState state, PlayerColor player) {
+		double score = normalize(evaluateInternal(state, player));
+
 		return new EvaluatedState(state, score);
 	}
 	
@@ -67,15 +60,15 @@ public abstract class Evaluator {
 		return initialWeight;//weight + progress;
 	}
 	
-	protected double evaluateNormal(BoardState state) {
-		return normalize(evaluateInternal(state));
+	protected double evaluateNormal(BoardState state, PlayerColor player) {
+		return normalize(evaluateInternal(state, player));
 	}
 
 	protected double normalize(double score) {		
 		return score * normalizationFactor;
 	}
 
-	protected abstract double evaluateInternal(BoardState state);
+	protected abstract double evaluateInternal(BoardState state, PlayerColor player);
 	
 	public static class EvaluatedState implements Comparable<EvaluatedState> {
 		public final BoardState state;

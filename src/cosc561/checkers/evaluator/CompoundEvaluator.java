@@ -13,27 +13,27 @@ public class CompoundEvaluator extends Evaluator {
 	
 	List<Evaluator> evaluators;
 
-	public CompoundEvaluator(PlayerColor playerColor) {
-		super(playerColor, 1.0, 1.0);
+	public CompoundEvaluator() {
+		super(1.0, 1.0);
 		evaluators = new ArrayList<>();
 		
 		//The primary evaluator. Piece count is pretty much always important.
-		evaluators.add(new PieceCountEvaluator(playerColor, 10.0, 2.0));
+		evaluators.add(new PieceCountEvaluator(10.0, 2.0));
 		
 		//Winning or losing should eclipse all other evaluations
 		//It will normally return 0 to have no impact
-		evaluators.add(new EndgameEvaluator(playerColor, 10.0, 10.0));
+		evaluators.add(new EndgameEvaluator(10.0, 10.0));
 		
 		
-		evaluators.add(new KingPieceEvaluator(playerColor, 2.0, 1.0));
-		evaluators.add(new HomeRowEvaluator(playerColor, 1.0, 0.25));
-		evaluators.add(new CenterBoardEvaluator(playerColor, 1.0, 1.0));
+		evaluators.add(new KingPieceEvaluator(2.0, 1.0));
+		evaluators.add(new HomeRowEvaluator(1.0, 0.25));
+		evaluators.add(new CenterBoardEvaluator(1.0, 1.0));
 		
-		evaluators.add(new RandomEvaluator(playerColor, 0.5, 0.1));
+		evaluators.add(new RandomEvaluator(0.5, 0.1));
 	}
 
 	@Override
-	protected double evaluateInternal(BoardState state) {
+	protected double evaluateInternal(BoardState state, PlayerColor player) {
 		
 		double cumulativeScore = 0;
 		
@@ -42,7 +42,7 @@ public class CompoundEvaluator extends Evaluator {
 		}
 		
 		for (Evaluator eval : evaluators) {
-			double score = eval.evaluateNormal(state);
+			double score = eval.evaluateNormal(state, player);
 			
 			if (debug) {
 				System.out.println(eval.getClass().getSimpleName()+": "+score);

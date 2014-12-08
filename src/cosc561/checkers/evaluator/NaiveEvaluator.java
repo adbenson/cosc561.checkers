@@ -5,12 +5,12 @@ import cosc561.checkers.model.PlayerColor;
 
 public class NaiveEvaluator extends Evaluator {
 
-	public NaiveEvaluator(PlayerColor playerColor, double initialWeight, double weightFactor) {
-		super(playerColor, initialWeight, weightFactor);
+	public NaiveEvaluator(double initialWeight, double weightFactor) {
+		super(initialWeight, weightFactor);
 	}
 
 	@Override
-	public double evaluateInternal(BoardState state) {
+	public double evaluateInternal(BoardState state, PlayerColor playerColor) {
 		return 1;
 	}
 

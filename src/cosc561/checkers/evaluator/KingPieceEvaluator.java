@@ -7,8 +7,8 @@ import cosc561.checkers.model.PlayerTurn.King;
 
 public class KingPieceEvaluator extends Evaluator {
 
-	public KingPieceEvaluator(PlayerColor playerColor, double initialWeight, double weightFactor) {
-		super(playerColor, initialWeight, weightFactor);
+	public KingPieceEvaluator(double initialWeight, double weightFactor) {
+		super(initialWeight, weightFactor);
 	}
 
 	/**
@@ -16,7 +16,7 @@ public class KingPieceEvaluator extends Evaluator {
 	 * or -1 if an opponent piece was kinged.
 	 */
 	@Override
-	protected double evaluateInternal(BoardState state) {
+	protected double evaluateInternal(BoardState state, PlayerColor playerColor) {
 		for (Change change : state.getTurn().getChanges()) {
 			if (change instanceof King) {
 				if (change.piece.color == playerColor) {

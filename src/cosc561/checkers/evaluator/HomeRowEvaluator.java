@@ -6,12 +6,12 @@ import cosc561.checkers.model.PlayerColor;
 
 public class HomeRowEvaluator extends Evaluator {
 
-	public HomeRowEvaluator(PlayerColor playerColor, double initialWeight, double weightFactor) {
-		super(playerColor, initialWeight, weightFactor);
+	public HomeRowEvaluator(double initialWeight, double weightFactor) {
+		super(initialWeight, weightFactor);
 	}
 
 	@Override
-	protected double evaluateInternal(BoardState state) {
+	protected double evaluateInternal(BoardState state, PlayerColor playerColor) {
 		double value = 0;
 		
 		for (Entry e : state.getPieces().iterateSpaces()) {
