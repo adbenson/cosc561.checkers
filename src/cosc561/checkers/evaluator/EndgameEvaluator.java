@@ -1,6 +1,7 @@
 package cosc561.checkers.evaluator;
 
 import cosc561.checkers.model.BoardState;
+import cosc561.checkers.model.PieceMap;
 import cosc561.checkers.model.PlayerColor;
 
 public class EndgameEvaluator extends Evaluator {
@@ -13,10 +14,11 @@ public class EndgameEvaluator extends Evaluator {
 	@Override
 	public double evaluate(BoardState state, PlayerColor playerColor) {
 		if (state.isEndgame()) {
-			if (state.winner() == playerColor) {
+			PlayerColor winner = state.getWinner();
+			if (winner == playerColor) {
 				return 1;
 			}
-			else {
+			else if (winner == playerColor.opponent()) {
 				return -1;
 			}
 		}
