@@ -62,7 +62,8 @@ public class CompoundEvaluator extends Evaluator {
 	}
 
 	//This is so parent class doesn't re-normalize our scores
-	protected double normalize(double score) {
+	@Override
+	public double normalize(double score) {
 		return score;
 	}
 
