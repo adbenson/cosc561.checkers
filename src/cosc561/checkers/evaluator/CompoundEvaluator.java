@@ -33,7 +33,7 @@ public class CompoundEvaluator extends Evaluator {
 	}
 
 	@Override
-	protected double evaluateInternal(BoardState state, PlayerColor player) {
+	public double evaluate(BoardState state, PlayerColor player) {
 		
 		double cumulativeScore = 0;
 		
@@ -42,7 +42,7 @@ public class CompoundEvaluator extends Evaluator {
 		}
 		
 		for (Evaluator eval : evaluators) {
-			double score = eval.evaluateNormal(state, player);
+			double score = eval.normalize(evaluate(state, player));
 			
 			if (debug) {
 				System.out.println(eval.getClass().getSimpleName()+": "+score);

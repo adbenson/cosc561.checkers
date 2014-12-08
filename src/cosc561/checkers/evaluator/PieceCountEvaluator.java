@@ -13,7 +13,7 @@ public class PieceCountEvaluator extends Evaluator {
 	public static final double KING_FACTOR = 1.5;
 
 	@Override
-	public double evaluateInternal(BoardState state, PlayerColor playerColor) {
+	public double evaluate(BoardState state, PlayerColor playerColor) {
 		int value = 0;
 		
 		for (Piece piece : state.getPieces()) {

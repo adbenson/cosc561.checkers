@@ -15,7 +15,7 @@ public class CenterBoardEvaluator extends Evaluator {
 
 
 	@Override
-	protected double evaluateInternal(BoardState state, PlayerColor playerColor) {
+	public double evaluate(BoardState state, PlayerColor playerColor) {
 		double value = 0;
 		
 		for (Entry e : state.getPieces().iterateSpaces()) {

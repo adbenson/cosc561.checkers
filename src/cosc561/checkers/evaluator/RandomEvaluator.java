@@ -15,7 +15,7 @@ public class RandomEvaluator extends Evaluator {
 	private Random random;
 
 	@Override
-	protected double evaluateInternal(BoardState state, PlayerColor playerColor) {
+	public double evaluate(BoardState state, PlayerColor playerColor) {
 		return random.nextDouble();
 	}
 	

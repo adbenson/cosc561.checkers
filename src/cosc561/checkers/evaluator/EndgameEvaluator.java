@@ -11,7 +11,7 @@ public class EndgameEvaluator extends Evaluator {
 	}
 
 	@Override
-	protected double evaluateInternal(BoardState state, PlayerColor playerColor) {
+	public double evaluate(BoardState state, PlayerColor playerColor) {
 		if (state.isEndgame()) {
 			if (state.winner() == playerColor) {
 				return 1;

@@ -32,24 +32,6 @@ public abstract class Evaluator {
 	protected double getRangeMax() {
 		return 1;
 	}
-
-	public List<EvaluatedState> evaluate(List<BoardState> states, PlayerColor player) {
-		List<EvaluatedState> evaluated = new ArrayList<EvaluatedState>();
-		
-		for (BoardState state : states) {
-			evaluated.add(evaluate(state, player));
-		}
-		
-		Collections.sort(evaluated);
-		
-		return evaluated;
-	}
-	
-	public EvaluatedState evaluate(BoardState state, PlayerColor player) {
-		double score = normalize(evaluateInternal(state, player));
-
-		return new EvaluatedState(state, score);
-	}
 	
 	protected double getWeight(int pieceCount) {
 		//Ranges from 1 (start of game) to 0 (end of game)
@@ -59,16 +41,12 @@ public abstract class Evaluator {
 		
 		return initialWeight;//weight + progress;
 	}
-	
-	protected double evaluateNormal(BoardState state, PlayerColor player) {
-		return normalize(evaluateInternal(state, player));
-	}
 
 	protected double normalize(double score) {		
 		return score * normalizationFactor;
 	}
 
-	protected abstract double evaluateInternal(BoardState state, PlayerColor player);
+	public abstract double evaluate(BoardState state, PlayerColor player);
 	
 	public static class EvaluatedState implements Comparable<EvaluatedState> {
 		public final BoardState state;

@@ -10,7 +10,7 @@ public class NaiveEvaluator extends Evaluator {
 	}
 
 	@Override
-	public double evaluateInternal(BoardState state, PlayerColor playerColor) {
+	public double evaluate(BoardState state, PlayerColor playerColor) {
 		return 1;
 	}
 

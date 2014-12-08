@@ -16,7 +16,7 @@ public class KingPieceEvaluator extends Evaluator {
 	 * or -1 if an opponent piece was kinged.
 	 */
 	@Override
-	protected double evaluateInternal(BoardState state, PlayerColor playerColor) {
+	public double evaluate(BoardState state, PlayerColor playerColor) {
 		for (Change change : state.getTurn().getChanges()) {
 			if (change instanceof King) {
 				if (change.piece.color == playerColor) {
