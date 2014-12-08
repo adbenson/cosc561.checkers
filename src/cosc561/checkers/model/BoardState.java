@@ -185,7 +185,7 @@ public class BoardState implements Printable {
 		for (PlayerColor color : PlayerColor.values()) {
 			if (getPieces().getPieceCount(color) < 1) {
 				if (winner == null) {
-					winner = color;
+					winner = color.opponent();
 				}
 				else {
 					return null;
