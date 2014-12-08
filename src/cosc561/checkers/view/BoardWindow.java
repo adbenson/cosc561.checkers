@@ -201,12 +201,22 @@ public class BoardWindow {
 			
 			boardPanel.setState(state);
 			
+			if (state.isEndgame()) {
+				endgame(state);
+			}
+			
 		} catch (IllegalMoveException e) {
 			System.err.println("Exception ending turn");
 			e.printStackTrace();
 		}
 	}
 	
+	private void endgame(BoardState state) {
+		String winner = (state.getWinner() == null)? "to you both" : state.getWinner().toString();
+		
+		JOptionPane.showMessageDialog(window, "Congratulations "+winner+"!\nWell Done!\n\n");
+	}
+
 	public BoardState applyTurn(BoardState state) throws IllegalMoveException {
 		PlayerTurn turn = state.getTurn();
 		logAction(turn);
@@ -263,6 +273,7 @@ public class BoardWindow {
 		
 		boardPanel.setState(previousState);
 	}
+
 	
 	
 	private Checkers.StartGameOptions getStartGameChoices() {
@@ -270,7 +281,9 @@ public class BoardWindow {
 		JCheckBox addPieces = new JCheckBox("Add starting pieces");
 		addPieces.setSelected(true);
 		
-		Object[] params = {"What color are we playing as today?", addPieces};
+		String message = "What color is the computer playing as?";
+
+		Object[] params = {message, addPieces};
 		
 		int n = JOptionPane.showOptionDialog(window,
 		    params,
