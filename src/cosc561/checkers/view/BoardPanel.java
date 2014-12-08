@@ -1,5 +1,6 @@
 package cosc561.checkers.view;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -19,11 +20,16 @@ import cosc561.checkers.utility.Vector;
 @SuppressWarnings("serial")
 public class BoardPanel extends JPanel implements ControlListener, ComponentListener {
 	
+	public static final int EVALUATOR_WIDTH = 300;	
+	
 	private BoardState state;
 	
 	private static Grid grid = Grid.getInstance();
 	
 	private ControlHandler controlHandler;
+	
+	private EvaluationPanel evaluation;
+	private JPanel board;
 	
 	private BoardGraphics graphics;
 	
@@ -34,14 +40,24 @@ public class BoardPanel extends JPanel implements ControlListener, ComponentList
 	private Vector dragOffset;
 
 	public BoardPanel(Dimension dimensions) {
-		setPreferredSize(dimensions);
+		super(new BorderLayout());
+		
+		board = new JPanel();
+		board.setPreferredSize(dimensions);
 		
 		controlHandler = new ControlHandler(this);
 
-		addMouseListener(controlHandler);
-		addMouseMotionListener(controlHandler);
-
-		addComponentListener(this);
+		board.addMouseListener(controlHandler);
+		board.addMouseMotionListener(controlHandler);
+		board.addComponentListener(this);
+		
+		this.add(board, BorderLayout.CENTER);
+		
+		
+		evaluation = new EvaluationPanel();
+		evaluation.setPreferredSize(new Dimension(EVALUATOR_WIDTH, 0));
+		
+		this.add(evaluation, BorderLayout.EAST);
 		
 		//Create empty starting state so it's never null
 		state = new BoardState();
@@ -49,7 +65,7 @@ public class BoardPanel extends JPanel implements ControlListener, ComponentList
 
 	public void init() {
 		
-		graphics = new BoardGraphics(this, grid);
+		graphics = new BoardGraphics(board, grid);
 		
 		hovered = null;
 		selected = null;
@@ -86,6 +102,8 @@ public class BoardPanel extends JPanel implements ControlListener, ComponentList
 				}
 				
 				graphics.display();
+				
+				evaluation.showEvaluation(board);
 			};
 		});
 	}

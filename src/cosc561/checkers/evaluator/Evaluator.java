@@ -33,7 +33,7 @@ public abstract class Evaluator {
 		return 1;
 	}
 	
-	protected double getWeight(int pieceCount) {
+	public double getWeight(int pieceCount) {
 		//Ranges from 1 (start of game) to 0 (end of game)
 		double progress = pieceCount / 24.0;
 		
@@ -42,10 +42,12 @@ public abstract class Evaluator {
 		return initialWeight;//weight + progress;
 	}
 
-	protected double normalize(double score) {		
+	public double normalize(double score) {		
 		return score * normalizationFactor;
 	}
 	
+	public double weight(double score, int pieceCount) {
+		return score * getWeight(pieceCount);
 	}
 
 	public abstract double evaluate(BoardState state, PlayerColor player);
