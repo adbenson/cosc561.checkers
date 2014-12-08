@@ -42,7 +42,7 @@ public class CompoundEvaluator extends Evaluator {
 		}
 		
 		for (Evaluator eval : evaluators) {
-			double score = eval.normalize(evaluate(state, player));
+			double score = eval.normalize(eval.evaluate(state, player));
 			
 			if (debug) {
 				System.out.println(eval.getClass().getSimpleName()+": "+score);
