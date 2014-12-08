@@ -45,28 +45,9 @@ public abstract class Evaluator {
 	protected double normalize(double score) {		
 		return score * normalizationFactor;
 	}
-
-	public abstract double evaluate(BoardState state, PlayerColor player);
 	
-	public static class EvaluatedState implements Comparable<EvaluatedState> {
-		public final BoardState state;
-		public final double score;
-				
-		public EvaluatedState(BoardState state, double cumulativeScore) {
-			this.state = state;
-			this.score = cumulativeScore;
-		}
-
-		@Override
-		public int compareTo(EvaluatedState that) {
-			return (int) (this.score - that.score);
-		}
-		
-		public String toString() {
-			return "Board #"+state.uid+", Score: "+score;
-		}
-
 	}
 
+	public abstract double evaluate(BoardState state, PlayerColor player);
 	
 }
